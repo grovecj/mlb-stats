@@ -30,4 +30,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     Page<Player> searchPlayers(@Param("search") String search, Pageable pageable);
 
     boolean existsByMlbId(Integer mlbId);
+
+    @Query("SELECT p FROM Player p WHERE p.bats IS NULL OR p.height IS NULL OR p.birthDate IS NULL")
+    List<Player> findIncomplete();
 }

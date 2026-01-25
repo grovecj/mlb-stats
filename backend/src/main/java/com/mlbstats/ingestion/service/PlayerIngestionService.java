@@ -55,6 +55,19 @@ public class PlayerIngestionService {
     @Transactional
     public Player getOrCreatePlayer(Integer mlbPlayerId, String fullName) {
         return playerRepository.findByMlbId(mlbPlayerId)
+                .map(existing -> {
+                    // If player exists but is missing key fields, try to sync
+                    if (isIncomplete(existing)) {
+                        try {
+                            log.debug("Player {} has incomplete data, syncing", mlbPlayerId);
+                            return syncPlayer(mlbPlayerId);
+                        } catch (Exception e) {
+                            log.warn("Failed to sync incomplete player {}: {}", mlbPlayerId, e.getMessage());
+                            return existing;
+                        }
+                    }
+                    return existing;
+                })
                 .orElseGet(() -> {
                     // Try to fetch from API first
                     try {
@@ -71,7 +84,31 @@ public class PlayerIngestionService {
                 });
     }
 
+    private boolean isIncomplete(Player player) {
+        // Check if essential biographical fields are missing
+        return player.getBats() == null || player.getHeight() == null || player.getBirthDate() == null;
+    }
+
     public Player getPlayerByMlbId(Integer mlbId) {
         return playerRepository.findByMlbId(mlbId).orElse(null);
+    }
+
+    @Transactional
+    public int syncIncompletePlayers() {
+        var incompletePlayers = playerRepository.findIncomplete();
+        log.info("Found {} players with incomplete data", incompletePlayers.size());
+
+        int synced = 0;
+        for (Player player : incompletePlayers) {
+            try {
+                syncPlayer(player.getMlbId());
+                synced++;
+            } catch (Exception e) {
+                log.warn("Failed to sync player {}: {}", player.getMlbId(), e.getMessage());
+            }
+        }
+
+        log.info("Successfully synced {} of {} incomplete players", synced, incompletePlayers.size());
+        return synced;
     }
 }

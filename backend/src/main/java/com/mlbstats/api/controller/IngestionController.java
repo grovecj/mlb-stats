@@ -76,4 +76,11 @@ public class IngestionController {
         orchestrator.runStatsSync(season);
         return ResponseEntity.ok(Map.of("status", "completed", "season", String.valueOf(season)));
     }
+
+    @PostMapping("/players/incomplete")
+    @Operation(summary = "Sync incomplete players", description = "Fetches full data for players missing biographical info")
+    public ResponseEntity<Map<String, String>> syncIncompletePlayers() {
+        int count = orchestrator.runIncompletePlayersSync();
+        return ResponseEntity.ok(Map.of("status", "completed", "synced", String.valueOf(count)));
+    }
 }

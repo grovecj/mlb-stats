@@ -14,15 +14,18 @@ public class IngestionOrchestrator {
     private final RosterIngestionService rosterIngestionService;
     private final GameIngestionService gameIngestionService;
     private final StatsIngestionService statsIngestionService;
+    private final PlayerIngestionService playerIngestionService;
 
     public IngestionOrchestrator(TeamIngestionService teamIngestionService,
                                  RosterIngestionService rosterIngestionService,
                                  GameIngestionService gameIngestionService,
-                                 StatsIngestionService statsIngestionService) {
+                                 StatsIngestionService statsIngestionService,
+                                 PlayerIngestionService playerIngestionService) {
         this.teamIngestionService = teamIngestionService;
         this.rosterIngestionService = rosterIngestionService;
         this.gameIngestionService = gameIngestionService;
         this.statsIngestionService = statsIngestionService;
+        this.playerIngestionService = playerIngestionService;
     }
 
     public void runFullSync() {
@@ -81,5 +84,10 @@ public class IngestionOrchestrator {
     public void runStatsSync(int season) {
         log.info("Running stats-only sync for season {}", season);
         statsIngestionService.syncAllPlayerStats(season);
+    }
+
+    public int runIncompletePlayersSync() {
+        log.info("Running sync for players with incomplete data");
+        return playerIngestionService.syncIncompletePlayers();
     }
 }

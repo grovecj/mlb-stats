@@ -154,6 +154,10 @@ export async function triggerStatsSync(season?: number): Promise<{ status: strin
   return postJson(`${API_BASE}/ingestion/stats${params}`);
 }
 
+export async function triggerIncompletePlayersSync(): Promise<{ status: string; synced: string }> {
+  return postJson(`${API_BASE}/ingestion/players/incomplete`);
+}
+
 // Admin - User Management
 export interface AdminUser {
   id: number;
