@@ -169,9 +169,10 @@ resource "digitalocean_record" "app_cname" {
 
 # GitHub Repository
 resource "github_repository" "mlb_stats" {
-  name        = local.github_repo
-  description = "Vibe Coded MLB Stats Webapp"
-  visibility  = "public"
+  name         = local.github_repo
+  description  = "Vibe Coded MLB Stats Webapp"
+  homepage_url = var.custom_domain != "" ? "https://${var.custom_domain}" : null
+  visibility   = "public"
 
   has_issues   = true
   has_projects = true
@@ -186,7 +187,7 @@ resource "github_branch_protection" "main" {
   pattern       = var.github_branch
 
   required_status_checks {
-    strict   = true # Require branch to be up to date before merging
+    strict = true # Require branch to be up to date before merging
     contexts = [
       "Frontend Build & Test",
       "Backend Build & Test"
