@@ -42,26 +42,16 @@ function PlayersPage() {
     <div>
       <h1 className="page-title">MLB Players</h1>
 
-      <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
+      <form onSubmit={handleSearch} className="search-form" style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
         <input
           type="text"
           className="search-input"
           placeholder="Search players by name..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          style={{ marginBottom: 0 }}
         />
-        <button
-          type="submit"
-          style={{
-            padding: '12px 24px',
-            marginLeft: '8px',
-            backgroundColor: '#002d72',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-          }}
-        >
+        <button type="submit" className="tab-btn active">
           Search
         </button>
       </form>
