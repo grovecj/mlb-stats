@@ -138,6 +138,14 @@ resource "github_branch_protection" "main" {
   repository_id = local.github_repo
   pattern       = var.github_branch
 
+  required_status_checks {
+    strict   = true # Require branch to be up to date before merging
+    contexts = [
+      "Frontend Build & Test",
+      "Backend Build & Test"
+    ]
+  }
+
   required_pull_request_reviews {
     required_approving_review_count = var.required_approvals
     dismiss_stale_reviews           = true
