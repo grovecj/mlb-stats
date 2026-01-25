@@ -149,7 +149,7 @@ resource "github_branch_protection" "main" {
   required_pull_request_reviews {
     required_approving_review_count = var.required_approvals
     dismiss_stale_reviews           = true
-    require_code_owner_reviews      = false
+    require_code_owner_reviews      = true
   }
 
   # Prevent force pushes
