@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: mlb-stats-db
+    environment:
+      POSTGRES_DB: mlbstats
+      POSTGRES_USER: mlbstats
+      POSTGRES_PASSWORD: mlbstats
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mlbstats"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

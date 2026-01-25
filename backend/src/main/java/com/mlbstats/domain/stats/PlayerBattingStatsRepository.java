@@ -1,0 +1,31 @@
+package com.mlbstats.domain.stats;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface PlayerBattingStatsRepository extends JpaRepository<PlayerBattingStats, Long> {
+
+    List<PlayerBattingStats> findByPlayerIdAndSeason(Long playerId, Integer season);
+
+    List<PlayerBattingStats> findByPlayerId(Long playerId);
+
+    List<PlayerBattingStats> findByTeamIdAndSeason(Long teamId, Integer season);
+
+    Optional<PlayerBattingStats> findByPlayerIdAndTeamIdAndSeasonAndGameType(
+            Long playerId, Long teamId, Integer season, String gameType);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player WHERE pbs.team.id = :teamId AND pbs.season = :season ORDER BY pbs.battingAvg DESC")
+    List<PlayerBattingStats> findByTeamIdAndSeasonWithPlayer(@Param("teamId") Long teamId, @Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season ORDER BY pbs.homeRuns DESC")
+    List<PlayerBattingStats> findTopHomeRunHitters(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.atBats >= :minAtBats ORDER BY pbs.battingAvg DESC")
+    List<PlayerBattingStats> findTopBattingAverage(@Param("season") Integer season, @Param("minAtBats") Integer minAtBats);
+}
