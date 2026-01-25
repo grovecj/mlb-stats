@@ -10,9 +10,16 @@ public record TeamDto(
         String locationName,
         String venueName,
         String league,
-        String division
+        String division,
+        String logoUrl
 ) {
+    private static final String LOGO_URL_TEMPLATE = "https://www.mlbstatic.com/team-logos/%d.svg";
+
     public static TeamDto fromEntity(Team team) {
+        String logoUrl = team.getMlbId() != null
+                ? String.format(LOGO_URL_TEMPLATE, team.getMlbId())
+                : null;
+
         return new TeamDto(
                 team.getId(),
                 team.getMlbId(),
@@ -21,7 +28,8 @@ public record TeamDto(
                 team.getLocationName(),
                 team.getVenueName(),
                 team.getLeague(),
-                team.getDivision()
+                team.getDivision(),
+                logoUrl
         );
     }
 }

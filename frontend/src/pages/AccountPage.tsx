@@ -100,7 +100,15 @@ function AccountPage() {
                       to={`/teams/${team.id}`}
                       className="favorite-card"
                     >
-                      <div className="favorite-abbrev">{team.abbreviation}</div>
+                      {team.logoUrl ? (
+                        <img
+                          src={team.logoUrl}
+                          alt={`${team.name} logo`}
+                          className="favorite-logo"
+                        />
+                      ) : (
+                        <div className="favorite-abbrev">{team.abbreviation}</div>
+                      )}
                       <div className="favorite-name">{team.name}</div>
                       <div className="favorite-meta">
                         {team.league} - {team.division}
@@ -129,7 +137,15 @@ function AccountPage() {
                       to={`/players/${player.id}`}
                       className="favorite-card"
                     >
-                      <div className="favorite-number">{player.jerseyNumber || '?'}</div>
+                      {player.headshotUrl ? (
+                        <img
+                          src={player.headshotUrl}
+                          alt={player.fullName}
+                          className="favorite-headshot"
+                        />
+                      ) : (
+                        <div className="favorite-number">{player.jerseyNumber || '?'}</div>
+                      )}
                       <div className="favorite-name">{player.fullName}</div>
                       <div className="favorite-meta">
                         {player.position || 'Position unknown'}

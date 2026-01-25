@@ -73,6 +73,8 @@ common/
 1. **Ingestion**: MLB Stats API → MlbApiClient → IngestionService → Mapper → Repository → PostgreSQL
 2. **API Requests**: Controller → ApiService → Repository → DTO transformation → JSON response
 
+For details on the MLB Stats API endpoints and image CDN URLs, see [docs/MLB_STATS_API.md](docs/MLB_STATS_API.md).
+
 ### Authentication & Authorization
 
 - OAuth2 login (Google) via Spring Security

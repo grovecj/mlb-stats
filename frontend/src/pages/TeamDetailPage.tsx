@@ -55,9 +55,17 @@ function TeamDetailPage() {
     <div>
       <div className="card" style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ fontSize: '48px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
-            {team.abbreviation}
-          </div>
+          {team.logoUrl ? (
+            <img
+              src={team.logoUrl}
+              alt={`${team.name} logo`}
+              style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+            />
+          ) : (
+            <div style={{ fontSize: '48px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
+              {team.abbreviation}
+            </div>
+          )}
           <div style={{ flex: 1 }}>
             <h1 style={{ margin: 0, fontSize: '28px' }}>{team.name}</h1>
             <p style={{ margin: '4px 0 0', color: 'var(--text-light)' }}>
