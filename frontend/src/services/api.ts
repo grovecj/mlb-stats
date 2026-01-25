@@ -112,11 +112,93 @@ export async function triggerFullSync(season?: number): Promise<{ status: string
   const params = season ? `?season=${season}` : '';
   const response = await fetch(`${API_BASE}/ingestion/full-sync${params}`, {
     method: 'POST',
+    credentials: 'include',
   });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
   return response.json();
 }
 
 export async function triggerTeamsSync(): Promise<{ status: string }> {
-  const response = await fetch(`${API_BASE}/ingestion/teams`, { method: 'POST' });
+  const response = await fetch(`${API_BASE}/ingestion/teams`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function triggerRostersSync(season?: number): Promise<{ status: string }> {
+  const params = season ? `?season=${season}` : '';
+  const response = await fetch(`${API_BASE}/ingestion/rosters${params}`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function triggerGamesSync(season?: number): Promise<{ status: string }> {
+  const params = season ? `?season=${season}` : '';
+  const response = await fetch(`${API_BASE}/ingestion/games${params}`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function triggerStatsSync(season?: number): Promise<{ status: string }> {
+  const params = season ? `?season=${season}` : '';
+  const response = await fetch(`${API_BASE}/ingestion/stats${params}`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+// Admin - User Management
+export interface AdminUser {
+  id: number;
+  email: string;
+  name: string;
+  pictureUrl: string;
+  role: 'USER' | 'ADMIN' | 'OWNER';
+  lastLoginAt: string | null;
+}
+
+export async function getUsers(): Promise<AdminUser[]> {
+  const response = await fetch(`${API_BASE}/admin/users`, {
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function updateUserRole(userId: number, role: 'USER' | 'ADMIN'): Promise<{ status: string }> {
+  const response = await fetch(`${API_BASE}/admin/users/${userId}/role`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ role }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || `API error: ${response.status}`);
+  }
   return response.json();
 }
