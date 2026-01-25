@@ -36,7 +36,9 @@ function StandingsPage() {
 
   // Sort each division by division rank
   Object.values(grouped).forEach((divisionStandings) => {
-    divisionStandings.sort((a, b) => a.divisionRank - b.divisionRank);
+    divisionStandings.sort(
+      (a, b) => (a.divisionRank ?? 999) - (b.divisionRank ?? 999)
+    );
   });
 
   const divisions = [
@@ -170,10 +172,10 @@ function StandingsPage() {
                         </span>
                       </td>
                       <td style={{ textAlign: 'center', padding: '8px' }}>
-                        {standing.homeWins}-{standing.homeLosses}
+                        {standing.homeWins ?? 0}-{standing.homeLosses ?? 0}
                       </td>
                       <td style={{ textAlign: 'center', padding: '8px' }}>
-                        {standing.awayWins}-{standing.awayLosses}
+                        {standing.awayWins ?? 0}-{standing.awayLosses ?? 0}
                       </td>
                       <td style={{ textAlign: 'center', padding: '8px' }}>
                         {standing.runsScored || 0}

@@ -172,7 +172,7 @@ export async function triggerIncompletePlayersSync(): Promise<{ status: string; 
   return postJson(`${API_BASE}/ingestion/players/incomplete`);
 }
 
-export async function triggerStandingsSync(season?: number): Promise<{ status: string; teams: string }> {
+export async function triggerStandingsSync(season?: number): Promise<{ status: string; season: string; teams: string }> {
   const params = season ? `?season=${season}` : '';
   return postJson(`${API_BASE}/ingestion/standings${params}`);
 }
