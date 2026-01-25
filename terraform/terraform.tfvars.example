@@ -9,6 +9,14 @@ do_token = "dop_v1_your_token_here"
 github_repo   = "grovecj/mlb-stats"
 github_branch = "main"
 
+# GitHub Personal Access Token
+# Create at: https://github.com/settings/tokens
+# Required scopes: repo (full control of private repositories)
+github_token = "ghp_your_token_here"
+
+# Branch Protection
+# required_approvals = 1
+
 # Google OAuth Credentials
 # Get from: https://console.cloud.google.com/apis/credentials
 google_client_id     = "your-client-id.apps.googleusercontent.com"

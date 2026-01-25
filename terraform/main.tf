@@ -6,11 +6,26 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.34"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.0"
+    }
   }
 }
 
 provider "digitalocean" {
   token = var.do_token
+}
+
+provider "github" {
+  token = var.github_token
+  owner = local.github_owner
+}
+
+locals {
+  github_parts = split("/", var.github_repo)
+  github_owner = local.github_parts[0]
+  github_repo  = local.github_parts[1]
 }
 
 # Managed PostgreSQL Database
@@ -116,4 +131,25 @@ resource "digitalocean_app" "mlb_stats" {
       }
     }
   }
+}
+
+# GitHub Branch Protection
+resource "github_branch_protection" "main" {
+  repository_id = local.github_repo
+  pattern       = var.github_branch
+
+  required_pull_request_reviews {
+    required_approving_review_count = var.required_approvals
+    dismiss_stale_reviews           = true
+    require_code_owner_reviews      = false
+  }
+
+  # Prevent force pushes
+  allows_force_pushes = false
+
+  # Prevent branch deletion
+  allows_deletions = false
+
+  # Require conversation resolution before merging
+  require_conversation_resolution = true
 }

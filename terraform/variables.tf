@@ -25,6 +25,12 @@ variable "tags" {
 }
 
 # GitHub Configuration
+variable "github_token" {
+  description = "GitHub personal access token with repo permissions"
+  type        = string
+  sensitive   = true
+}
+
 variable "github_repo" {
   description = "GitHub repository (owner/repo format)"
   type        = string
@@ -34,6 +40,12 @@ variable "github_branch" {
   description = "GitHub branch to deploy"
   type        = string
   default     = "main"
+}
+
+variable "required_approvals" {
+  description = "Number of required PR approvals before merging"
+  type        = number
+  default     = 1
 }
 
 # App Platform Configuration
