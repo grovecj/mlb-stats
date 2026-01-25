@@ -97,6 +97,11 @@ variable "owner_email" {
 # Google Analytics 4
 variable "ga_measurement_id" {
   description = "Google Analytics 4 Measurement ID"
+}
+  
+# Custom Domain
+variable "custom_domain" {
+  description = "Custom domain for the application (e.g., stats.cartergrove.me)"
   type        = string
   default     = ""
 }

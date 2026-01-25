@@ -32,6 +32,9 @@ owner_email = "your-email@gmail.com"
 # Get from: https://analytics.google.com (Admin > Data Streams > Measurement ID)
 ga_measurement_id = "G-XXXXXXXXXX"
 
+# Custom Domain (optional - for DO-managed domains, CNAME record is created automatically)
+# custom_domain = "stats.yourdomain.com"
+
 # Optional: Override defaults
 # app_name       = "mlb-stats"
 # region         = "nyc"
