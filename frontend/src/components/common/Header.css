@@ -11,6 +11,22 @@
   gap: 16px;
 }
 
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.github-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .theme-toggle {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -72,10 +88,16 @@
     display: none;
   }
 
+  .github-link,
   .theme-toggle,
   .logout-btn {
     padding: 6px 8px;
     font-size: 12px;
+  }
+
+  .github-link svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -83,6 +105,15 @@
   .user-avatar {
     width: 28px;
     height: 28px;
+  }
+
+  .github-link {
+    padding: 4px 6px;
+  }
+
+  .github-link svg {
+    width: 16px;
+    height: 16px;
   }
 
   .theme-toggle {
