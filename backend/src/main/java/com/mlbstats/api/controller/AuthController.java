@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -14,17 +15,20 @@ import java.util.Map;
 public class AuthController {
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
+    public ResponseEntity<Map<String, Object>> getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
+        Map<String, Object> response = new HashMap<>();
+
         if (principal == null) {
-            return ResponseEntity.ok(Map.of("authenticated", false));
+            response.put("authenticated", false);
+            return ResponseEntity.ok(response);
         }
 
-        return ResponseEntity.ok(Map.of(
-            "authenticated", true,
-            "name", principal.getAttribute("name"),
-            "email", principal.getAttribute("email"),
-            "picture", principal.getAttribute("picture")
-        ));
+        response.put("authenticated", true);
+        response.put("name", principal.getAttribute("name"));
+        response.put("email", principal.getAttribute("email"));
+        response.put("picture", principal.getAttribute("picture"));
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/status")
