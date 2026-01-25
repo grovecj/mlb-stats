@@ -135,9 +135,22 @@ resource "digitalocean_app" "mlb_stats" {
   }
 }
 
+# GitHub Repository
+resource "github_repository" "mlb_stats" {
+  name        = local.github_repo
+  description = "Vibe Coded MLB Stats Webapp"
+  visibility  = "public"
+
+  has_issues   = true
+  has_projects = true
+  has_wiki     = false
+
+  delete_branch_on_merge = true
+}
+
 # GitHub Branch Protection
 resource "github_branch_protection" "main" {
-  repository_id = local.github_repo
+  repository_id = github_repository.mlb_stats.name
   pattern       = var.github_branch
 
   required_status_checks {
