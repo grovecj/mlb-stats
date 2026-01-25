@@ -179,6 +179,15 @@ resource "github_repository" "mlb_stats" {
   has_wiki     = false
 
   delete_branch_on_merge = true
+
+  # Enable Dependabot security alerts
+  vulnerability_alerts = true
+}
+
+# Enable Dependabot security updates (auto-PRs for vulnerabilities)
+resource "github_repository_dependabot_security_updates" "mlb_stats" {
+  repository = github_repository.mlb_stats.name
+  enabled    = true
 }
 
 # GitHub Branch Protection
