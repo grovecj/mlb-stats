@@ -20,8 +20,8 @@ public class PlayerResponse {
         private String lastName;
         private String primaryNumber;
         private PositionData primaryPosition;
-        private String batSide;
-        private String pitchHand;
+        private BatSideData batSide;
+        private PitchHandData pitchHand;
         private String birthDate;
         private String height;
         private Integer weight;
