@@ -93,3 +93,10 @@ variable "owner_email" {
   description = "Email address of the application owner (gets OWNER role)"
   type        = string
 }
+
+# Google Analytics 4
+variable "ga_measurement_id" {
+  description = "Google Analytics 4 Measurement ID"
+  type        = string
+  default     = ""
+}

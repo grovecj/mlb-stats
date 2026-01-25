@@ -118,3 +118,41 @@ Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.cs
 POST/PUT/DELETE requests must include the CSRF token. Use helpers in `api.ts`:
 - `postJson(url)` - Automatically includes CSRF token from cookie
 - For custom requests: read `XSRF-TOKEN` cookie, send as `X-XSRF-TOKEN` header
+
+## Google Analytics 4 (GA4) Instrumentation
+
+The app includes GA4 for tracking user behavior. Page views are tracked automatically via `useAnalytics` hook in `App.tsx`.
+
+### Tracking Custom Events
+
+For significant user interactions, use the `event` function from `frontend/src/utils/analytics.ts`:
+
+```typescript
+import { event } from '../utils/analytics';
+
+// Track button clicks, form submissions, etc.
+event('button_click', { button_name: 'sync_teams' });
+event('form_submit', { form_name: 'search', search_term: query });
+event('filter_change', { filter_type: 'season', value: '2024' });
+```
+
+### When to Add Events
+
+Add GA4 events for:
+- Button clicks that trigger important actions (sync, export, etc.)
+- Form submissions (search, filters)
+- Navigation to external links
+- Error states users encounter
+- Feature usage (toggle dark mode, expand/collapse sections)
+
+### Event Naming Conventions
+
+- Use snake_case for event names and parameter keys
+- Keep event names descriptive but concise
+- Common parameters: `button_name`, `form_name`, `page_section`, `item_id`, `item_type`
+
+### Configuration
+
+- Measurement ID is set via `VITE_GA_MEASUREMENT_ID` env var
+- Local development: set in `frontend/.env`
+- Production: configured via Terraform (`ga_measurement_id` variable)
