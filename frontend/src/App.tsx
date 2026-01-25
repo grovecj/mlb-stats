@@ -10,6 +10,7 @@ import PlayerDetailPage from './pages/PlayerDetailPage';
 import GamesPage from './pages/GamesPage';
 import GameDetailPage from './pages/GameDetailPage';
 import LoginPage from './pages/LoginPage';
+import AdminPage from './pages/AdminPage';
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -44,6 +45,7 @@ function AppContent() {
           <Route path="/players/:id" element={<PlayerDetailPage />} />
           <Route path="/games" element={<GamesPage />} />
           <Route path="/games/:id" element={<GameDetailPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

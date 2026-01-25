@@ -1,5 +1,7 @@
 package com.mlbstats.api.controller;
 
+import com.mlbstats.common.security.AppUserPrincipal;
+import com.mlbstats.domain.user.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -27,6 +29,13 @@ public class AuthController {
         response.put("name", principal.getAttribute("name"));
         response.put("email", principal.getAttribute("email"));
         response.put("picture", principal.getAttribute("picture"));
+
+        // Include role if principal is an AppUserPrincipal
+        if (principal instanceof AppUserPrincipal appUserPrincipal) {
+            response.put("role", appUserPrincipal.getRole().name());
+        } else {
+            response.put("role", Role.USER.name());
+        }
 
         return ResponseEntity.ok(response);
     }

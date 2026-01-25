@@ -87,3 +87,9 @@ variable "ingestion_api_key" {
   type        = string
   sensitive   = true
 }
+
+# Owner Configuration
+variable "owner_email" {
+  description = "Email address of the application owner (gets OWNER role)"
+  type        = string
+}

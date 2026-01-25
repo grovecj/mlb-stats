@@ -131,6 +131,12 @@ resource "digitalocean_app" "mlb_stats" {
         value = "" # Empty means same origin
         type  = "GENERAL"
       }
+
+      env {
+        key   = "OWNER_EMAIL"
+        value = var.owner_email
+        type  = "GENERAL"
+      }
     }
   }
 }
