@@ -5,6 +5,7 @@ import com.mlbstats.domain.user.AppUserRepository;
 import com.mlbstats.domain.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,10 @@ import java.util.Map;
 @RequestMapping("/api/admin")
 @Tag(name = "Admin", description = "Administrative endpoints")
 @PreAuthorize("hasRole('OWNER')")
+@RequiredArgsConstructor
 public class AdminController {
 
     private final AppUserRepository appUserRepository;
-
-    public AdminController(AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository;
-    }
 
     @GetMapping("/users")
     @Operation(summary = "List all users", description = "Returns a list of all users sorted by last login")

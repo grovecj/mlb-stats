@@ -1,32 +1,20 @@
 package com.mlbstats.ingestion.service;
 
 import com.mlbstats.common.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class IngestionOrchestrator {
-
-    private static final Logger log = LoggerFactory.getLogger(IngestionOrchestrator.class);
 
     private final TeamIngestionService teamIngestionService;
     private final RosterIngestionService rosterIngestionService;
     private final GameIngestionService gameIngestionService;
     private final StatsIngestionService statsIngestionService;
     private final PlayerIngestionService playerIngestionService;
-
-    public IngestionOrchestrator(TeamIngestionService teamIngestionService,
-                                 RosterIngestionService rosterIngestionService,
-                                 GameIngestionService gameIngestionService,
-                                 StatsIngestionService statsIngestionService,
-                                 PlayerIngestionService playerIngestionService) {
-        this.teamIngestionService = teamIngestionService;
-        this.rosterIngestionService = rosterIngestionService;
-        this.gameIngestionService = gameIngestionService;
-        this.statsIngestionService = statsIngestionService;
-        this.playerIngestionService = playerIngestionService;
-    }
 
     public void runFullSync() {
         int season = DateUtils.getCurrentSeason();

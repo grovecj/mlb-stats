@@ -2,8 +2,7 @@ package com.mlbstats.ingestion.client;
 
 import com.mlbstats.common.exception.IngestionException;
 import com.mlbstats.ingestion.client.dto.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -11,10 +10,10 @@ import org.springframework.web.client.RestClientException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Component
 public class MlbApiClient {
 
-    private static final Logger log = LoggerFactory.getLogger(MlbApiClient.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final RestClient restClient;

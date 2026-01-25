@@ -5,18 +5,18 @@ import com.mlbstats.ingestion.service.GameIngestionService;
 import com.mlbstats.ingestion.service.IngestionOrchestrator;
 import com.mlbstats.ingestion.service.RosterIngestionService;
 import com.mlbstats.ingestion.service.StatsIngestionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class IngestionScheduler {
-
-    private static final Logger log = LoggerFactory.getLogger(IngestionScheduler.class);
 
     private final IngestionOrchestrator orchestrator;
     private final GameIngestionService gameIngestionService;
@@ -25,16 +25,6 @@ public class IngestionScheduler {
 
     @Value("${mlb.ingestion.enabled:false}")
     private boolean ingestionEnabled;
-
-    public IngestionScheduler(IngestionOrchestrator orchestrator,
-                              GameIngestionService gameIngestionService,
-                              RosterIngestionService rosterIngestionService,
-                              StatsIngestionService statsIngestionService) {
-        this.orchestrator = orchestrator;
-        this.gameIngestionService = gameIngestionService;
-        this.rosterIngestionService = rosterIngestionService;
-        this.statsIngestionService = statsIngestionService;
-    }
 
     /**
      * Daily: Full stats refresh at 6 AM

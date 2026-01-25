@@ -5,6 +5,7 @@ import com.mlbstats.api.dto.PageDto;
 import com.mlbstats.api.service.GameApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,13 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/games")
 @Tag(name = "Games", description = "Game management APIs")
+@RequiredArgsConstructor
 public class GameController {
 
     private final GameApiService gameApiService;
-
-    public GameController(GameApiService gameApiService) {
-        this.gameApiService = gameApiService;
-    }
 
     @GetMapping
     @Operation(summary = "Get games", description = "Returns games for a given season or date range")
