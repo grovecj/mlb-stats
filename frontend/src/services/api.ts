@@ -5,8 +5,30 @@ import { BattingStats, PitchingStats, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
 
+function getCsrfToken(): string | null {
+  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+async function postJson<T>(url: string): Promise<T> {
+  const csrfToken = getCsrfToken();
+  const headers: HeadersInit = {};
+  if (csrfToken) {
+    headers['X-XSRF-TOKEN'] = csrfToken;
+  }
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+  });
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);
   }
@@ -110,61 +132,26 @@ export async function getTodaysGames(): Promise<Game[]> {
 // Ingestion
 export async function triggerFullSync(season?: number): Promise<{ status: string }> {
   const params = season ? `?season=${season}` : '';
-  const response = await fetch(`${API_BASE}/ingestion/full-sync${params}`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-  return response.json();
+  return postJson(`${API_BASE}/ingestion/full-sync${params}`);
 }
 
 export async function triggerTeamsSync(): Promise<{ status: string }> {
-  const response = await fetch(`${API_BASE}/ingestion/teams`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-  return response.json();
+  return postJson(`${API_BASE}/ingestion/teams`);
 }
 
 export async function triggerRostersSync(season?: number): Promise<{ status: string }> {
   const params = season ? `?season=${season}` : '';
-  const response = await fetch(`${API_BASE}/ingestion/rosters${params}`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-  return response.json();
+  return postJson(`${API_BASE}/ingestion/rosters${params}`);
 }
 
 export async function triggerGamesSync(season?: number): Promise<{ status: string }> {
   const params = season ? `?season=${season}` : '';
-  const response = await fetch(`${API_BASE}/ingestion/games${params}`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-  return response.json();
+  return postJson(`${API_BASE}/ingestion/games${params}`);
 }
 
 export async function triggerStatsSync(season?: number): Promise<{ status: string }> {
   const params = season ? `?season=${season}` : '';
-  const response = await fetch(`${API_BASE}/ingestion/stats${params}`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-  return response.json();
+  return postJson(`${API_BASE}/ingestion/stats${params}`);
 }
 
 // Admin - User Management
@@ -188,11 +175,16 @@ export async function getUsers(): Promise<AdminUser[]> {
 }
 
 export async function updateUserRole(userId: number, role: 'USER' | 'ADMIN'): Promise<{ status: string }> {
+  const csrfToken = getCsrfToken();
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  if (csrfToken) {
+    headers['X-XSRF-TOKEN'] = csrfToken;
+  }
   const response = await fetch(`${API_BASE}/admin/users/${userId}/role`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     credentials: 'include',
     body: JSON.stringify({ role }),
   });
