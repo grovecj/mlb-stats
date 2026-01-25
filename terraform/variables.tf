@@ -93,3 +93,10 @@ variable "owner_email" {
   description = "Email address of the application owner (gets OWNER role)"
   type        = string
 }
+
+# Custom Domain
+variable "custom_domain" {
+  description = "Custom domain for the application (e.g., stats.cartergrove.me)"
+  type        = string
+  default     = ""
+}

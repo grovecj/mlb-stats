@@ -56,6 +56,15 @@ resource "digitalocean_app" "mlb_stats" {
     name   = var.app_name
     region = var.region
 
+    # Custom domain (if configured)
+    dynamic "domain" {
+      for_each = var.custom_domain != "" ? [var.custom_domain] : []
+      content {
+        name = domain.value
+        type = "PRIMARY"
+      }
+    }
+
     # Alert on deployment failure
     alert {
       rule = "DEPLOYMENT_FAILED"
@@ -139,6 +148,16 @@ resource "digitalocean_app" "mlb_stats" {
       }
     }
   }
+}
+
+# DNS Record for custom subdomain (if domain is managed in DO)
+resource "digitalocean_record" "app_cname" {
+  count  = var.custom_domain != "" ? 1 : 0
+  domain = join(".", slice(split(".", var.custom_domain), 1, length(split(".", var.custom_domain))))
+  type   = "CNAME"
+  name   = split(".", var.custom_domain)[0]
+  value  = "${replace(digitalocean_app.mlb_stats.default_ingress, "https://", "")}."
+  ttl    = 3600
 }
 
 # GitHub Repository
