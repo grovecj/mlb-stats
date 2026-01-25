@@ -29,6 +29,7 @@ public class PlayerBattingStats {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Column(nullable = false)
     private Integer season;
 
     @Column(name = "game_type")

@@ -27,6 +27,7 @@ public class TeamRoster {
     @JoinColumn(name = "player_id")
     private Player player;
 
+    @Column(nullable = false)
     private Integer season;
 
     private String status;
