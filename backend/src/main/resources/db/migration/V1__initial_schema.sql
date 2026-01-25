@@ -2,7 +2,7 @@
 
 -- Core entities
 CREATE TABLE teams (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     mlb_id INTEGER UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     abbreviation VARCHAR(10) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE teams (
 );
 
 CREATE TABLE players (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     mlb_id INTEGER UNIQUE NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     first_name VARCHAR(50),
@@ -36,9 +36,9 @@ CREATE TABLE players (
 
 -- Roster relationship (season-aware)
 CREATE TABLE team_rosters (
-    id SERIAL PRIMARY KEY,
-    team_id INTEGER REFERENCES teams(id),
-    player_id INTEGER REFERENCES players(id),
+    id BIGSERIAL PRIMARY KEY,
+    team_id BIGINT REFERENCES teams(id),
+    player_id BIGINT REFERENCES players(id),
     season INTEGER NOT NULL,
     status VARCHAR(50),
     jersey_number VARCHAR(10),
@@ -49,14 +49,14 @@ CREATE TABLE team_rosters (
 );
 
 CREATE TABLE games (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     mlb_id INTEGER UNIQUE NOT NULL,
     season INTEGER NOT NULL,
     game_date DATE NOT NULL,
     game_type VARCHAR(10),
     status VARCHAR(20),
-    home_team_id INTEGER REFERENCES teams(id),
-    away_team_id INTEGER REFERENCES teams(id),
+    home_team_id BIGINT REFERENCES teams(id),
+    away_team_id BIGINT REFERENCES teams(id),
     home_score INTEGER,
     away_score INTEGER,
     venue_name VARCHAR(100),
@@ -68,9 +68,9 @@ CREATE TABLE games (
 
 -- Player season statistics
 CREATE TABLE player_batting_stats (
-    id SERIAL PRIMARY KEY,
-    player_id INTEGER REFERENCES players(id),
-    team_id INTEGER REFERENCES teams(id),
+    id BIGSERIAL PRIMARY KEY,
+    player_id BIGINT REFERENCES players(id),
+    team_id BIGINT REFERENCES teams(id),
     season INTEGER NOT NULL,
     game_type VARCHAR(10) DEFAULT 'R',
     games_played INTEGER,
@@ -104,9 +104,9 @@ CREATE TABLE player_batting_stats (
 );
 
 CREATE TABLE player_pitching_stats (
-    id SERIAL PRIMARY KEY,
-    player_id INTEGER REFERENCES players(id),
-    team_id INTEGER REFERENCES teams(id),
+    id BIGSERIAL PRIMARY KEY,
+    player_id BIGINT REFERENCES players(id),
+    team_id BIGINT REFERENCES teams(id),
     season INTEGER NOT NULL,
     game_type VARCHAR(10) DEFAULT 'R',
     games_played INTEGER,
@@ -140,10 +140,10 @@ CREATE TABLE player_pitching_stats (
 
 -- Game-level player stats
 CREATE TABLE player_game_batting (
-    id SERIAL PRIMARY KEY,
-    player_id INTEGER REFERENCES players(id),
-    game_id INTEGER REFERENCES games(id),
-    team_id INTEGER REFERENCES teams(id),
+    id BIGSERIAL PRIMARY KEY,
+    player_id BIGINT REFERENCES players(id),
+    game_id BIGINT REFERENCES games(id),
+    team_id BIGINT REFERENCES teams(id),
     at_bats INTEGER,
     runs INTEGER,
     hits INTEGER,
@@ -160,10 +160,10 @@ CREATE TABLE player_game_batting (
 );
 
 CREATE TABLE player_game_pitching (
-    id SERIAL PRIMARY KEY,
-    player_id INTEGER REFERENCES players(id),
-    game_id INTEGER REFERENCES games(id),
-    team_id INTEGER REFERENCES teams(id),
+    id BIGSERIAL PRIMARY KEY,
+    player_id BIGINT REFERENCES players(id),
+    game_id BIGINT REFERENCES games(id),
+    team_id BIGINT REFERENCES teams(id),
     innings_pitched DECIMAL(4,1),
     hits_allowed INTEGER,
     runs_allowed INTEGER,
