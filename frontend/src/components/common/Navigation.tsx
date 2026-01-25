@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Navigation() {
+  const { isAdmin } = useAuth();
+
   return (
     <nav className="navigation">
       <ul>
@@ -24,6 +27,13 @@ function Navigation() {
             Games
           </NavLink>
         </li>
+        {isAdmin && (
+          <li>
+            <NavLink to="/admin" className={({ isActive }) => isActive ? 'active' : ''}>
+              Admin
+            </NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );

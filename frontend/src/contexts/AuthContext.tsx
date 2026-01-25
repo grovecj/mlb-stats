@@ -1,18 +1,30 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+type Role = 'USER' | 'ADMIN' | 'OWNER';
+
 interface User {
   name: string;
   email: string;
   picture: string;
+  role: Role;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAdmin: boolean;
+  isOwner: boolean;
+  hasRole: (role: Role) => boolean;
   login: () => void;
   logout: () => void;
 }
+
+const ROLE_HIERARCHY: Record<Role, number> = {
+  USER: 0,
+  ADMIN: 1,
+  OWNER: 2,
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -43,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name: data.name,
           email: data.email,
           picture: data.picture,
+          role: data.role || 'USER',
         });
       } else {
         setUser(null);
@@ -76,12 +89,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = '/';
   };
 
+  const hasRole = (role: Role): boolean => {
+    if (!user) return false;
+    return ROLE_HIERARCHY[user.role] >= ROLE_HIERARCHY[role];
+  };
+
+  const isAdmin = user ? hasRole('ADMIN') : false;
+  const isOwner = user ? user.role === 'OWNER' : false;
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: !!user,
         isLoading,
+        isAdmin,
+        isOwner,
+        hasRole,
         login,
         logout,
       }}

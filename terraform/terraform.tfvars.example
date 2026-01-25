@@ -25,6 +25,9 @@ google_client_secret = "your-client-secret"
 # Ingestion API Key (generate with: openssl rand -hex 32)
 ingestion_api_key = "your-random-api-key"
 
+# Owner Email (this user gets OWNER role with full admin access)
+owner_email = "your-email@gmail.com"
+
 # Optional: Override defaults
 # app_name       = "mlb-stats"
 # region         = "nyc"
