@@ -18,6 +18,11 @@ function Navigation() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/standings" className={({ isActive }) => isActive ? 'active' : ''}>
+            Standings
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/players" className={({ isActive }) => isActive ? 'active' : ''}>
             Players
           </NavLink>

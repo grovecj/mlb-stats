@@ -112,4 +112,16 @@ public class MlbApiClient {
     public StatsResponse getPlayerPitchingStats(Integer playerId, Integer season) {
         return getPlayerStats(playerId, season, "pitching");
     }
+
+    public StandingsResponse getStandings(Integer season) {
+        log.info("Fetching standings for season {}", season);
+        try {
+            return restClient.get()
+                    .uri("/standings?leagueId=103,104&season={season}&standingsTypes=regularSeason", season)
+                    .retrieve()
+                    .body(StandingsResponse.class);
+        } catch (RestClientException e) {
+            throw new IngestionException("Failed to fetch standings for season " + season, e);
+        }
+    }
 }

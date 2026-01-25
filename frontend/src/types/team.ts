@@ -18,3 +18,25 @@ export interface RosterEntry {
   jerseyNumber: string;
   position: string;
 }
+
+export interface TeamStanding {
+  id: number;
+  team: Team;
+  season: number;
+  wins: number;
+  losses: number;
+  winningPercentage: number;
+  gamesBack: string;
+  wildCardGamesBack: string;
+  divisionRank: number;
+  leagueRank: number;
+  wildCardRank: number;
+  runsScored: number;
+  runsAllowed: number;
+  runDifferential: number;
+  streakCode: string;
+  homeWins: number;
+  homeLosses: number;
+  awayWins: number;
+  awayLosses: number;
+}

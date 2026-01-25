@@ -4,6 +4,7 @@ import com.mlbstats.api.dto.BattingStatsDto;
 import com.mlbstats.api.dto.GameDto;
 import com.mlbstats.api.dto.RosterEntryDto;
 import com.mlbstats.api.dto.TeamDto;
+import com.mlbstats.api.dto.TeamStandingDto;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.GameRepository;
@@ -11,6 +12,7 @@ import com.mlbstats.domain.player.TeamRosterRepository;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.team.Team;
 import com.mlbstats.domain.team.TeamRepository;
+import com.mlbstats.domain.team.TeamStandingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class TeamApiService {
     private final TeamRosterRepository rosterRepository;
     private final GameRepository gameRepository;
     private final PlayerBattingStatsRepository battingStatsRepository;
+    private final TeamStandingRepository standingRepository;
 
     @Cacheable("teams")
     public List<TeamDto> getAllTeams() {
@@ -78,5 +81,23 @@ public class TeamApiService {
         return battingStatsRepository.findByTeamIdAndSeasonWithPlayer(teamId, season).stream()
                 .map(BattingStatsDto::fromEntity)
                 .toList();
+    }
+
+    public List<TeamStandingDto> getStandings(Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return standingRepository.findBySeasonWithTeam(season).stream()
+                .map(TeamStandingDto::fromEntity)
+                .toList();
+    }
+
+    public TeamStandingDto getTeamStanding(Long teamId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return standingRepository.findByTeamIdAndSeason(teamId, season)
+                .map(TeamStandingDto::fromEntity)
+                .orElse(null);
     }
 }

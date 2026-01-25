@@ -1,4 +1,4 @@
-import { Team, RosterEntry } from '../types/team';
+import { Team, RosterEntry, TeamStanding } from '../types/team';
 import { Player } from '../types/player';
 import { Game } from '../types/game';
 import { BattingStats, PitchingStats, PageResponse } from '../types/stats';
@@ -57,6 +57,20 @@ export async function getTeamGames(id: number, season?: number): Promise<Game[]>
 export async function getTeamStats(id: number, season?: number): Promise<BattingStats[]> {
   const params = season ? `?season=${season}` : '';
   return fetchJson<BattingStats[]>(`${API_BASE}/teams/${id}/stats${params}`);
+}
+
+export async function getStandings(season?: number): Promise<TeamStanding[]> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<TeamStanding[]>(`${API_BASE}/teams/standings${params}`);
+}
+
+export async function getTeamStanding(id: number, season?: number): Promise<TeamStanding | null> {
+  const params = season ? `?season=${season}` : '';
+  try {
+    return await fetchJson<TeamStanding>(`${API_BASE}/teams/${id}/standing${params}`);
+  } catch {
+    return null;
+  }
 }
 
 // Players
@@ -156,6 +170,11 @@ export async function triggerStatsSync(season?: number): Promise<{ status: strin
 
 export async function triggerIncompletePlayersSync(): Promise<{ status: string; synced: string }> {
   return postJson(`${API_BASE}/ingestion/players/incomplete`);
+}
+
+export async function triggerStandingsSync(season?: number): Promise<{ status: string; teams: string }> {
+  const params = season ? `?season=${season}` : '';
+  return postJson(`${API_BASE}/ingestion/standings${params}`);
 }
 
 // Admin - User Management

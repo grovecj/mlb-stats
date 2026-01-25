@@ -6,6 +6,7 @@ import Header from './components/common/Header';
 import Navigation from './components/common/Navigation';
 import HomePage from './pages/HomePage';
 import TeamsPage from './pages/TeamsPage';
+import StandingsPage from './pages/StandingsPage';
 import TeamDetailPage from './pages/TeamDetailPage';
 import PlayersPage from './pages/PlayersPage';
 import PlayerDetailPage from './pages/PlayerDetailPage';
@@ -45,6 +46,7 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/teams/:id" element={<TeamDetailPage />} />
+          <Route path="/standings" element={<StandingsPage />} />
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/players/:id" element={<PlayerDetailPage />} />
           <Route path="/games" element={<GamesPage />} />
