@@ -6,14 +6,14 @@
 
 .admin-page h1 {
   margin-bottom: 24px;
-  color: #1a1a2e;
+  color: var(--primary-color);
 }
 
 .admin-tabs {
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-color);
   padding-bottom: 0;
 }
 
@@ -23,24 +23,24 @@
   background: none;
   cursor: pointer;
   font-size: 16px;
-  color: #666;
+  color: var(--text-light);
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   transition: all 0.2s;
 }
 
 .tab-button:hover {
-  color: #1a1a2e;
+  color: var(--text-color);
 }
 
 .tab-button.active {
-  color: #1a1a2e;
-  border-bottom-color: #1a1a2e;
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
   font-weight: 600;
 }
 
 .tab-content {
-  background: #fff;
+  background: var(--card-background);
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -49,11 +49,11 @@
 /* Sync Panel */
 .sync-panel h2 {
   margin-bottom: 8px;
-  color: #1a1a2e;
+  color: var(--text-color);
 }
 
 .sync-description {
-  color: #666;
+  color: var(--text-light);
   margin-bottom: 24px;
 }
 
@@ -65,9 +65,9 @@
 
 .sync-button {
   padding: 12px 24px;
-  border: 2px solid #1a1a2e;
-  background: #fff;
-  color: #1a1a2e;
+  border: 2px solid var(--primary-color);
+  background: var(--card-background);
+  color: var(--primary-color);
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
@@ -79,8 +79,8 @@
 }
 
 .sync-button:hover:not(:disabled) {
-  background: #1a1a2e;
-  color: #fff;
+  background: var(--primary-color);
+  color: white;
 }
 
 .sync-button:disabled {
@@ -89,13 +89,13 @@
 }
 
 .sync-button.completed {
-  border-color: #28a745;
-  color: #28a745;
+  border-color: var(--success-color);
+  color: var(--success-color);
 }
 
 .sync-button.failed {
-  border-color: #dc3545;
-  color: #dc3545;
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 .status-icon {
@@ -105,7 +105,7 @@
 /* Users Panel */
 .users-panel h2 {
   margin-bottom: 16px;
-  color: #1a1a2e;
+  color: var(--text-color);
 }
 
 .users-table {
@@ -117,17 +117,17 @@
 .users-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .users-table th {
-  background: #f5f5f5;
+  background: var(--primary-color);
+  color: white;
   font-weight: 600;
-  color: #1a1a2e;
 }
 
 .users-table tr:hover {
-  background: #fafafa;
+  background: var(--border-color);
 }
 
 .user-cell {
@@ -145,10 +145,12 @@
 
 .role-select {
   padding: 6px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
+  background: var(--card-background);
+  color: var(--text-color);
 }
 
 .role-badge {
@@ -161,13 +163,13 @@
 }
 
 .role-badge.owner {
-  background: #ffd700;
+  background: var(--warning-color);
   color: #1a1a2e;
 }
 
-.error {
-  color: #dc3545;
+.admin-page .error {
+  color: var(--secondary-color);
   padding: 12px;
-  background: #ffe0e0;
+  background: rgba(191, 13, 62, 0.1);
   border-radius: 4px;
 }

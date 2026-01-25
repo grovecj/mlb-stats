@@ -16,6 +16,16 @@
   --warning-color: #ffc107;
 }
 
+[data-theme="dark"] {
+  --primary-color: #1a4a8a;
+  --secondary-color: #e63950;
+  --background-color: #1a1a2e;
+  --card-background: #252540;
+  --text-color: #e0e0e0;
+  --text-light: #a0a0a0;
+  --border-color: #3a3a5a;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background-color: var(--background-color);
@@ -117,7 +127,7 @@ body {
 }
 
 .data-table tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--border-color);
 }
 
 .data-table td.number {
