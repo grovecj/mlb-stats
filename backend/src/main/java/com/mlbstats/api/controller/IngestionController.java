@@ -4,6 +4,7 @@ import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.ingestion.service.IngestionOrchestrator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +15,10 @@ import java.util.Map;
 @RequestMapping("/api/ingestion")
 @Tag(name = "Ingestion", description = "Data ingestion management APIs")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class IngestionController {
 
     private final IngestionOrchestrator orchestrator;
-
-    public IngestionController(IngestionOrchestrator orchestrator) {
-        this.orchestrator = orchestrator;
-    }
 
     @PostMapping("/full-sync")
     @Operation(summary = "Run full sync", description = "Triggers a full data synchronization from MLB API")

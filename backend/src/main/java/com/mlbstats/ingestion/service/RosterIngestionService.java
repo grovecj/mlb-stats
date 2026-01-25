@@ -7,31 +7,23 @@ import com.mlbstats.domain.team.Team;
 import com.mlbstats.domain.team.TeamRepository;
 import com.mlbstats.ingestion.client.MlbApiClient;
 import com.mlbstats.ingestion.client.dto.RosterResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class RosterIngestionService {
-
-    private static final Logger log = LoggerFactory.getLogger(RosterIngestionService.class);
 
     private final MlbApiClient mlbApiClient;
     private final TeamRepository teamRepository;
     private final TeamRosterRepository teamRosterRepository;
     private final PlayerIngestionService playerIngestionService;
-
-    public RosterIngestionService(MlbApiClient mlbApiClient, TeamRepository teamRepository,
-                                  TeamRosterRepository teamRosterRepository, PlayerIngestionService playerIngestionService) {
-        this.mlbApiClient = mlbApiClient;
-        this.teamRepository = teamRepository;
-        this.teamRosterRepository = teamRosterRepository;
-        this.playerIngestionService = playerIngestionService;
-    }
 
     @Transactional
     public int syncAllRosters(Integer season) {

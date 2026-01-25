@@ -4,6 +4,7 @@ import com.mlbstats.api.dto.*;
 import com.mlbstats.api.service.PlayerApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,13 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/players")
 @Tag(name = "Players", description = "Player management APIs")
+@RequiredArgsConstructor
 public class PlayerController {
 
     private final PlayerApiService playerApiService;
-
-    public PlayerController(PlayerApiService playerApiService) {
-        this.playerApiService = playerApiService;
-    }
 
     @GetMapping
     @Operation(summary = "Get players", description = "Returns a paginated list of players, optionally filtered by search term")

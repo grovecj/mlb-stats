@@ -13,17 +13,17 @@ import com.mlbstats.domain.team.TeamRepository;
 import com.mlbstats.ingestion.client.MlbApiClient;
 import com.mlbstats.ingestion.client.dto.StatsResponse;
 import com.mlbstats.ingestion.mapper.StatsMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class StatsIngestionService {
-
-    private static final Logger log = LoggerFactory.getLogger(StatsIngestionService.class);
 
     private final MlbApiClient mlbApiClient;
     private final PlayerRepository playerRepository;
@@ -32,20 +32,6 @@ public class StatsIngestionService {
     private final PlayerBattingStatsRepository battingStatsRepository;
     private final PlayerPitchingStatsRepository pitchingStatsRepository;
     private final StatsMapper statsMapper;
-
-    public StatsIngestionService(MlbApiClient mlbApiClient, PlayerRepository playerRepository,
-                                 TeamRepository teamRepository, TeamRosterRepository teamRosterRepository,
-                                 PlayerBattingStatsRepository battingStatsRepository,
-                                 PlayerPitchingStatsRepository pitchingStatsRepository,
-                                 StatsMapper statsMapper) {
-        this.mlbApiClient = mlbApiClient;
-        this.playerRepository = playerRepository;
-        this.teamRepository = teamRepository;
-        this.teamRosterRepository = teamRosterRepository;
-        this.battingStatsRepository = battingStatsRepository;
-        this.pitchingStatsRepository = pitchingStatsRepository;
-        this.statsMapper = statsMapper;
-    }
 
     @Transactional
     public int syncAllPlayerStats(Integer season) {

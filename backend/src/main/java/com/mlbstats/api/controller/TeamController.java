@@ -7,6 +7,7 @@ import com.mlbstats.api.dto.TeamDto;
 import com.mlbstats.api.service.TeamApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/teams")
 @Tag(name = "Teams", description = "Team management APIs")
+@RequiredArgsConstructor
 public class TeamController {
 
     private final TeamApiService teamApiService;
-
-    public TeamController(TeamApiService teamApiService) {
-        this.teamApiService = teamApiService;
-    }
 
     @GetMapping
     @Operation(summary = "Get all teams", description = "Returns all MLB teams ordered by league and division")

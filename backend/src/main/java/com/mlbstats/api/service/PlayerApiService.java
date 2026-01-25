@@ -8,6 +8,7 @@ import com.mlbstats.domain.player.PlayerRepository;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerPitchingStatsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,22 +18,13 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class PlayerApiService {
 
     private final PlayerRepository playerRepository;
     private final PlayerBattingStatsRepository battingStatsRepository;
     private final PlayerPitchingStatsRepository pitchingStatsRepository;
     private final PlayerGameBattingRepository gameBattingRepository;
-
-    public PlayerApiService(PlayerRepository playerRepository,
-                            PlayerBattingStatsRepository battingStatsRepository,
-                            PlayerPitchingStatsRepository pitchingStatsRepository,
-                            PlayerGameBattingRepository gameBattingRepository) {
-        this.playerRepository = playerRepository;
-        this.battingStatsRepository = battingStatsRepository;
-        this.pitchingStatsRepository = pitchingStatsRepository;
-        this.gameBattingRepository = gameBattingRepository;
-    }
 
     public PageDto<PlayerDto> getAllPlayers(Pageable pageable) {
         Page<Player> page = playerRepository.findByActiveTrue(pageable);

@@ -5,27 +5,21 @@ import com.mlbstats.domain.team.TeamRepository;
 import com.mlbstats.ingestion.client.MlbApiClient;
 import com.mlbstats.ingestion.client.dto.TeamResponse;
 import com.mlbstats.ingestion.mapper.TeamMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class TeamIngestionService {
-
-    private static final Logger log = LoggerFactory.getLogger(TeamIngestionService.class);
 
     private final MlbApiClient mlbApiClient;
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
-
-    public TeamIngestionService(MlbApiClient mlbApiClient, TeamRepository teamRepository, TeamMapper teamMapper) {
-        this.mlbApiClient = mlbApiClient;
-        this.teamRepository = teamRepository;
-        this.teamMapper = teamMapper;
-    }
 
     @Transactional
     public int syncAllTeams() {

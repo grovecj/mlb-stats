@@ -6,6 +6,7 @@ import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.Game;
 import com.mlbstats.domain.game.GameRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,10 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class GameApiService {
 
     private final GameRepository gameRepository;
-
-    public GameApiService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
 
     public PageDto<GameDto> getGamesBySeason(Integer season, Pageable pageable) {
         if (season == null) {

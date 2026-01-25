@@ -7,31 +7,23 @@ import com.mlbstats.domain.team.TeamRepository;
 import com.mlbstats.ingestion.client.MlbApiClient;
 import com.mlbstats.ingestion.client.dto.ScheduleResponse;
 import com.mlbstats.ingestion.mapper.GameMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class GameIngestionService {
-
-    private static final Logger log = LoggerFactory.getLogger(GameIngestionService.class);
 
     private final MlbApiClient mlbApiClient;
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final GameMapper gameMapper;
-
-    public GameIngestionService(MlbApiClient mlbApiClient, GameRepository gameRepository,
-                                TeamRepository teamRepository, GameMapper gameMapper) {
-        this.mlbApiClient = mlbApiClient;
-        this.gameRepository = gameRepository;
-        this.teamRepository = teamRepository;
-        this.gameMapper = gameMapper;
-    }
 
     @Transactional
     public int syncGamesForDateRange(LocalDate startDate, LocalDate endDate) {

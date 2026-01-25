@@ -11,6 +11,7 @@ import com.mlbstats.domain.player.TeamRosterRepository;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.team.Team;
 import com.mlbstats.domain.team.TeamRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,20 +20,13 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TeamApiService {
 
     private final TeamRepository teamRepository;
     private final TeamRosterRepository rosterRepository;
     private final GameRepository gameRepository;
     private final PlayerBattingStatsRepository battingStatsRepository;
-
-    public TeamApiService(TeamRepository teamRepository, TeamRosterRepository rosterRepository,
-                          GameRepository gameRepository, PlayerBattingStatsRepository battingStatsRepository) {
-        this.teamRepository = teamRepository;
-        this.rosterRepository = rosterRepository;
-        this.gameRepository = gameRepository;
-        this.battingStatsRepository = battingStatsRepository;
-    }
 
     @Cacheable("teams")
     public List<TeamDto> getAllTeams() {
