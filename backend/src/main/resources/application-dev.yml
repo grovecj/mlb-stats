@@ -1,0 +1,32 @@
+# Development profile - enables debug features
+# Activate with: SPRING_PROFILES_ACTIVE=dev or --spring.profiles.active=dev
+
+logging:
+  level:
+    com.mlbstats: DEBUG
+    org.springframework.security: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+# Disable rate limiting in dev
+rate-limit:
+  enabled: false
+
+# Allow ingestion without API key in dev
+ingestion:
+  api-key: ""
+
+# For local development, you'll need to set these environment variables:
+# GOOGLE_CLIENT_ID=your-client-id
+# GOOGLE_CLIENT_SECRET=your-client-secret
+#
+# To get these:
+# 1. Go to https://console.cloud.google.com/
+# 2. Create a project (or select existing)
+# 3. Go to APIs & Services > Credentials
+# 4. Create OAuth 2.0 Client ID (Web application)
+# 5. Add http://localhost:8080/login/oauth2/code/google to Authorized redirect URIs

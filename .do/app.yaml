@@ -1,0 +1,53 @@
+# Digital Ocean App Platform Specification
+# https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+
+name: mlb-stats
+
+region: nyc
+
+services:
+  - name: web
+    github:
+      repo: grovecj/mlb-stats
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: Dockerfile
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    health_check:
+      http_path: /actuator/health
+      initial_delay_seconds: 60
+      period_seconds: 30
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: jdbc:postgresql://${db.HOSTNAME}:${db.PORT}/${db.DATABASE}?sslmode=require
+      - key: DATABASE_USERNAME
+        scope: RUN_TIME
+        value: ${db.USERNAME}
+      - key: DATABASE_PASSWORD
+        scope: RUN_TIME
+        value: ${db.PASSWORD}
+      - key: GOOGLE_CLIENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: GOOGLE_CLIENT_SECRET
+        scope: RUN_TIME
+        type: SECRET
+      - key: FRONTEND_URL
+        scope: RUN_TIME
+        value: ${APP_URL}
+      - key: INGESTION_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: JAVA_OPTS
+        scope: RUN_TIME
+        value: "-Xmx512m"
+
+databases:
+  - name: db
+    engine: PG
+    version: "16"
+    size: db-s-1vcpu-1gb
+    num_nodes: 1
