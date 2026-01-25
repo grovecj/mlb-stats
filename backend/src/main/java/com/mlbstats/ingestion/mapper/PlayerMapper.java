@@ -29,8 +29,12 @@ public class PlayerMapper {
             player.setPositionType(dto.getPrimaryPosition().getType());
         }
 
-        player.setBats(dto.getBatSide());
-        player.setThrowsHand(dto.getPitchHand());
+        if (dto.getBatSide() != null) {
+            player.setBats(dto.getBatSide().getCode());
+        }
+        if (dto.getPitchHand() != null) {
+            player.setThrowsHand(dto.getPitchHand().getCode());
+        }
 
         if (dto.getBirthDate() != null) {
             player.setBirthDate(parseDate(dto.getBirthDate()));
@@ -57,8 +61,12 @@ public class PlayerMapper {
             existing.setPositionType(dto.getPrimaryPosition().getType());
         }
 
-        existing.setBats(dto.getBatSide());
-        existing.setThrowsHand(dto.getPitchHand());
+        if (dto.getBatSide() != null) {
+            existing.setBats(dto.getBatSide().getCode());
+        }
+        if (dto.getPitchHand() != null) {
+            existing.setThrowsHand(dto.getPitchHand().getCode());
+        }
 
         if (dto.getBirthDate() != null) {
             existing.setBirthDate(parseDate(dto.getBirthDate()));

@@ -14,9 +14,21 @@ public class StatsResponse {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class StatGroup {
-        private String type;
-        private String group;
+        private TypeData type;
+        private GroupData group;
         private List<StatSplit> splits;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class TypeData {
+        private String displayName;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class GroupData {
+        private String displayName;
     }
 
     @Data

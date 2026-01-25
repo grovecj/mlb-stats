@@ -80,14 +80,28 @@ public class MlbApiClient {
     }
 
     public StatsResponse getPlayerStats(Integer playerId, Integer season, String statGroup) {
-        log.info("Fetching {} stats for player {} season {}", statGroup, playerId, season);
+        log.debug("Fetching {} stats for player {} season {}", statGroup, playerId, season);
         try {
-            return restClient.get()
+            StatsResponse response = restClient.get()
                     .uri("/people/{playerId}/stats?stats=season&season={season}&group={group}",
                             playerId, season, statGroup)
                     .retrieve()
                     .body(StatsResponse.class);
+
+            if (response != null && response.getStats() != null) {
+                int splitCount = response.getStats().stream()
+                        .filter(g -> g.getSplits() != null)
+                        .mapToInt(g -> g.getSplits().size())
+                        .sum();
+                log.debug("MLB API returned {} stat groups with {} total splits for player {} ({} stats)",
+                        response.getStats().size(), splitCount, playerId, statGroup);
+            } else {
+                log.debug("MLB API returned null or empty response for player {} ({} stats)", playerId, statGroup);
+            }
+
+            return response;
         } catch (RestClientException e) {
+            log.warn("API error fetching {} stats for player {}: {}", statGroup, playerId, e.getMessage());
             throw new IngestionException("Failed to fetch stats for player " + playerId, e);
         }
     }
