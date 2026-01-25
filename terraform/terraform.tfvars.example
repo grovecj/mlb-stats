@@ -28,6 +28,10 @@ ingestion_api_key = "your-random-api-key"
 # Owner Email (this user gets OWNER role with full admin access)
 owner_email = "your-email@gmail.com"
 
+# Google Analytics 4 Measurement ID (optional)
+# Get from: https://analytics.google.com (Admin > Data Streams > Measurement ID)
+ga_measurement_id = "G-XXXXXXXXXX"
+
 # Custom Domain (optional - for DO-managed domains, CNAME record is created automatically)
 # custom_domain = "stats.yourdomain.com"
 

@@ -146,6 +146,13 @@ resource "digitalocean_app" "mlb_stats" {
         value = var.owner_email
         type  = "GENERAL"
       }
+
+      env {
+        key   = "VITE_GA_MEASUREMENT_ID"
+        value = var.ga_measurement_id
+        scope = "BUILD_TIME"
+        type  = "GENERAL"
+      }
     }
   }
 }

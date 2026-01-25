@@ -1,6 +1,11 @@
 # Build frontend
 FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
+
+# Build args for Vite env vars (must be available at build time)
+ARG VITE_GA_MEASUREMENT_ID
+ENV VITE_GA_MEASUREMENT_ID=$VITE_GA_MEASUREMENT_ID
+
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./

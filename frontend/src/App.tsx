@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { useAnalytics } from './hooks/useAnalytics';
 import Header from './components/common/Header';
 import Navigation from './components/common/Navigation';
 import HomePage from './pages/HomePage';
@@ -15,6 +16,7 @@ import AdminPage from './pages/AdminPage';
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
+  useAnalytics();
 
   if (isLoading) {
     return (
