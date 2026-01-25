@@ -103,9 +103,11 @@ public class StatsIngestionService {
                 if (split.getStat() == null) continue;
 
                 // Use team from split if available, otherwise use passed team
-                Team statsTeam = team;
+                Team statsTeam;
                 if (split.getTeam() != null && split.getTeam().getId() != null) {
                     statsTeam = teamRepository.findByMlbId(split.getTeam().getId()).orElse(team);
+                } else {
+                    statsTeam = team;
                 }
 
                 Integer statsSeason = season;
@@ -117,6 +119,7 @@ public class StatsIngestionService {
                     }
                 }
 
+                Integer finalStatsSeason = statsSeason;
                 battingStatsRepository.findByPlayerIdAndTeamIdAndSeasonAndGameType(
                                 player.getId(), statsTeam.getId(), statsSeason, "R")
                         .ifPresentOrElse(
@@ -126,7 +129,7 @@ public class StatsIngestionService {
                                 },
                                 () -> {
                                     PlayerBattingStats stats = statsMapper.toBattingStats(
-                                            split.getStat(), player, statsTeam, statsSeason);
+                                            split.getStat(), player, statsTeam, finalStatsSeason);
                                     battingStatsRepository.save(stats);
                                 }
                         );
@@ -150,9 +153,11 @@ public class StatsIngestionService {
             for (StatsResponse.StatSplit split : group.getSplits()) {
                 if (split.getStat() == null) continue;
 
-                Team statsTeam = team;
+                Team statsTeam;
                 if (split.getTeam() != null && split.getTeam().getId() != null) {
                     statsTeam = teamRepository.findByMlbId(split.getTeam().getId()).orElse(team);
+                } else {
+                    statsTeam = team;
                 }
 
                 Integer statsSeason = season;
@@ -164,6 +169,7 @@ public class StatsIngestionService {
                     }
                 }
 
+                Integer finalStatsSeason = statsSeason;
                 pitchingStatsRepository.findByPlayerIdAndTeamIdAndSeasonAndGameType(
                                 player.getId(), statsTeam.getId(), statsSeason, "R")
                         .ifPresentOrElse(
@@ -173,7 +179,7 @@ public class StatsIngestionService {
                                 },
                                 () -> {
                                     PlayerPitchingStats stats = statsMapper.toPitchingStats(
-                                            split.getStat(), player, statsTeam, statsSeason);
+                                            split.getStat(), player, statsTeam, finalStatsSeason);
                                     pitchingStatsRepository.save(stats);
                                 }
                         );
