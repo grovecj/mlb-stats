@@ -15,6 +15,7 @@ public class IngestionOrchestrator {
     private final GameIngestionService gameIngestionService;
     private final StatsIngestionService statsIngestionService;
     private final PlayerIngestionService playerIngestionService;
+    private final StandingsIngestionService standingsIngestionService;
 
     public void runFullSync() {
         int season = DateUtils.getCurrentSeason();
@@ -45,6 +46,11 @@ public class IngestionOrchestrator {
             log.info("Step 4: Syncing player stats...");
             int statsCount = statsIngestionService.syncAllPlayerStats(season);
             log.info("Synced stats for {} players", statsCount);
+
+            // Step 5: Sync standings
+            log.info("Step 5: Syncing standings...");
+            int standingsCount = standingsIngestionService.syncStandings(season);
+            log.info("Synced {} team standings", standingsCount);
 
             long elapsed = System.currentTimeMillis() - startTime;
             log.info("Full sync completed in {}ms", elapsed);
@@ -77,5 +83,10 @@ public class IngestionOrchestrator {
     public int runIncompletePlayersSync() {
         log.info("Running sync for players with incomplete data");
         return playerIngestionService.syncIncompletePlayers();
+    }
+
+    public int runStandingsSync(int season) {
+        log.info("Running standings sync for season {}", season);
+        return standingsIngestionService.syncStandings(season);
     }
 }

@@ -4,6 +4,7 @@ import com.mlbstats.api.dto.BattingStatsDto;
 import com.mlbstats.api.dto.GameDto;
 import com.mlbstats.api.dto.RosterEntryDto;
 import com.mlbstats.api.dto.TeamDto;
+import com.mlbstats.api.dto.TeamStandingDto;
 import com.mlbstats.api.service.TeamApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,5 +67,24 @@ public class TeamController {
             @PathVariable Long id,
             @RequestParam(required = false) Integer season) {
         return ResponseEntity.ok(teamApiService.getTeamBattingStats(id, season));
+    }
+
+    @GetMapping("/standings")
+    @Operation(summary = "Get standings", description = "Returns standings for all teams for a given season")
+    public ResponseEntity<List<TeamStandingDto>> getStandings(
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(teamApiService.getStandings(season));
+    }
+
+    @GetMapping("/{id}/standing")
+    @Operation(summary = "Get team standing", description = "Returns the standing for a specific team")
+    public ResponseEntity<TeamStandingDto> getTeamStanding(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        TeamStandingDto standing = teamApiService.getTeamStanding(id, season);
+        if (standing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(standing);
     }
 }
