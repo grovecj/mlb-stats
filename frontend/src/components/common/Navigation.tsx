@@ -27,6 +27,11 @@ function Navigation() {
             Games
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/account" className={({ isActive }) => isActive ? 'active' : ''}>
+            My Favorites
+          </NavLink>
+        </li>
         {isAdmin && (
           <li>
             <NavLink to="/admin" className={({ isActive }) => isActive ? 'active' : ''}>

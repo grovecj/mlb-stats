@@ -198,3 +198,64 @@ export async function updateUserRole(userId: number, role: 'USER' | 'ADMIN'): Pr
   }
   return response.json();
 }
+
+// Favorites
+export async function getFavoriteTeams(): Promise<Team[]> {
+  return fetchJson<Team[]>(`${API_BASE}/favorites/teams`);
+}
+
+export async function isTeamFavorite(teamId: number): Promise<boolean> {
+  const result = await fetchJson<{ isFavorite: boolean }>(`${API_BASE}/favorites/teams/${teamId}/status`);
+  return result.isFavorite;
+}
+
+export async function addTeamFavorite(teamId: number): Promise<{ status: string }> {
+  return postJson(`${API_BASE}/favorites/teams/${teamId}`);
+}
+
+export async function removeTeamFavorite(teamId: number): Promise<{ status: string }> {
+  const csrfToken = getCsrfToken();
+  const headers: HeadersInit = {};
+  if (csrfToken) {
+    headers['X-XSRF-TOKEN'] = csrfToken;
+  }
+  const response = await fetch(`${API_BASE}/favorites/teams/${teamId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers,
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function getFavoritePlayers(): Promise<Player[]> {
+  return fetchJson<Player[]>(`${API_BASE}/favorites/players`);
+}
+
+export async function isPlayerFavorite(playerId: number): Promise<boolean> {
+  const result = await fetchJson<{ isFavorite: boolean }>(`${API_BASE}/favorites/players/${playerId}/status`);
+  return result.isFavorite;
+}
+
+export async function addPlayerFavorite(playerId: number): Promise<{ status: string }> {
+  return postJson(`${API_BASE}/favorites/players/${playerId}`);
+}
+
+export async function removePlayerFavorite(playerId: number): Promise<{ status: string }> {
+  const csrfToken = getCsrfToken();
+  const headers: HeadersInit = {};
+  if (csrfToken) {
+    headers['X-XSRF-TOKEN'] = csrfToken;
+  }
+  const response = await fetch(`${API_BASE}/favorites/players/${playerId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers,
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}

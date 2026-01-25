@@ -4,12 +4,15 @@ import { Team, RosterEntry } from '../types/team';
 import { Game } from '../types/game';
 import { BattingStats } from '../types/stats';
 import { getTeam, getTeamRoster, getTeamGames, getTeamStats } from '../services/api';
+import { useTeamFavorite } from '../hooks/useFavorite';
 import TeamRoster from '../components/team/TeamRoster';
 import TeamStats from '../components/team/TeamStats';
 import GameSchedule from '../components/game/GameSchedule';
+import FavoriteButton from '../components/common/FavoriteButton';
 
 function TeamDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const teamId = id ? parseInt(id) : undefined;
   const [team, setTeam] = useState<Team | null>(null);
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [games, setGames] = useState<Game[]>([]);
@@ -17,12 +20,12 @@ function TeamDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'roster' | 'stats' | 'games'>('roster');
+  const { isFavorite, loading: favoriteLoading, toggling, toggleFavorite } = useTeamFavorite(teamId);
 
   useEffect(() => {
     async function fetchData() {
-      if (!id) return;
+      if (!teamId) return;
       try {
-        const teamId = parseInt(id);
         const [teamData, rosterData, gamesData, statsData] = await Promise.all([
           getTeam(teamId),
           getTeamRoster(teamId).catch(() => []),
@@ -40,7 +43,7 @@ function TeamDetailPage() {
       }
     }
     fetchData();
-  }, [id]);
+  }, [teamId]);
 
   if (loading) return <div className="loading">Loading team...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -52,15 +55,21 @@ function TeamDetailPage() {
     <div>
       <div className="card" style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#002d72' }}>
+          <div style={{ fontSize: '48px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
             {team.abbreviation}
           </div>
-          <div>
+          <div style={{ flex: 1 }}>
             <h1 style={{ margin: 0, fontSize: '28px' }}>{team.name}</h1>
-            <p style={{ margin: '4px 0 0', color: '#666' }}>
+            <p style={{ margin: '4px 0 0', color: 'var(--text-light)' }}>
               {team.league} - {team.division} | {team.venueName}
             </p>
           </div>
+          <FavoriteButton
+            isFavorite={isFavorite}
+            loading={favoriteLoading}
+            toggling={toggling}
+            onToggle={toggleFavorite}
+          />
         </div>
       </div>
 
