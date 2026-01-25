@@ -23,6 +23,7 @@ public class Game {
     @Column(name = "mlb_id", unique = true, nullable = false)
     private Integer mlbId;
 
+    @Column(nullable = false)
     private Integer season;
 
     @Column(name = "game_date", nullable = false)
