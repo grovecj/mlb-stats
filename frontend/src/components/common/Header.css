@@ -20,6 +20,7 @@
   color: white;
   padding: 6px 10px;
   border-radius: 4px;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
