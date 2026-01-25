@@ -127,13 +127,13 @@ public class StatsMapper {
             BigDecimal nine = new BigDecimal("9");
 
             if (stats.getStrikeouts() != null) {
-                stats.setkPer9(new BigDecimal(stats.getStrikeouts()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
+                stats.setKPer9(new BigDecimal(stats.getStrikeouts()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
             if (stats.getWalks() != null) {
                 stats.setBbPer9(new BigDecimal(stats.getWalks()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
             if (stats.getHitsAllowed() != null) {
-                stats.sethPer9(new BigDecimal(stats.getHitsAllowed()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
+                stats.setHPer9(new BigDecimal(stats.getHitsAllowed()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
         }
 
@@ -167,13 +167,13 @@ public class StatsMapper {
             BigDecimal nine = new BigDecimal("9");
 
             if (existing.getStrikeouts() != null) {
-                existing.setkPer9(new BigDecimal(existing.getStrikeouts()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
+                existing.setKPer9(new BigDecimal(existing.getStrikeouts()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
             if (existing.getWalks() != null) {
                 existing.setBbPer9(new BigDecimal(existing.getWalks()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
             if (existing.getHitsAllowed() != null) {
-                existing.sethPer9(new BigDecimal(existing.getHitsAllowed()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
+                existing.setHPer9(new BigDecimal(existing.getHitsAllowed()).multiply(nine).divide(ip, 2, BigDecimal.ROUND_HALF_UP));
             }
         }
     }

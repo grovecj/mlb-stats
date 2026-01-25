@@ -53,9 +53,9 @@ public record PitchingStatsDto(
                 stats.getStrikeouts(),
                 stats.getEra(),
                 stats.getWhip(),
-                stats.getkPer9(),
+                stats.getKPer9(),
                 stats.getBbPer9(),
-                stats.gethPer9(),
+                stats.getHPer9(),
                 stats.getCompleteGames(),
                 stats.getShutouts()
         );

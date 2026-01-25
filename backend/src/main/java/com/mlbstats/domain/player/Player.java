@@ -1,11 +1,18 @@
 package com.mlbstats.domain.player;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "players")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Player {
 
     @Id
@@ -55,9 +62,6 @@ public class Player {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Player() {
-    }
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -67,142 +71,5 @@ public class Player {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getMlbId() {
-        return mlbId;
-    }
-
-    public void setMlbId(Integer mlbId) {
-        this.mlbId = mlbId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getJerseyNumber() {
-        return jerseyNumber;
-    }
-
-    public void setJerseyNumber(String jerseyNumber) {
-        this.jerseyNumber = jerseyNumber;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getPositionType() {
-        return positionType;
-    }
-
-    public void setPositionType(String positionType) {
-        this.positionType = positionType;
-    }
-
-    public String getBats() {
-        return bats;
-    }
-
-    public void setBats(String bats) {
-        this.bats = bats;
-    }
-
-    public String getThrowsHand() {
-        return throwsHand;
-    }
-
-    public void setThrowsHand(String throwsHand) {
-        this.throwsHand = throwsHand;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public LocalDate getMlbDebutDate() {
-        return mlbDebutDate;
-    }
-
-    public void setMlbDebutDate(LocalDate mlbDebutDate) {
-        this.mlbDebutDate = mlbDebutDate;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

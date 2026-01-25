@@ -4,10 +4,17 @@ import com.mlbstats.domain.game.Game;
 import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.team.Team;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "player_game_pitching")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PlayerGamePitching {
 
     @Id
@@ -61,144 +68,4 @@ public class PlayerGamePitching {
 
     @Column(name = "is_save")
     private Boolean isSave;
-
-    public PlayerGamePitching() {
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public BigDecimal getInningsPitched() {
-        return inningsPitched;
-    }
-
-    public void setInningsPitched(BigDecimal inningsPitched) {
-        this.inningsPitched = inningsPitched;
-    }
-
-    public Integer getHitsAllowed() {
-        return hitsAllowed;
-    }
-
-    public void setHitsAllowed(Integer hitsAllowed) {
-        this.hitsAllowed = hitsAllowed;
-    }
-
-    public Integer getRunsAllowed() {
-        return runsAllowed;
-    }
-
-    public void setRunsAllowed(Integer runsAllowed) {
-        this.runsAllowed = runsAllowed;
-    }
-
-    public Integer getEarnedRuns() {
-        return earnedRuns;
-    }
-
-    public void setEarnedRuns(Integer earnedRuns) {
-        this.earnedRuns = earnedRuns;
-    }
-
-    public Integer getWalks() {
-        return walks;
-    }
-
-    public void setWalks(Integer walks) {
-        this.walks = walks;
-    }
-
-    public Integer getStrikeouts() {
-        return strikeouts;
-    }
-
-    public void setStrikeouts(Integer strikeouts) {
-        this.strikeouts = strikeouts;
-    }
-
-    public Integer getHomeRunsAllowed() {
-        return homeRunsAllowed;
-    }
-
-    public void setHomeRunsAllowed(Integer homeRunsAllowed) {
-        this.homeRunsAllowed = homeRunsAllowed;
-    }
-
-    public Integer getPitchesThrown() {
-        return pitchesThrown;
-    }
-
-    public void setPitchesThrown(Integer pitchesThrown) {
-        this.pitchesThrown = pitchesThrown;
-    }
-
-    public Integer getStrikes() {
-        return strikes;
-    }
-
-    public void setStrikes(Integer strikes) {
-        this.strikes = strikes;
-    }
-
-    public Boolean getIsStarter() {
-        return isStarter;
-    }
-
-    public void setIsStarter(Boolean isStarter) {
-        this.isStarter = isStarter;
-    }
-
-    public Boolean getIsWinner() {
-        return isWinner;
-    }
-
-    public void setIsWinner(Boolean isWinner) {
-        this.isWinner = isWinner;
-    }
-
-    public Boolean getIsLoser() {
-        return isLoser;
-    }
-
-    public void setIsLoser(Boolean isLoser) {
-        this.isLoser = isLoser;
-    }
-
-    public Boolean getIsSave() {
-        return isSave;
-    }
-
-    public void setIsSave(Boolean isSave) {
-        this.isSave = isSave;
-    }
 }
