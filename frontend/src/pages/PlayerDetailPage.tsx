@@ -55,40 +55,21 @@ function PlayerDetailPage() {
   return (
     <div>
       <div className="card" style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+        <div className="detail-header">
           {player.headshotUrl ? (
             <img
               src={player.headshotUrl}
               alt={player.fullName}
-              style={{
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                flexShrink: 0,
-                backgroundColor: 'var(--border-color)',
-              }}
+              className="detail-header-image"
             />
           ) : (
-            <div style={{
-              width: '100px',
-              height: '100px',
-              backgroundColor: 'var(--primary-color)',
-              color: 'white',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '32px',
-              fontWeight: 'bold',
-              flexShrink: 0,
-            }}>
+            <div className="detail-header-placeholder">
               {player.jerseyNumber || '?'}
             </div>
           )}
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-              <h1 style={{ margin: 0, fontSize: '28px' }}>{player.fullName}</h1>
+          <div className="detail-header-content">
+            <div className="detail-header-title">
+              <h1>{player.fullName}</h1>
               <FavoriteButton
                 isFavorite={isFavorite}
                 loading={favoriteLoading}
@@ -115,22 +96,22 @@ function PlayerDetailPage() {
               )}
             </div>
 
-            <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-              <div>
-                <div style={{ fontSize: '12px', color: 'var(--text-light)', textTransform: 'uppercase' }}>Bats/Throws</div>
-                <div style={{ fontWeight: '600' }}>{player.bats || '-'}/{player.throwsHand || '-'}</div>
+            <div className="detail-stats-grid">
+              <div className="detail-stat-item">
+                <div className="detail-stat-label">Bats/Throws</div>
+                <div className="detail-stat-value">{player.bats || '-'}/{player.throwsHand || '-'}</div>
               </div>
-              <div>
-                <div style={{ fontSize: '12px', color: 'var(--text-light)', textTransform: 'uppercase' }}>Height/Weight</div>
-                <div style={{ fontWeight: '600' }}>{player.height || '-'} / {player.weight || '-'} lbs</div>
+              <div className="detail-stat-item">
+                <div className="detail-stat-label">Height/Weight</div>
+                <div className="detail-stat-value">{player.height || '-'} / {player.weight || '-'} lbs</div>
               </div>
-              <div>
-                <div style={{ fontSize: '12px', color: 'var(--text-light)', textTransform: 'uppercase' }}>Birth Date</div>
-                <div style={{ fontWeight: '600' }}>{formatDate(player.birthDate)}</div>
+              <div className="detail-stat-item">
+                <div className="detail-stat-label">Birth Date</div>
+                <div className="detail-stat-value">{formatDate(player.birthDate)}</div>
               </div>
-              <div>
-                <div style={{ fontSize: '12px', color: 'var(--text-light)', textTransform: 'uppercase' }}>MLB Debut</div>
-                <div style={{ fontWeight: '600' }}>{formatDate(player.mlbDebutDate)}</div>
+              <div className="detail-stat-item">
+                <div className="detail-stat-label">MLB Debut</div>
+                <div className="detail-stat-value">{formatDate(player.mlbDebutDate)}</div>
               </div>
             </div>
           </div>

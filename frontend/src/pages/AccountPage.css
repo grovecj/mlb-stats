@@ -183,3 +183,86 @@
   border-radius: 4px;
   margin-bottom: 16px;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .account-page {
+    padding: 12px;
+  }
+
+  .account-profile {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .account-info h1 {
+    font-size: 20px;
+  }
+
+  .favorites-tabs {
+    gap: 0;
+  }
+
+  .favorites-tabs .tab-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .favorites-content {
+    padding: 16px;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .favorite-card {
+    padding: 16px;
+  }
+
+  .favorite-logo,
+  .favorite-headshot,
+  .favorite-number {
+    width: 48px;
+    height: 48px;
+  }
+
+  .favorite-number {
+    font-size: 16px;
+  }
+
+  .favorite-abbrev {
+    font-size: 24px;
+  }
+
+  .favorite-name {
+    font-size: 14px;
+  }
+
+  .favorite-meta {
+    font-size: 12px;
+  }
+
+  .empty-state {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .favorites-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .favorite-card {
+    padding: 12px;
+  }
+}

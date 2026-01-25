@@ -54,72 +54,51 @@ function TeamDetailPage() {
   return (
     <div>
       <div className="card" style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div className="detail-header">
           {team.logoUrl ? (
             <img
               src={team.logoUrl}
               alt={`${team.name} logo`}
-              style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+              className="team-detail-logo"
             />
           ) : (
-            <div style={{ fontSize: '48px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
+            <div className="team-detail-abbrev">
               {team.abbreviation}
             </div>
           )}
-          <div style={{ flex: 1 }}>
-            <h1 style={{ margin: 0, fontSize: '28px' }}>{team.name}</h1>
+          <div className="detail-header-content">
+            <div className="detail-header-title">
+              <h1>{team.name}</h1>
+              <FavoriteButton
+                isFavorite={isFavorite}
+                loading={favoriteLoading}
+                toggling={toggling}
+                onToggle={toggleFavorite}
+              />
+            </div>
             <p style={{ margin: '4px 0 0', color: 'var(--text-light)' }}>
               {team.league} - {team.division} | {team.venueName}
             </p>
           </div>
-          <FavoriteButton
-            isFavorite={isFavorite}
-            loading={favoriteLoading}
-            toggling={toggling}
-            onToggle={toggleFavorite}
-          />
         </div>
       </div>
 
-      <div style={{ marginBottom: '16px' }}>
+      <div className="tab-buttons">
         <button
           onClick={() => setActiveTab('roster')}
-          style={{
-            padding: '8px 16px',
-            marginRight: '8px',
-            backgroundColor: activeTab === 'roster' ? '#002d72' : '#fff',
-            color: activeTab === 'roster' ? '#fff' : '#333',
-            border: '1px solid #002d72',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
+          className={`tab-btn ${activeTab === 'roster' ? 'active' : ''}`}
         >
           Roster ({roster.length})
         </button>
         <button
           onClick={() => setActiveTab('stats')}
-          style={{
-            padding: '8px 16px',
-            marginRight: '8px',
-            backgroundColor: activeTab === 'stats' ? '#002d72' : '#fff',
-            color: activeTab === 'stats' ? '#fff' : '#333',
-            border: '1px solid #002d72',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
+          className={`tab-btn ${activeTab === 'stats' ? 'active' : ''}`}
         >
           Stats
         </button>
         <button
           onClick={() => setActiveTab('games')}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: activeTab === 'games' ? '#002d72' : '#fff',
-            color: activeTab === 'games' ? '#fff' : '#333',
-            border: '1px solid #002d72',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
+          className={`tab-btn ${activeTab === 'games' ? 'active' : ''}`}
         >
           Games ({games.length})
         </button>
