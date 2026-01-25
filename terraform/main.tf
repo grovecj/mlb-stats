@@ -79,6 +79,8 @@ resource "digitalocean_app" "mlb_stats" {
         http_path             = "/actuator/health"
         initial_delay_seconds = 60
         period_seconds        = 30
+        timeout_seconds       = 10
+        failure_threshold     = 3
       }
 
       # Environment variables
