@@ -1,0 +1,25 @@
+# Copy this file to terraform.tfvars and fill in your values
+# DO NOT commit terraform.tfvars to version control
+
+# Digital Ocean API Token
+# Get from: https://cloud.digitalocean.com/account/api/tokens
+do_token = "dop_v1_your_token_here"
+
+# GitHub Repository
+github_repo   = "grovecj/mlb-stats"
+github_branch = "main"
+
+# Google OAuth Credentials
+# Get from: https://console.cloud.google.com/apis/credentials
+google_client_id     = "your-client-id.apps.googleusercontent.com"
+google_client_secret = "your-client-secret"
+
+# Ingestion API Key (generate with: openssl rand -hex 32)
+ingestion_api_key = "your-random-api-key"
+
+# Optional: Override defaults
+# app_name       = "mlb-stats"
+# region         = "nyc"
+# instance_size  = "basic-xxs"
+# instance_count = 1
+# database_size  = "db-s-1vcpu-1gb"
