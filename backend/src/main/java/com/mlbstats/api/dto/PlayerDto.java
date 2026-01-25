@@ -19,9 +19,17 @@ public record PlayerDto(
         String height,
         Integer weight,
         LocalDate mlbDebutDate,
-        Boolean active
+        Boolean active,
+        String headshotUrl
 ) {
+    private static final String HEADSHOT_URL_TEMPLATE =
+            "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/%d/headshot/67/current";
+
     public static PlayerDto fromEntity(Player player) {
+        String headshotUrl = player.getMlbId() != null
+                ? String.format(HEADSHOT_URL_TEMPLATE, player.getMlbId())
+                : null;
+
         return new PlayerDto(
                 player.getId(),
                 player.getMlbId(),
@@ -37,7 +45,8 @@ public record PlayerDto(
                 player.getHeight(),
                 player.getWeight(),
                 player.getMlbDebutDate(),
-                player.getActive()
+                player.getActive(),
+                headshotUrl
         );
     }
 }

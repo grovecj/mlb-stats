@@ -56,21 +56,36 @@ function PlayerDetailPage() {
     <div>
       <div className="card" style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            backgroundColor: 'var(--primary-color)',
-            color: 'white',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '32px',
-            fontWeight: 'bold',
-            flexShrink: 0,
-          }}>
-            {player.jerseyNumber || '?'}
-          </div>
+          {player.headshotUrl ? (
+            <img
+              src={player.headshotUrl}
+              alt={player.fullName}
+              style={{
+                width: '100px',
+                height: '100px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0,
+                backgroundColor: 'var(--border-color)',
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100px',
+              height: '100px',
+              backgroundColor: 'var(--primary-color)',
+              color: 'white',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '32px',
+              fontWeight: 'bold',
+              flexShrink: 0,
+            }}>
+              {player.jerseyNumber || '?'}
+            </div>
+          )}
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
               <h1 style={{ margin: 0, fontSize: '28px' }}>{player.fullName}</h1>

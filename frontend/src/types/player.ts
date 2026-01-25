@@ -14,4 +14,5 @@ export interface Player {
   weight: number;
   mlbDebutDate: string;
   active: boolean;
+  headshotUrl: string | null;
 }

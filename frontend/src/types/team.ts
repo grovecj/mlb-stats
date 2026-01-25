@@ -7,6 +7,7 @@ export interface Team {
   venueName: string;
   league: string;
   division: string;
+  logoUrl: string | null;
 }
 
 export interface RosterEntry {
