@@ -89,7 +89,7 @@ public class RosterIngestionService {
             roster.setTeam(team);
             roster.setPlayer(player);
             roster.setSeason(season);
-            roster.setStatus(entry.getStatus());
+            roster.setStatus(entry.getStatus() != null ? entry.getStatus().getDescription() : null);
             roster.setJerseyNumber(entry.getJerseyNumber());
             roster.setStartDate(LocalDate.of(season, 3, 1));
 

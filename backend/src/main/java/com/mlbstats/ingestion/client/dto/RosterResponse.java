@@ -21,7 +21,7 @@ public class RosterResponse {
         private PersonData person;
         private String jerseyNumber;
         private PositionData position;
-        private String status;
+        private StatusData status;
 
         public PersonData getPerson() {
             return person;
@@ -47,12 +47,34 @@ public class RosterResponse {
             this.position = position;
         }
 
-        public String getStatus() {
+        public StatusData getStatus() {
             return status;
         }
 
-        public void setStatus(String status) {
+        public void setStatus(StatusData status) {
             this.status = status;
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class StatusData {
+        private String code;
+        private String description;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
     }
 
