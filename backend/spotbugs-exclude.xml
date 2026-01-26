@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude generated code and test classes -->
+    <Match>
+        <Source name="~.*Test\.java"/>
+    </Match>
+
+    <!--
+        EI_EXPOSE_REP/EI_EXPOSE_REP2: Suppress globally because:
+        - Records (DTOs) are immutable by design
+        - Spring constructor injection is framework-managed
+        - Lombok @Data/@Value generates appropriate code
+        These are false positives in a Spring Boot context.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Spring managed beans - null checks handled by framework -->
+    <Match>
+        <Package name="~com\.mlbstats\..*\.config"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+</FindBugsFilter>

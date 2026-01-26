@@ -19,6 +19,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <spotbugs.version>4.8.6.6</spotbugs.version>
+        <pmd.version>3.26.0</pmd.version>
     </properties>
 
     <dependencies>
@@ -135,6 +137,32 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <!-- SpotBugs - finds bug patterns -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <failOnError>true</failOnError>
+                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+            <!-- PMD - finds code smells (report-only, does not fail build) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${pmd.version}</version>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                    <failOnViolation>false</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+                    <rulesets>
+                        <ruleset>pmd-ruleset.xml</ruleset>
+                    </rulesets>
                 </configuration>
             </plugin>
         </plugins>
