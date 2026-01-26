@@ -51,4 +51,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     long countBySeason(Integer season);
 
     void deleteBySeason(Integer season);
+
+    Optional<Game> findTopByOrderByGameDateDesc();
 }

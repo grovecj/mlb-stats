@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .requestMatchers("/assets/**", "/favicon.ico", "/*.js", "/*.css").permitAll()
                 // Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                // Public API endpoints
+                .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 // Everything else requires authentication
