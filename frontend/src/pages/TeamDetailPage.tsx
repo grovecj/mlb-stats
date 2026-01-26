@@ -36,7 +36,7 @@ function TeamDetailPage() {
         setRoster(rosterData);
         setGames(gamesData);
         setStats(statsData);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load team data');
       } finally {
         setLoading(false);

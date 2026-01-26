@@ -25,7 +25,7 @@ function GameDetailPage() {
         ]);
         setGame(gameData);
         setBoxScore(boxScoreData);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load game');
       } finally {
         setLoading(false);

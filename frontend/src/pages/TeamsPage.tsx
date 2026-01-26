@@ -13,7 +13,7 @@ function TeamsPage() {
       try {
         const data = await getTeams();
         setTeams(data);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load teams');
       } finally {
         setLoading(false);

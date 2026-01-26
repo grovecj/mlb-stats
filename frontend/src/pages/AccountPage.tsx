@@ -26,7 +26,7 @@ function AccountPage() {
     try {
       const teams = await getFavoriteTeams();
       setFavoriteTeams(teams);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load favorite teams');
     } finally {
       setTeamsLoading(false);
@@ -37,7 +37,7 @@ function AccountPage() {
     try {
       const players = await getFavoritePlayers();
       setFavoritePlayers(players);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load favorite players');
     } finally {
       setPlayersLoading(false);
