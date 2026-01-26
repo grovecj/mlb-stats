@@ -153,6 +153,30 @@ resource "digitalocean_app" "mlb_stats" {
         scope = "BUILD_TIME"
         type  = "GENERAL"
       }
+
+      env {
+        key   = "NEW_RELIC_ENABLED"
+        value = var.new_relic_enabled ? "true" : "false"
+        type  = "GENERAL"
+      }
+
+      env {
+        key   = "NEW_RELIC_API_KEY"
+        value = var.new_relic_api_key
+        type  = "SECRET"
+      }
+
+      env {
+        key   = "NEW_RELIC_ACCOUNT_ID"
+        value = var.new_relic_account_id
+        type  = "GENERAL"
+      }
+
+      env {
+        key   = "ENVIRONMENT"
+        value = "production"
+        type  = "GENERAL"
+      }
     }
   }
 }

@@ -35,6 +35,13 @@ ga_measurement_id = "G-XXXXXXXXXX"
 # Custom Domain (optional - for DO-managed domains, CNAME record is created automatically)
 # custom_domain = "stats.yourdomain.com"
 
+# New Relic Monitoring (optional)
+# Get API key from: https://one.newrelic.com/api-keys (Ingest - License key)
+# Get Account ID from: https://one.newrelic.com (User menu > Administration > Access management)
+# new_relic_enabled    = true
+# new_relic_api_key    = "your-new-relic-license-key"
+# new_relic_account_id = "your-account-id"
+
 # Optional: Override defaults
 # app_name       = "mlb-stats"
 # region         = "nyc"

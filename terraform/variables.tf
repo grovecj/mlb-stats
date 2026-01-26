@@ -105,3 +105,23 @@ variable "custom_domain" {
   type        = string
   default     = ""
 }
+
+# New Relic Monitoring
+variable "new_relic_enabled" {
+  description = "Enable New Relic metrics export"
+  type        = bool
+  default     = false
+}
+
+variable "new_relic_api_key" {
+  description = "New Relic Ingest API key (License key)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "new_relic_account_id" {
+  description = "New Relic Account ID"
+  type        = string
+  default     = ""
+}
