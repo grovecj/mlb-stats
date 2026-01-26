@@ -5,6 +5,7 @@ import com.mlbstats.api.dto.GameDto;
 import com.mlbstats.api.dto.RosterEntryDto;
 import com.mlbstats.api.dto.TeamDto;
 import com.mlbstats.api.dto.TeamStandingDto;
+import com.mlbstats.common.config.CacheConfig;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.GameRepository;
@@ -31,37 +32,42 @@ public class TeamApiService {
     private final PlayerBattingStatsRepository battingStatsRepository;
     private final TeamStandingRepository standingRepository;
 
-    @Cacheable("teams")
+    @Cacheable(CacheConfig.TEAMS)
     public List<TeamDto> getAllTeams() {
         return teamRepository.findAllOrderByLeagueAndDivision().stream()
                 .map(TeamDto::fromEntity)
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.SEARCH, key = "'team_' + #search")
     public List<TeamDto> searchTeams(String search) {
         return teamRepository.searchTeams(search).stream()
                 .map(TeamDto::fromEntity)
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.TEAMS_BY_LEAGUE, key = "#league")
     public List<TeamDto> getTeamsByLeague(String league) {
         return teamRepository.findByLeague(league).stream()
                 .map(TeamDto::fromEntity)
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.TEAMS_BY_DIVISION, key = "#league + '_' + #division")
     public List<TeamDto> getTeamsByDivision(String league, String division) {
         return teamRepository.findByLeagueAndDivision(league, division).stream()
                 .map(TeamDto::fromEntity)
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.TEAMS_BY_ID, key = "#id")
     public TeamDto getTeamById(Long id) {
         Team team = teamRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Team", id));
         return TeamDto.fromEntity(team);
     }
 
+    @Cacheable(value = CacheConfig.ROSTERS, key = "#teamId + '_' + #season")
     public List<RosterEntryDto> getTeamRoster(Long teamId, Integer season) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -89,6 +95,7 @@ public class TeamApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.STANDINGS, key = "#season")
     public List<TeamStandingDto> getStandings(Integer season) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -98,6 +105,7 @@ public class TeamApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.TEAM_STANDINGS, key = "#teamId + '_' + #season")
     public TeamStandingDto getTeamStanding(Long teamId, Integer season) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
