@@ -93,4 +93,23 @@ public class IngestionController {
         int count = orchestrator.runStandingsSync(season);
         return ResponseEntity.ok(Map.of("status", "completed", "season", String.valueOf(season), "teams", String.valueOf(count)));
     }
+
+    @PostMapping("/boxscores")
+    @Operation(summary = "Sync box scores", description = "Synchronizes game-level player stats for completed games")
+    public ResponseEntity<Map<String, String>> syncBoxScores(
+            @RequestParam(required = false) Integer season) {
+
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        int count = orchestrator.runBoxScoresSync(season);
+        return ResponseEntity.ok(Map.of("status", "completed", "season", String.valueOf(season), "games", String.valueOf(count)));
+    }
+
+    @PostMapping("/boxscores/game/{gameId}")
+    @Operation(summary = "Sync box score for specific game", description = "Synchronizes game-level player stats for a specific game")
+    public ResponseEntity<Map<String, String>> syncGameBoxScore(@PathVariable Long gameId) {
+        int count = orchestrator.runBoxScoreForGame(gameId);
+        return ResponseEntity.ok(Map.of("status", "completed", "gameId", String.valueOf(gameId), "stats", String.valueOf(count)));
+    }
 }

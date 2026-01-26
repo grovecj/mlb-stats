@@ -16,6 +16,7 @@ public class IngestionOrchestrator {
     private final StatsIngestionService statsIngestionService;
     private final PlayerIngestionService playerIngestionService;
     private final StandingsIngestionService standingsIngestionService;
+    private final BoxScoreIngestionService boxScoreIngestionService;
 
     public void runFullSync() {
         int season = DateUtils.getCurrentSeason();
@@ -88,5 +89,15 @@ public class IngestionOrchestrator {
     public int runStandingsSync(int season) {
         log.info("Running standings sync for season {}", season);
         return standingsIngestionService.syncStandings(season);
+    }
+
+    public int runBoxScoresSync(int season) {
+        log.info("Running box scores sync for season {}", season);
+        return boxScoreIngestionService.syncBoxScoresForSeason(season);
+    }
+
+    public int runBoxScoreForGame(Long gameId) {
+        log.info("Running box score sync for game {}", gameId);
+        return boxScoreIngestionService.syncBoxScoreForGame(gameId);
     }
 }
