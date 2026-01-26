@@ -38,6 +38,12 @@ public class TeamApiService {
                 .toList();
     }
 
+    public List<TeamDto> searchTeams(String search) {
+        return teamRepository.searchTeams(search).stream()
+                .map(TeamDto::fromEntity)
+                .toList();
+    }
+
     public List<TeamDto> getTeamsByLeague(String league) {
         return teamRepository.findByLeague(league).stream()
                 .map(TeamDto::fromEntity)

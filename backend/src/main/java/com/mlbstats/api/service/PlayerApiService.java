@@ -36,6 +36,13 @@ public class PlayerApiService {
         return PageDto.fromPage(page, PlayerDto::fromEntity);
     }
 
+    public List<PlayerDto> searchPlayers(String search, int limit) {
+        return playerRepository.searchPlayersByName(search).stream()
+                .limit(limit)
+                .map(PlayerDto::fromEntity)
+                .toList();
+    }
+
     public PlayerDto getPlayerById(Long id) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Player", id));

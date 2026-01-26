@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import SearchBar from './SearchBar';
 import './Header.css';
 
 function Header() {
@@ -12,6 +13,7 @@ function Header() {
       <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
         <h1>MLB Stats</h1>
       </Link>
+      <SearchBar />
       <div className="header-right">
         <a
           href="https://github.com/grovecj/mlb-stats"
