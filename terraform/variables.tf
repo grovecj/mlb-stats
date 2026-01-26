@@ -105,3 +105,24 @@ variable "custom_domain" {
   type        = string
   default     = ""
 }
+
+# Datadog Monitoring
+variable "datadog_enabled" {
+  description = "Enable Datadog metrics export"
+  type        = bool
+  default     = false
+}
+
+variable "datadog_api_key" {
+  description = "Datadog API key"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "datadog_app_key" {
+  description = "Datadog Application key"
+  type        = string
+  sensitive   = true
+  default     = ""
+}

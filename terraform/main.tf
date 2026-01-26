@@ -153,6 +153,30 @@ resource "digitalocean_app" "mlb_stats" {
         scope = "BUILD_TIME"
         type  = "GENERAL"
       }
+
+      env {
+        key   = "DATADOG_ENABLED"
+        value = var.datadog_enabled ? "true" : "false"
+        type  = "GENERAL"
+      }
+
+      env {
+        key   = "DATADOG_API_KEY"
+        value = var.datadog_api_key
+        type  = "SECRET"
+      }
+
+      env {
+        key   = "DATADOG_APP_KEY"
+        value = var.datadog_app_key
+        type  = "SECRET"
+      }
+
+      env {
+        key   = "ENVIRONMENT"
+        value = "production"
+        type  = "GENERAL"
+      }
     }
   }
 }

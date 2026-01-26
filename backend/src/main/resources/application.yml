@@ -80,12 +80,28 @@ springdoc:
     enabled: ${SWAGGER_ENABLED:false}
     path: /swagger-ui.html
 
-# Actuator
+# Actuator & Metrics
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: never
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${ENVIRONMENT:production}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  datadog:
+    metrics:
+      export:
+        enabled: ${DATADOG_ENABLED:false}
+        api-key: ${DATADOG_API_KEY:}
+        application-key: ${DATADOG_APP_KEY:}
+        uri: https://api.datadoghq.com
+        step: 30s
+        descriptions: true

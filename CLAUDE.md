@@ -158,3 +158,41 @@ Add GA4 events for:
 - Measurement ID is set via `VITE_GA_MEASUREMENT_ID` env var
 - Local development: set in `frontend/.env`
 - Production: configured via Terraform (`ga_measurement_id` variable)
+
+## Datadog Application Monitoring
+
+The backend integrates with Datadog for application monitoring and metrics via Spring Boot Actuator and Micrometer.
+
+### Metrics Exported
+
+- HTTP request metrics (latency, status codes, throughput)
+- JVM metrics (heap, GC, threads)
+- Database connection pool metrics
+- Custom application metrics
+
+### Configuration
+
+Enable Datadog monitoring via environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `DATADOG_ENABLED` | Set to `true` to enable metrics export |
+| `DATADOG_API_KEY` | Datadog API key |
+| `DATADOG_APP_KEY` | Datadog Application key |
+| `ENVIRONMENT` | Environment tag (e.g., `production`, `staging`) |
+
+### Terraform Setup
+
+```hcl
+datadog_enabled = true
+datadog_api_key = "your-api-key"
+datadog_app_key = "your-app-key"
+```
+
+### Actuator Endpoints
+
+Available at `/actuator/*` (requires authentication):
+- `/actuator/health` - Application health status
+- `/actuator/info` - Application info
+- `/actuator/metrics` - Available metrics list
+- `/actuator/metrics/{name}` - Specific metric details
