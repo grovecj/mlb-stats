@@ -26,4 +26,8 @@ public interface TeamRosterRepository extends JpaRepository<TeamRoster, Long> {
             Long teamId, Long playerId, Integer season, LocalDate startDate);
 
     boolean existsByTeamIdAndPlayerIdAndSeason(Long teamId, Long playerId, Integer season);
+
+    long countBySeason(Integer season);
+
+    void deleteBySeason(Integer season);
 }

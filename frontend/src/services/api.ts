@@ -177,6 +177,42 @@ export async function triggerStandingsSync(season?: number): Promise<{ status: s
   return postJson(`${API_BASE}/ingestion/standings${params}`);
 }
 
+// Data Manager
+export interface SeasonData {
+  season: number;
+  gamesCount: number;
+  battingStatsCount: number;
+  pitchingStatsCount: number;
+  rosterEntriesCount: number;
+  standingsCount: number;
+  isCurrent: boolean;
+}
+
+export async function getSyncedSeasons(): Promise<SeasonData[]> {
+  return fetchJson<SeasonData[]>(`${API_BASE}/data-manager/seasons`);
+}
+
+export async function getAvailableSeasons(): Promise<number[]> {
+  return fetchJson<number[]>(`${API_BASE}/data-manager/seasons/available`);
+}
+
+export async function deleteSeasonData(season: number): Promise<{ status: string }> {
+  const csrfToken = getCsrfToken();
+  const headers: HeadersInit = {};
+  if (csrfToken) {
+    headers['X-XSRF-TOKEN'] = csrfToken;
+  }
+  const response = await fetch(`${API_BASE}/data-manager/seasons/${season}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers,
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  return response.json();
+}
+
 // Admin - User Management
 export interface AdminUser {
   id: number;

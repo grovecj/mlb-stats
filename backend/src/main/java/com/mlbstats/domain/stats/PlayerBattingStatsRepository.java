@@ -28,4 +28,8 @@ public interface PlayerBattingStatsRepository extends JpaRepository<PlayerBattin
 
     @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.atBats >= :minAtBats ORDER BY pbs.battingAvg DESC")
     List<PlayerBattingStats> findTopBattingAverage(@Param("season") Integer season, @Param("minAtBats") Integer minAtBats);
+
+    long countBySeason(Integer season);
+
+    void deleteBySeason(Integer season);
 }

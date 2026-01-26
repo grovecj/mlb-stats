@@ -40,4 +40,11 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByIdWithTeams(@Param("id") Long id);
 
     boolean existsByMlbId(Integer mlbId);
+
+    @Query("SELECT DISTINCT g.season FROM Game g ORDER BY g.season DESC")
+    List<Integer> findDistinctSeasons();
+
+    long countBySeason(Integer season);
+
+    void deleteBySeason(Integer season);
 }
