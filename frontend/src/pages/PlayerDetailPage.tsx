@@ -30,7 +30,7 @@ function PlayerDetailPage() {
         setPlayer(playerData);
         setBattingStats(batting);
         setPitchingStats(pitching);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load player data');
       } finally {
         setLoading(false);

@@ -16,7 +16,7 @@ function GamesPage() {
       try {
         const data = await getGames({ date });
         setGames(Array.isArray(data) ? data : (data as { content: Game[] }).content || []);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load games');
         setGames([]);
       } finally {

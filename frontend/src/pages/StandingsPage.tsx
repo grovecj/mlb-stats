@@ -17,7 +17,7 @@ function StandingsPage() {
         const data = await getStandings(season);
         setStandings(data);
         setError(null);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load standings');
       } finally {
         setLoading(false);

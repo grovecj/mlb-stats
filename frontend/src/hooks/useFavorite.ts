@@ -28,7 +28,7 @@ export function useTeamFavorite(teamId: number | undefined) {
         if (!cancelled) {
           setIsFavorite(result);
         }
-      } catch (err) {
+      } catch (_err) {
         // User might not be authenticated, silently fail
         if (!cancelled) {
           setIsFavorite(false);
@@ -88,7 +88,7 @@ export function usePlayerFavorite(playerId: number | undefined) {
         if (!cancelled) {
           setIsFavorite(result);
         }
-      } catch (err) {
+      } catch (_err) {
         // User might not be authenticated, silently fail
         if (!cancelled) {
           setIsFavorite(false);

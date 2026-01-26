@@ -24,7 +24,7 @@ function HomePage() {
         setTodaysGames(games);
         setHrLeaders(hrs);
         setWinLeaders(wins);
-      } catch (err) {
+      } catch (_err) {
         setError('Failed to load data');
       } finally {
         setLoading(false);

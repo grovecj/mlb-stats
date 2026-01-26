@@ -19,7 +19,7 @@ function PlayersPage() {
       const data: PageResponse<Player> = await getPlayers(page, 20, search || undefined);
       setPlayers(data.content);
       setTotalPages(data.totalPages);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load players');
     } finally {
       setLoading(false);
