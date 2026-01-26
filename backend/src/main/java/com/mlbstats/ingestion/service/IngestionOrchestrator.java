@@ -95,4 +95,9 @@ public class IngestionOrchestrator {
         log.info("Running box scores sync for season {}", season);
         return boxScoreIngestionService.syncBoxScoresForSeason(season);
     }
+
+    public int runBoxScoreForGame(Long gameId) {
+        log.info("Running box score sync for game {}", gameId);
+        return boxScoreIngestionService.syncBoxScoreForGame(gameId);
+    }
 }

@@ -19,7 +19,7 @@ public interface PlayerGameBattingRepository extends JpaRepository<PlayerGameBat
 
     Optional<PlayerGameBatting> findByPlayerIdAndGameId(Long playerId, Long gameId);
 
-    @Query("SELECT pgb FROM PlayerGameBatting pgb JOIN FETCH pgb.player WHERE pgb.game.id = :gameId ORDER BY pgb.team.id, pgb.battingOrder")
+    @Query("SELECT pgb FROM PlayerGameBatting pgb JOIN FETCH pgb.player JOIN FETCH pgb.team WHERE pgb.game.id = :gameId ORDER BY pgb.team.id, pgb.battingOrder")
     List<PlayerGameBatting> findByGameIdWithPlayer(@Param("gameId") Long gameId);
 
     @Query("SELECT pgb FROM PlayerGameBatting pgb JOIN FETCH pgb.game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam WHERE pgb.player.id = :playerId ORDER BY g.gameDate DESC")

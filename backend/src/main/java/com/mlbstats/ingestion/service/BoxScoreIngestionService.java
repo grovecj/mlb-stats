@@ -78,8 +78,12 @@ public class BoxScoreIngestionService {
 
     private int syncBoxScore(Game game) {
         BoxScoreResponse response = mlbApiClient.getBoxScore(game.getMlbId());
-        if (response == null || response.getTeams() == null) {
-            log.debug("No box score data for game {}", game.getId());
+        if (response == null) {
+            log.warn("Null response from MLB API for game {} (mlbId: {})", game.getId(), game.getMlbId());
+            return 0;
+        }
+        if (response.getTeams() == null) {
+            log.warn("No teams data in box score for game {} (mlbId: {})", game.getId(), game.getMlbId());
             return 0;
         }
 
@@ -87,12 +91,20 @@ public class BoxScoreIngestionService {
 
         // Process away team
         if (response.getTeams().getAway() != null) {
-            count += processTeamBoxScore(game, game.getAwayTeam(), response.getTeams().getAway());
+            int awayCount = processTeamBoxScore(game, game.getAwayTeam(), response.getTeams().getAway());
+            log.info("Processed {} player stats for away team in game {}", awayCount, game.getId());
+            count += awayCount;
+        } else {
+            log.warn("No away team data in box score for game {}", game.getId());
         }
 
         // Process home team
         if (response.getTeams().getHome() != null) {
-            count += processTeamBoxScore(game, game.getHomeTeam(), response.getTeams().getHome());
+            int homeCount = processTeamBoxScore(game, game.getHomeTeam(), response.getTeams().getHome());
+            log.info("Processed {} player stats for home team in game {}", homeCount, game.getId());
+            count += homeCount;
+        } else {
+            log.warn("No home team data in box score for game {}", game.getId());
         }
 
         return count > 0 ? 1 : 0;
@@ -100,10 +112,15 @@ public class BoxScoreIngestionService {
 
     private int processTeamBoxScore(Game game, Team team, BoxScoreResponse.TeamBoxScore teamData) {
         if (teamData.getPlayers() == null) {
+            log.warn("No players map in team box score for game {}", game.getId());
             return 0;
         }
 
+        log.debug("Processing {} player entries for team {} in game {}",
+                teamData.getPlayers().size(), team.getName(), game.getId());
+
         int count = 0;
+        int playersNotFound = 0;
         Set<Integer> starterIds = new HashSet<>();
 
         // First pitcher in the list is typically the starter
@@ -116,6 +133,7 @@ public class BoxScoreIngestionService {
             BoxScoreResponse.PlayerStats playerStats = entry.getValue();
 
             if (playerStats.getPerson() == null) {
+                log.debug("No person data for player entry: {}", entry.getKey());
                 continue;
             }
 
@@ -123,7 +141,8 @@ public class BoxScoreIngestionService {
             Player player = playerRepository.findByMlbId(mlbPlayerId).orElse(null);
 
             if (player == null) {
-                log.debug("Player not found: {}", mlbPlayerId);
+                log.debug("Player not found in database: {} ({})", playerStats.getPerson().getFullName(), mlbPlayerId);
+                playersNotFound++;
                 continue;
             }
 
@@ -151,6 +170,11 @@ public class BoxScoreIngestionService {
                     count++;
                 }
             }
+        }
+
+        if (playersNotFound > 0) {
+            log.warn("{} players not found in database for team {} in game {}",
+                    playersNotFound, team.getName(), game.getId());
         }
 
         return count;

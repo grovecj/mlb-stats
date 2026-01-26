@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BoxScoreResponse {
+public class  BoxScoreResponse {
 
     private Teams teams;
 

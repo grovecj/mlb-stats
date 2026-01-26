@@ -128,10 +128,24 @@ public class MlbApiClient {
     public BoxScoreResponse getBoxScore(Integer gamePk) {
         log.debug("Fetching box score for game {}", gamePk);
         try {
-            return restClient.get()
+            BoxScoreResponse response = restClient.get()
                     .uri("/game/{gamePk}/boxscore", gamePk)
                     .retrieve()
                     .body(BoxScoreResponse.class);
+
+            // Diagnostic logging
+            if (response != null && response.getTeams() != null) {
+                var away = response.getTeams().getAway();
+                var home = response.getTeams().getHome();
+                log.info("Box score for game {}: away players={}, home players={}",
+                        gamePk,
+                        away != null && away.getPlayers() != null ? away.getPlayers().size() : 0,
+                        home != null && home.getPlayers() != null ? home.getPlayers().size() : 0);
+            } else {
+                log.warn("Box score response for game {} has null teams", gamePk);
+            }
+
+            return response;
         } catch (RestClientException e) {
             log.warn("Failed to fetch box score for game {}: {}", gamePk, e.getMessage());
             return null;
