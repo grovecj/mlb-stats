@@ -158,3 +158,47 @@ Add GA4 events for:
 - Measurement ID is set via `VITE_GA_MEASUREMENT_ID` env var
 - Local development: set in `frontend/.env`
 - Production: configured via Terraform (`ga_measurement_id` variable)
+
+## New Relic Application Monitoring
+
+The backend integrates with New Relic for application monitoring and metrics via Spring Boot Actuator and Micrometer.
+
+### Metrics Exported
+
+- HTTP request metrics (latency, status codes, throughput)
+- JVM metrics (heap, GC, threads)
+- Database connection pool metrics
+- Custom application metrics
+
+### Configuration
+
+Enable New Relic monitoring via environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `NEW_RELIC_ENABLED` | Set to `true` to enable metrics export |
+| `NEW_RELIC_API_KEY` | New Relic Ingest License key |
+| `NEW_RELIC_ACCOUNT_ID` | New Relic Account ID |
+| `ENVIRONMENT` | Environment tag (e.g., `production`, `staging`) |
+
+### Terraform Setup
+
+```hcl
+new_relic_enabled    = true
+new_relic_api_key    = "your-license-key"
+new_relic_account_id = "your-account-id"
+```
+
+### Getting New Relic Credentials
+
+1. Sign up at https://newrelic.com (free tier available)
+2. Get License Key: User menu > API Keys > Create key (Ingest - License)
+3. Get Account ID: User menu > Administration > Access management
+
+### Actuator Endpoints
+
+Available at `/actuator/*` (requires authentication):
+- `/actuator/health` - Application health status
+- `/actuator/info` - Application info
+- `/actuator/metrics` - Available metrics list
+- `/actuator/metrics/{name}` - Specific metric details

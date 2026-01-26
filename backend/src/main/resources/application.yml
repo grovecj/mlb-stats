@@ -80,12 +80,27 @@ springdoc:
     enabled: ${SWAGGER_ENABLED:false}
     path: /swagger-ui.html
 
-# Actuator
+# Actuator & Metrics
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,info,metrics
   endpoint:
     health:
-      show-details: never
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${ENVIRONMENT:production}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  newrelic:
+    metrics:
+      export:
+        enabled: ${NEW_RELIC_ENABLED:false}
+        api-key: ${NEW_RELIC_API_KEY:}
+        account-id: ${NEW_RELIC_ACCOUNT_ID:}
+        uri: https://metric-api.newrelic.com
+        step: 30s
