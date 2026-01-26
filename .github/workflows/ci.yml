@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Backend Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +34,7 @@ jobs:
           retention-days: 7
 
   frontend:
+    name: Frontend Build & Test
     runs-on: ubuntu-latest
 
     steps:
