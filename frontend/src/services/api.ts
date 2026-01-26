@@ -35,6 +35,17 @@ async function postJson<T>(url: string): Promise<T> {
   return response.json();
 }
 
+// Search
+export interface SearchResult {
+  teams: Team[];
+  players: Player[];
+}
+
+export async function globalSearch(query: string, limit = 5): Promise<SearchResult> {
+  const params = new URLSearchParams({ q: query, limit: String(limit) });
+  return fetchJson<SearchResult>(`${API_BASE}/search?${params}`);
+}
+
 // Teams
 export async function getTeams(): Promise<Team[]> {
   return fetchJson<Team[]>(`${API_BASE}/teams`);

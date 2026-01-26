@@ -29,6 +29,11 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
            "LOWER(p.position) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Player> searchPlayers(@Param("search") String search, Pageable pageable);
 
+    @Query("SELECT p FROM Player p WHERE p.active = true AND " +
+           "LOWER(p.fullName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "ORDER BY p.fullName")
+    List<Player> searchPlayersByName(@Param("search") String search);
+
     boolean existsByMlbId(Integer mlbId);
 
     @Query("SELECT p FROM Player p WHERE p.bats IS NULL OR p.height IS NULL OR p.birthDate IS NULL")
