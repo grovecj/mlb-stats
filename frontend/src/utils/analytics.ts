@@ -13,8 +13,8 @@ function initializeGtag() {
 
   // Initialize dataLayer and gtag function
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag() {
-    window.dataLayer.push(arguments);
+  window.gtag = function gtag(...args: unknown[]) {
+    window.dataLayer.push(args);
   };
   window.gtag('js', new Date());
   window.gtag('config', GA_MEASUREMENT_ID);
