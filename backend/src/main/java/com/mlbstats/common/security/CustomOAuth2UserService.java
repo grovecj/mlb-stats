@@ -39,6 +39,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(name);
         user.setPictureUrl(picture);
         user.recordLogin();
+
+        // Promote to OWNER if email matches configured owner email
+        if (authProperties.isOwnerEmail(user.getEmail()) && user.getRole() != Role.OWNER) {
+            user.setRole(Role.OWNER);
+        }
+
         return appUserRepository.save(user);
     }
 
