@@ -1,11 +1,14 @@
 package com.mlbstats.api.service;
 
-import com.mlbstats.api.dto.GameDto;
-import com.mlbstats.api.dto.PageDto;
+import com.mlbstats.api.dto.*;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.Game;
 import com.mlbstats.domain.game.GameRepository;
+import com.mlbstats.domain.stats.PlayerGameBatting;
+import com.mlbstats.domain.stats.PlayerGameBattingRepository;
+import com.mlbstats.domain.stats.PlayerGamePitching;
+import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,6 +25,8 @@ import java.util.List;
 public class GameApiService {
 
     private final GameRepository gameRepository;
+    private final PlayerGameBattingRepository gameBattingRepository;
+    private final PlayerGamePitchingRepository gamePitchingRepository;
 
     public PageDto<GameDto> getGamesBySeason(Integer season, Pageable pageable) {
         if (season == null) {
@@ -55,5 +61,44 @@ public class GameApiService {
         return gameRepository.findByTeamIdAndSeason(teamId, season).stream()
                 .map(GameDto::fromEntity)
                 .toList();
+    }
+
+    public BoxScoreDto getBoxScore(Long gameId) {
+        Game game = gameRepository.findByIdWithTeams(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Game", gameId));
+
+        List<PlayerGameBatting> batting = gameBattingRepository.findByGameIdWithPlayer(gameId);
+        List<PlayerGamePitching> pitching = gamePitchingRepository.findByGameIdWithPlayer(gameId);
+
+        Long awayTeamId = game.getAwayTeam().getId();
+        Long homeTeamId = game.getHomeTeam().getId();
+
+        List<GameBattingDto> awayBatting = batting.stream()
+                .filter(b -> b.getTeam().getId().equals(awayTeamId))
+                .map(GameBattingDto::fromEntity)
+                .collect(Collectors.toList());
+
+        List<GameBattingDto> homeBatting = batting.stream()
+                .filter(b -> b.getTeam().getId().equals(homeTeamId))
+                .map(GameBattingDto::fromEntity)
+                .collect(Collectors.toList());
+
+        List<GamePitchingDto> awayPitching = pitching.stream()
+                .filter(p -> p.getTeam().getId().equals(awayTeamId))
+                .map(GamePitchingDto::fromEntity)
+                .collect(Collectors.toList());
+
+        List<GamePitchingDto> homePitching = pitching.stream()
+                .filter(p -> p.getTeam().getId().equals(homeTeamId))
+                .map(GamePitchingDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new BoxScoreDto(
+                GameDto.fromEntity(game),
+                awayBatting,
+                awayPitching,
+                homeBatting,
+                homePitching
+        );
     }
 }

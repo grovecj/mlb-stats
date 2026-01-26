@@ -1,21 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Game } from '../types/game';
-import { getGame } from '../services/api';
+import { Game, BoxScore as BoxScoreType } from '../types/game';
+import { getGame, getGameBoxScore } from '../services/api';
 import BoxScore from '../components/game/BoxScore';
+import BattingTable from '../components/game/BattingTable';
+import PitchingTable from '../components/game/PitchingTable';
 
 function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [game, setGame] = useState<Game | null>(null);
+  const [boxScore, setBoxScore] = useState<BoxScoreType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'batting' | 'pitching'>('batting');
 
   useEffect(() => {
     async function fetchGame() {
       if (!id) return;
       try {
-        const data = await getGame(parseInt(id));
-        setGame(data);
+        const [gameData, boxScoreData] = await Promise.all([
+          getGame(parseInt(id)),
+          getGameBoxScore(parseInt(id)).catch(() => null),
+        ]);
+        setGame(gameData);
+        setBoxScore(boxScoreData);
       } catch (err) {
         setError('Failed to load game');
       } finally {
@@ -24,6 +32,13 @@ function GameDetailPage() {
     }
     fetchGame();
   }, [id]);
+
+  const hasBoxScore = boxScore && (
+    boxScore.awayBatting.length > 0 ||
+    boxScore.homeBatting.length > 0 ||
+    boxScore.awayPitching.length > 0 ||
+    boxScore.homePitching.length > 0
+  );
 
   if (loading) return <div className="loading">Loading game...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -98,6 +113,62 @@ function GameDetailPage() {
           </tbody>
         </table>
       </div>
+
+      {hasBoxScore && (
+        <div className="card" style={{ marginTop: '24px' }}>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+            <button
+              onClick={() => setActiveTab('batting')}
+              style={{
+                padding: '8px 16px',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: activeTab === 'batting' ? '600' : '400',
+                background: activeTab === 'batting' ? 'var(--primary-color)' : 'var(--border-color)',
+                color: activeTab === 'batting' ? 'white' : 'var(--text-color)',
+              }}
+            >
+              Batting
+            </button>
+            <button
+              onClick={() => setActiveTab('pitching')}
+              style={{
+                padding: '8px 16px',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: activeTab === 'pitching' ? '600' : '400',
+                background: activeTab === 'pitching' ? 'var(--primary-color)' : 'var(--border-color)',
+                color: activeTab === 'pitching' ? 'white' : 'var(--text-color)',
+              }}
+            >
+              Pitching
+            </button>
+          </div>
+
+          {activeTab === 'batting' && boxScore && (
+            <div className="grid grid-2">
+              <BattingTable batting={boxScore.awayBatting} teamName={game.awayTeam?.name || 'Away'} />
+              <BattingTable batting={boxScore.homeBatting} teamName={game.homeTeam?.name || 'Home'} />
+            </div>
+          )}
+
+          {activeTab === 'pitching' && boxScore && (
+            <div className="grid grid-2">
+              <PitchingTable pitching={boxScore.awayPitching} teamName={game.awayTeam?.name || 'Away'} />
+              <PitchingTable pitching={boxScore.homePitching} teamName={game.homeTeam?.name || 'Home'} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {game.status === 'Final' && !hasBoxScore && (
+        <div className="card" style={{ marginTop: '24px', textAlign: 'center', color: 'var(--text-light)' }}>
+          <p>Box score data not yet available for this game.</p>
+          <p style={{ fontSize: '12px' }}>Admins can sync box scores from the Admin page.</p>
+        </div>
+      )}
     </div>
   );
 }

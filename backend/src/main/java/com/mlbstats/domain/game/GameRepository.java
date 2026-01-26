@@ -36,6 +36,10 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Page<Game> findBySeasonOrderByGameDateDesc(Integer season, Pageable pageable);
 
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "WHERE g.season = :season AND g.status = :status ORDER BY g.gameDate")
+    List<Game> findBySeasonAndStatus(@Param("season") Integer season, @Param("status") String status);
+
     @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam WHERE g.id = :id")
     Optional<Game> findByIdWithTeams(@Param("id") Long id);
 

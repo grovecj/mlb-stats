@@ -8,6 +8,7 @@ import {
   triggerGamesSync,
   triggerStatsSync,
   triggerStandingsSync,
+  triggerBoxScoresSync,
   triggerIncompletePlayersSync,
   getUsers,
   updateUserRole,
@@ -209,6 +210,11 @@ function AdminPage() {
                 label="Standings"
                 status={syncStatus['standings']}
                 onClick={() => handleSync(triggerStandingsSync, 'standings')}
+              />
+              <SyncButton
+                label="Box Scores"
+                status={syncStatus['boxscores']}
+                onClick={() => handleSync(triggerBoxScoresSync, 'boxscores')}
               />
               <SyncButton
                 label="Incomplete Players"

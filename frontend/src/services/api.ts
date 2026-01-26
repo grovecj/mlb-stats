@@ -1,6 +1,6 @@
 import { Team, RosterEntry, TeamStanding } from '../types/team';
 import { Player } from '../types/player';
-import { Game } from '../types/game';
+import { Game, BoxScore } from '../types/game';
 import { BattingStats, PitchingStats, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
@@ -150,6 +150,10 @@ export async function getGame(id: number): Promise<Game> {
   return fetchJson<Game>(`${API_BASE}/games/${id}`);
 }
 
+export async function getGameBoxScore(id: number): Promise<BoxScore> {
+  return fetchJson<BoxScore>(`${API_BASE}/games/${id}/boxscore`);
+}
+
 export async function getTodaysGames(): Promise<Game[]> {
   return fetchJson<Game[]>(`${API_BASE}/games/today`);
 }
@@ -186,6 +190,11 @@ export async function triggerIncompletePlayersSync(): Promise<{ status: string; 
 export async function triggerStandingsSync(season?: number): Promise<{ status: string; season: string; teams: string }> {
   const params = season ? `?season=${season}` : '';
   return postJson(`${API_BASE}/ingestion/standings${params}`);
+}
+
+export async function triggerBoxScoresSync(season?: number): Promise<{ status: string; season: string; games: string }> {
+  const params = season ? `?season=${season}` : '';
+  return postJson(`${API_BASE}/ingestion/boxscores${params}`);
 }
 
 // Data Manager

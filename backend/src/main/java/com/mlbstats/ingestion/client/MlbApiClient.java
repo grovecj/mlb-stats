@@ -124,4 +124,17 @@ public class MlbApiClient {
             throw new IngestionException("Failed to fetch standings for season " + season, e);
         }
     }
+
+    public BoxScoreResponse getBoxScore(Integer gamePk) {
+        log.debug("Fetching box score for game {}", gamePk);
+        try {
+            return restClient.get()
+                    .uri("/game/{gamePk}/boxscore", gamePk)
+                    .retrieve()
+                    .body(BoxScoreResponse.class);
+        } catch (RestClientException e) {
+            log.warn("Failed to fetch box score for game {}: {}", gamePk, e.getMessage());
+            return null;
+        }
+    }
 }

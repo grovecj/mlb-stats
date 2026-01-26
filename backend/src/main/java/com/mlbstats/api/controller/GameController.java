@@ -1,5 +1,6 @@
 package com.mlbstats.api.controller;
 
+import com.mlbstats.api.dto.BoxScoreDto;
 import com.mlbstats.api.dto.GameDto;
 import com.mlbstats.api.dto.PageDto;
 import com.mlbstats.api.service.GameApiService;
@@ -64,5 +65,11 @@ public class GameController {
     @Operation(summary = "Get today's games", description = "Returns all games scheduled for today")
     public ResponseEntity<List<GameDto>> getTodaysGames() {
         return ResponseEntity.ok(gameApiService.getGamesByDate(LocalDate.now()));
+    }
+
+    @GetMapping("/{id}/boxscore")
+    @Operation(summary = "Get game box score", description = "Returns detailed batting and pitching stats for a game")
+    public ResponseEntity<BoxScoreDto> getBoxScore(@PathVariable Long id) {
+        return ResponseEntity.ok(gameApiService.getBoxScore(id));
     }
 }
