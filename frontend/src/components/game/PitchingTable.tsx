@@ -14,7 +14,30 @@ function formatDecision(p: GamePitching): string {
   return '';
 }
 
+// Convert baseball IP (e.g., 6.2 = 6 2/3 innings) to total outs
+function ipToOuts(ip: number): number {
+  const fullInnings = Math.floor(ip);
+  const partialOuts = Math.round((ip - fullInnings) * 10);
+  return fullInnings * 3 + partialOuts;
+}
+
+// Convert total outs back to baseball IP format
+function outsToIp(outs: number): string {
+  const fullInnings = Math.floor(outs / 3);
+  const partialOuts = outs % 3;
+  return partialOuts === 0 ? `${fullInnings}.0` : `${fullInnings}.${partialOuts}`;
+}
+
 function PitchingTable({ pitching, teamName }: PitchingTableProps) {
+  if (pitching.length === 0) {
+    return (
+      <div className="boxscore-table-container">
+        <h4 className="boxscore-table-title">{teamName} Pitching</h4>
+        <p className="boxscore-empty">No pitching stats available</p>
+      </div>
+    );
+  }
+
   // Sort: starters first, then by appearance order (we use id as proxy)
   const sortedPitching = [...pitching].sort((a, b) => {
     if (a.isStarter && !b.isStarter) return -1;
@@ -22,17 +45,17 @@ function PitchingTable({ pitching, teamName }: PitchingTableProps) {
     return a.id - b.id;
   });
 
-  // Calculate totals
+  // Calculate totals (convert IP to outs for correct addition)
   const totals = sortedPitching.reduce(
     (acc, p) => ({
-      inningsPitched: acc.inningsPitched + (p.inningsPitched || 0),
+      totalOuts: acc.totalOuts + ipToOuts(p.inningsPitched || 0),
       hitsAllowed: acc.hitsAllowed + (p.hitsAllowed || 0),
       runsAllowed: acc.runsAllowed + (p.runsAllowed || 0),
       earnedRuns: acc.earnedRuns + (p.earnedRuns || 0),
       walks: acc.walks + (p.walks || 0),
       strikeouts: acc.strikeouts + (p.strikeouts || 0),
     }),
-    { inningsPitched: 0, hitsAllowed: 0, runsAllowed: 0, earnedRuns: 0, walks: 0, strikeouts: 0 }
+    { totalOuts: 0, hitsAllowed: 0, runsAllowed: 0, earnedRuns: 0, walks: 0, strikeouts: 0 }
   );
 
   return (
@@ -74,7 +97,7 @@ function PitchingTable({ pitching, teamName }: PitchingTableProps) {
         <tfoot>
           <tr className="totals-row">
             <td className="player-col">Totals</td>
-            <td className="stat-col">{totals.inningsPitched.toFixed(1)}</td>
+            <td className="stat-col">{outsToIp(totals.totalOuts)}</td>
             <td className="stat-col">{totals.hitsAllowed}</td>
             <td className="stat-col">{totals.runsAllowed}</td>
             <td className="stat-col">{totals.earnedRuns}</td>

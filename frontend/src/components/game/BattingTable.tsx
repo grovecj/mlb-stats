@@ -8,11 +8,20 @@ interface BattingTableProps {
 }
 
 function BattingTable({ batting, teamName }: BattingTableProps) {
+  if (batting.length === 0) {
+    return (
+      <div className="boxscore-table-container">
+        <h4 className="boxscore-table-title">{teamName} Batting</h4>
+        <p className="boxscore-empty">No batting stats available</p>
+      </div>
+    );
+  }
+
   // Sort by batting order, null values last
   const sortedBatting = [...batting].sort((a, b) => {
     if (a.battingOrder === null && b.battingOrder === null) return 0;
     if (a.battingOrder === null) return 1;
-    if (b.battingOrder === null) return -1;
+    if (b.battingOrder === null) return 1;
     return a.battingOrder - b.battingOrder;
   });
 

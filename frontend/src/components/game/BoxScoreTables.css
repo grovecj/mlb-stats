@@ -100,6 +100,100 @@
   border-bottom: none;
 }
 
+.boxscore-empty {
+  color: var(--text-light);
+  font-style: italic;
+  padding: 16px 0;
+}
+
+/* Tab styles for box score */
+.boxscore-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.boxscore-tab {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  background: var(--border-color);
+  color: var(--text-color);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.boxscore-tab:hover {
+  background: var(--text-light);
+  color: white;
+}
+
+.boxscore-tab[aria-selected="true"] {
+  font-weight: 600;
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Game detail page styles */
+.game-back-link {
+  margin-bottom: 16px;
+}
+
+.game-back-link a {
+  color: var(--text-light);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.game-back-link a:hover {
+  color: var(--primary-color);
+}
+
+.team-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-abbreviation {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.team-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name {
+  font-weight: 600;
+}
+
+.team-division {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.game-info-table {
+  max-width: 400px;
+}
+
+.game-info-label {
+  font-weight: 600;
+}
+
+.boxscore-unavailable {
+  text-align: center;
+  color: var(--text-light);
+}
+
+.boxscore-unavailable p:last-child {
+  font-size: 12px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .boxscore-table {

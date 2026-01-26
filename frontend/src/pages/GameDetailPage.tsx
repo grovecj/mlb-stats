@@ -5,6 +5,7 @@ import { getGame, getGameBoxScore } from '../services/api';
 import BoxScore from '../components/game/BoxScore';
 import BattingTable from '../components/game/BattingTable';
 import PitchingTable from '../components/game/PitchingTable';
+import '../components/game/BoxScoreTables.css';
 
 function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,10 +47,8 @@ function GameDetailPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: '16px' }}>
-        <Link to="/games" style={{ color: '#666', fontSize: '14px' }}>
-          &larr; Back to Games
-        </Link>
+      <div className="game-back-link">
+        <Link to="/games">&larr; Back to Games</Link>
       </div>
 
       <BoxScore game={game} />
@@ -58,13 +57,13 @@ function GameDetailPage() {
         <div className="card">
           <h3 className="card-title">Away Team</h3>
           <Link to={`/teams/${game.awayTeam?.id}`}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#002d72' }}>
+            <div className="team-card-content">
+              <span className="team-abbreviation">
                 {game.awayTeam?.abbreviation}
               </span>
-              <div>
-                <div style={{ fontWeight: '600' }}>{game.awayTeam?.name}</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>
+              <div className="team-details">
+                <div className="team-name">{game.awayTeam?.name}</div>
+                <div className="team-division">
                   {game.awayTeam?.league} - {game.awayTeam?.division}
                 </div>
               </div>
@@ -75,13 +74,13 @@ function GameDetailPage() {
         <div className="card">
           <h3 className="card-title">Home Team</h3>
           <Link to={`/teams/${game.homeTeam?.id}`}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#002d72' }}>
+            <div className="team-card-content">
+              <span className="team-abbreviation">
                 {game.homeTeam?.abbreviation}
               </span>
-              <div>
-                <div style={{ fontWeight: '600' }}>{game.homeTeam?.name}</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>
+              <div className="team-details">
+                <div className="team-name">{game.homeTeam?.name}</div>
+                <div className="team-division">
                   {game.homeTeam?.league} - {game.homeTeam?.division}
                 </div>
               </div>
@@ -92,22 +91,22 @@ function GameDetailPage() {
 
       <div className="card" style={{ marginTop: '24px' }}>
         <h3 className="card-title">Game Information</h3>
-        <table className="data-table" style={{ maxWidth: '400px' }}>
+        <table className="data-table game-info-table">
           <tbody>
             <tr>
-              <td style={{ fontWeight: '600' }}>Venue</td>
+              <td className="game-info-label">Venue</td>
               <td>{game.venueName || '-'}</td>
             </tr>
             <tr>
-              <td style={{ fontWeight: '600' }}>Game Type</td>
+              <td className="game-info-label">Game Type</td>
               <td>{game.gameType === 'R' ? 'Regular Season' : game.gameType === 'P' ? 'Postseason' : game.gameType}</td>
             </tr>
             <tr>
-              <td style={{ fontWeight: '600' }}>Day/Night</td>
+              <td className="game-info-label">Day/Night</td>
               <td>{game.dayNight || '-'}</td>
             </tr>
             <tr>
-              <td style={{ fontWeight: '600' }}>Season</td>
+              <td className="game-info-label">Season</td>
               <td>{game.season}</td>
             </tr>
           </tbody>
@@ -116,46 +115,38 @@ function GameDetailPage() {
 
       {hasBoxScore && (
         <div className="card" style={{ marginTop: '24px' }}>
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+          <div className="boxscore-tabs" role="tablist" aria-label="Box score statistics">
             <button
+              role="tab"
+              aria-selected={activeTab === 'batting'}
+              aria-controls="batting-panel"
+              id="batting-tab"
+              className="boxscore-tab"
               onClick={() => setActiveTab('batting')}
-              style={{
-                padding: '8px 16px',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: activeTab === 'batting' ? '600' : '400',
-                background: activeTab === 'batting' ? 'var(--primary-color)' : 'var(--border-color)',
-                color: activeTab === 'batting' ? 'white' : 'var(--text-color)',
-              }}
             >
               Batting
             </button>
             <button
+              role="tab"
+              aria-selected={activeTab === 'pitching'}
+              aria-controls="pitching-panel"
+              id="pitching-tab"
+              className="boxscore-tab"
               onClick={() => setActiveTab('pitching')}
-              style={{
-                padding: '8px 16px',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: activeTab === 'pitching' ? '600' : '400',
-                background: activeTab === 'pitching' ? 'var(--primary-color)' : 'var(--border-color)',
-                color: activeTab === 'pitching' ? 'white' : 'var(--text-color)',
-              }}
             >
               Pitching
             </button>
           </div>
 
           {activeTab === 'batting' && boxScore && (
-            <div className="grid grid-2">
+            <div className="grid grid-2" role="tabpanel" id="batting-panel" aria-labelledby="batting-tab">
               <BattingTable batting={boxScore.awayBatting} teamName={game.awayTeam?.name || 'Away'} />
               <BattingTable batting={boxScore.homeBatting} teamName={game.homeTeam?.name || 'Home'} />
             </div>
           )}
 
           {activeTab === 'pitching' && boxScore && (
-            <div className="grid grid-2">
+            <div className="grid grid-2" role="tabpanel" id="pitching-panel" aria-labelledby="pitching-tab">
               <PitchingTable pitching={boxScore.awayPitching} teamName={game.awayTeam?.name || 'Away'} />
               <PitchingTable pitching={boxScore.homePitching} teamName={game.homeTeam?.name || 'Home'} />
             </div>
@@ -164,9 +155,9 @@ function GameDetailPage() {
       )}
 
       {game.status === 'Final' && !hasBoxScore && (
-        <div className="card" style={{ marginTop: '24px', textAlign: 'center', color: 'var(--text-light)' }}>
+        <div className="card boxscore-unavailable" style={{ marginTop: '24px' }}>
           <p>Box score data not yet available for this game.</p>
-          <p style={{ fontSize: '12px' }}>Admins can sync box scores from the Admin page.</p>
+          <p>Admins can sync box scores from the Admin page.</p>
         </div>
       )}
     </div>

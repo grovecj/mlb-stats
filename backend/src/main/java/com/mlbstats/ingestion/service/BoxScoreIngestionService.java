@@ -9,7 +9,6 @@ import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerGamePitching;
 import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
 import com.mlbstats.domain.team.Team;
-import com.mlbstats.domain.team.TeamRepository;
 import com.mlbstats.ingestion.client.MlbApiClient;
 import com.mlbstats.ingestion.client.dto.BoxScoreResponse;
 import com.mlbstats.ingestion.mapper.BoxScoreMapper;
@@ -30,7 +29,6 @@ public class BoxScoreIngestionService {
 
     private final MlbApiClient mlbApiClient;
     private final GameRepository gameRepository;
-    private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
     private final PlayerGameBattingRepository gameBattingRepository;
     private final PlayerGamePitchingRepository gamePitchingRepository;
