@@ -29,7 +29,8 @@ function LandingPage() {
 
   const formatDate = (dateStr: string | null): string => {
     if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
+    // Append time component to parse as local time, not UTC
+    const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',

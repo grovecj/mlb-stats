@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mlbstats.common.util.DateUtils;
+
 import java.time.LocalDate;
-import java.time.Year;
 
 @RestController
 @RequestMapping("/api/public")
@@ -32,7 +33,7 @@ public class PublicController {
         long playerCount = playerRepository.count();
         long gameCount = gameRepository.count();
 
-        int currentSeason = Year.now().getValue();
+        int currentSeason = DateUtils.getCurrentSeason();
         long currentSeasonGames = gameRepository.countBySeason(currentSeason);
 
         LocalDate lastUpdated = gameRepository.findTopByOrderByGameDateDesc()
