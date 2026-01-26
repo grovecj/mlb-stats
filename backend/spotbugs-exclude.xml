@@ -5,7 +5,13 @@
         <Source name="~.*Test\.java"/>
     </Match>
 
-    <!-- Lombok-generated code causes false positives -->
+    <!--
+        EI_EXPOSE_REP/EI_EXPOSE_REP2: Suppress globally because:
+        - Records (DTOs) are immutable by design
+        - Spring constructor injection is framework-managed
+        - Lombok @Data/@Value generates appropriate code
+        These are false positives in a Spring Boot context.
+    -->
     <Match>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>

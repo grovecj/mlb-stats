@@ -20,18 +20,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and test
+      - name: Build, test, and analyze
         working-directory: backend
-        run: ./mvnw verify -B
-
-      - name: Run SpotBugs
-        working-directory: backend
-        run: ./mvnw spotbugs:check -B
-
-      - name: Run PMD (report only)
-        working-directory: backend
-        run: ./mvnw pmd:pmd -B
-        continue-on-error: true
+        run: ./mvnw verify spotbugs:check pmd:pmd -B
 
       - name: Upload PMD report
         uses: actions/upload-artifact@v4
@@ -61,6 +52,10 @@ jobs:
       - name: Lint
         working-directory: frontend
         run: npm run lint
+
+      - name: Test
+        working-directory: frontend
+        run: npm test -- --run --passWithNoTests
 
       - name: Build
         working-directory: frontend
