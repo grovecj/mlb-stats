@@ -35,6 +35,19 @@ async function postJson<T>(url: string): Promise<T> {
   return response.json();
 }
 
+// Public Stats
+export interface PublicStats {
+  teamCount: number;
+  playerCount: number;
+  gameCount: number;
+  currentSeasonGames: number;
+  lastUpdated: string | null;
+}
+
+export async function getPublicStats(): Promise<PublicStats> {
+  return fetchJson<PublicStats>(`${API_BASE}/public/stats`);
+}
+
 // Search
 export interface SearchResult {
   teams: Team[];
