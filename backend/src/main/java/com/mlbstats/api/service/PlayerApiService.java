@@ -1,6 +1,7 @@
 package com.mlbstats.api.service;
 
 import com.mlbstats.api.dto.*;
+import com.mlbstats.common.config.CacheConfig;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.player.Player;
@@ -9,6 +10,7 @@ import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerPitchingStatsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class PlayerApiService {
         return PageDto.fromPage(page, PlayerDto::fromEntity);
     }
 
+    @Cacheable(value = CacheConfig.SEARCH, key = "'player_' + #search + '_' + #limit")
     public List<PlayerDto> searchPlayers(String search, int limit) {
         return playerRepository.searchPlayersByName(search).stream()
                 .limit(limit)
@@ -43,6 +46,7 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.PLAYERS, key = "#id")
     public PlayerDto getPlayerById(Long id) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Player", id));
@@ -71,6 +75,7 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'hr_' + #season + '_' + #limit")
     public List<BattingStatsDto> getTopHomeRunHitters(Integer season, int limit) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -81,6 +86,7 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'avg_' + #season + '_' + #minAtBats + '_' + #limit")
     public List<BattingStatsDto> getTopBattingAverage(Integer season, int minAtBats, int limit) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -91,6 +97,7 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'wins_' + #season + '_' + #limit")
     public List<PitchingStatsDto> getTopWinners(Integer season, int limit) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -101,6 +108,7 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'so_' + #season + '_' + #limit")
     public List<PitchingStatsDto> getTopStrikeouts(Integer season, int limit) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();

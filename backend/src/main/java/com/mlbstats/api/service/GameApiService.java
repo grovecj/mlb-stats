@@ -1,6 +1,7 @@
 package com.mlbstats.api.service;
 
 import com.mlbstats.api.dto.*;
+import com.mlbstats.common.config.CacheConfig;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.Game;
@@ -10,6 +11,7 @@ import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerGamePitching;
 import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class GameApiService {
         return PageDto.fromPage(page, GameDto::fromEntity);
     }
 
+    @Cacheable(value = CacheConfig.GAMES_BY_DATE, key = "#date")
     public List<GameDto> getGamesByDate(LocalDate date) {
         return gameRepository.findByDateWithTeams(date).stream()
                 .map(GameDto::fromEntity)
@@ -48,6 +51,7 @@ public class GameApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.GAMES, key = "#id")
     public GameDto getGameById(Long id) {
         Game game = gameRepository.findByIdWithTeams(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Game", id));
@@ -63,6 +67,7 @@ public class GameApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.BOX_SCORES, key = "#gameId")
     public BoxScoreDto getBoxScore(Long gameId) {
         Game game = gameRepository.findByIdWithTeams(gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Game", gameId));

@@ -23,7 +23,7 @@ spring:
     baseline-on-migrate: true
 
   cache:
-    type: simple
+    type: caffeine
 
   # OAuth2 Configuration
   security:
@@ -85,7 +85,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,caches
   endpoint:
     health:
       show-details: when_authorized
