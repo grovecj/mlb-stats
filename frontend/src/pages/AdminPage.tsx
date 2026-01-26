@@ -12,10 +12,14 @@ import {
   getUsers,
   updateUserRole,
   AdminUser,
+  getSyncedSeasons,
+  getAvailableSeasons,
+  deleteSeasonData,
+  SeasonData,
 } from '../services/api';
 import './AdminPage.css';
 
-type Tab = 'sync' | 'users';
+type Tab = 'sync' | 'data' | 'users';
 
 function AdminPage() {
   const { isAdmin, isOwner } = useAuth();
@@ -25,6 +29,12 @@ function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState<string | null>(null);
+  const [seasons, setSeasons] = useState<SeasonData[]>([]);
+  const [availableSeasons, setAvailableSeasons] = useState<number[]>([]);
+  const [seasonsLoading, setSeasonsLoading] = useState(false);
+  const [seasonsError, setSeasonsError] = useState<string | null>(null);
+  const [selectedSeason, setSelectedSeason] = useState<number | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -36,7 +46,51 @@ function AdminPage() {
     if (activeTab === 'users' && isOwner) {
       loadUsers();
     }
+    if (activeTab === 'data') {
+      loadSeasons();
+    }
   }, [activeTab, isOwner]);
+
+  const loadSeasons = async () => {
+    setSeasonsLoading(true);
+    setSeasonsError(null);
+    try {
+      const [syncedData, availableData] = await Promise.all([
+        getSyncedSeasons(),
+        getAvailableSeasons(),
+      ]);
+      setSeasons(syncedData);
+      setAvailableSeasons(availableData);
+    } catch (error) {
+      setSeasonsError(error instanceof Error ? error.message : 'Failed to load seasons');
+    } finally {
+      setSeasonsLoading(false);
+    }
+  };
+
+  const handleSyncSeason = async (season: number) => {
+    setSyncStatus((prev) => ({ ...prev, [`season-${season}`]: 'running' }));
+    try {
+      await triggerFullSync(season);
+      setSyncStatus((prev) => ({ ...prev, [`season-${season}`]: 'completed' }));
+      loadSeasons();
+    } catch (error) {
+      setSyncStatus((prev) => ({
+        ...prev,
+        [`season-${season}`]: error instanceof Error ? error.message : 'failed',
+      }));
+    }
+  };
+
+  const handleDeleteSeason = async (season: number) => {
+    try {
+      await deleteSeasonData(season);
+      setDeleteConfirm(null);
+      loadSeasons();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to delete season');
+    }
+  };
 
   const loadUsers = async () => {
     setUsersLoading(true);
@@ -100,6 +154,12 @@ function AdminPage() {
         >
           Data Sync
         </button>
+        <button
+          className={`tab-button ${activeTab === 'data' ? 'active' : ''}`}
+          onClick={() => setActiveTab('data')}
+        >
+          Data Manager
+        </button>
         {isOwner && (
           <button
             className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
@@ -156,6 +216,122 @@ function AdminPage() {
                 onClick={() => handleSync(triggerIncompletePlayersSync, 'incompletePlayers')}
               />
             </div>
+          </div>
+        )}
+
+        {activeTab === 'data' && (
+          <div className="data-panel">
+            <h2>Season Data Manager</h2>
+            <p className="sync-description">
+              Manage synced seasons. You can sync new seasons or delete old season data.
+            </p>
+
+            {seasonsLoading && <p>Loading seasons...</p>}
+            {seasonsError && <p className="error">{seasonsError}</p>}
+
+            {!seasonsLoading && !seasonsError && (
+              <>
+                <h3>Synced Seasons</h3>
+                {seasons.length === 0 ? (
+                  <p>No seasons synced yet. Use the selector below to sync a season.</p>
+                ) : (
+                  <table className="seasons-table">
+                    <thead>
+                      <tr>
+                        <th>Season</th>
+                        <th>Games</th>
+                        <th>Batting Stats</th>
+                        <th>Pitching Stats</th>
+                        <th>Roster Entries</th>
+                        <th>Standings</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {seasons.map((season) => (
+                        <tr key={season.season}>
+                          <td>
+                            {season.season}
+                            {season.isCurrent && (
+                              <span className="current-badge">Current</span>
+                            )}
+                          </td>
+                          <td>{season.gamesCount.toLocaleString()}</td>
+                          <td>{season.battingStatsCount.toLocaleString()}</td>
+                          <td>{season.pitchingStatsCount.toLocaleString()}</td>
+                          <td>{season.rosterEntriesCount.toLocaleString()}</td>
+                          <td>{season.standingsCount.toLocaleString()}</td>
+                          <td>
+                            <button
+                              className="sync-button small"
+                              onClick={() => handleSyncSeason(season.season)}
+                              disabled={syncStatus[`season-${season.season}`] === 'running'}
+                            >
+                              {syncStatus[`season-${season.season}`] === 'running'
+                                ? 'Syncing...'
+                                : 'Re-sync'}
+                            </button>
+                            {!season.isCurrent && (
+                              <>
+                                {deleteConfirm === season.season ? (
+                                  <>
+                                    <button
+                                      className="delete-button confirm"
+                                      onClick={() => handleDeleteSeason(season.season)}
+                                    >
+                                      Confirm
+                                    </button>
+                                    <button
+                                      className="cancel-button"
+                                      onClick={() => setDeleteConfirm(null)}
+                                    >
+                                      Cancel
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    className="delete-button"
+                                    onClick={() => setDeleteConfirm(season.season)}
+                                  >
+                                    Delete
+                                  </button>
+                                )}
+                              </>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                <h3>Sync New Season</h3>
+                <div className="sync-new-season">
+                  <select
+                    value={selectedSeason || ''}
+                    onChange={(e) => setSelectedSeason(Number(e.target.value) || null)}
+                  >
+                    <option value="">Select a season...</option>
+                    {availableSeasons
+                      .filter((s) => !seasons.some((ss) => ss.season === s))
+                      .map((season) => (
+                        <option key={season} value={season}>
+                          {season}
+                        </option>
+                      ))}
+                  </select>
+                  <button
+                    className="sync-button"
+                    onClick={() => selectedSeason && handleSyncSeason(selectedSeason)}
+                    disabled={!selectedSeason || syncStatus[`season-${selectedSeason}`] === 'running'}
+                  >
+                    {selectedSeason && syncStatus[`season-${selectedSeason}`] === 'running'
+                      ? 'Syncing...'
+                      : 'Sync Season'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
 

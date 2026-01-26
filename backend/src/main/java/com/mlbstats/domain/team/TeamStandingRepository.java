@@ -20,4 +20,8 @@ public interface TeamStandingRepository extends JpaRepository<TeamStanding, Long
 
     @Query("SELECT DISTINCT ts.season FROM TeamStanding ts ORDER BY ts.season DESC")
     List<Integer> findDistinctSeasons();
+
+    long countBySeason(Integer season);
+
+    void deleteBySeason(Integer season);
 }
