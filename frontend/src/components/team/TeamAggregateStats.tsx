@@ -10,9 +10,14 @@ function formatAvg(value: number | null): string {
   return value.toFixed(3).replace(/^0/, '');
 }
 
-function formatRate(value: number | null): string {
-  if (value === null || value === undefined) return '-';
+function formatEra(value: number | null): string {
+  if (value === null || value === undefined) return '--.--';
   return value.toFixed(2);
+}
+
+function formatRate(value: number | null): string {
+  if (value === null || value === undefined) return '--';
+  return value.toFixed(1);
 }
 
 function TeamAggregateStats({ stats, loading }: TeamAggregateStatsProps) {
@@ -52,8 +57,8 @@ function TeamAggregateStats({ stats, loading }: TeamAggregateStatsProps) {
         <div className="card">
           <h3 className="card-title">Team Pitching</h3>
           <div className="detail-stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))' }}>
-            <StatItem label="ERA" value={formatRate(pitching.era)} />
-            <StatItem label="WHIP" value={formatRate(pitching.whip)} />
+            <StatItem label="ERA" value={formatEra(pitching.era)} />
+            <StatItem label="WHIP" value={formatAvg(pitching.whip)} />
             <StatItem label="K/9" value={formatRate(pitching.kPer9)} />
             <StatItem label="Record" value={`${pitching.wins}-${pitching.losses}`} />
             <StatItem label="Saves" value={pitching.saves.toLocaleString()} />

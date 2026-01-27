@@ -162,6 +162,45 @@ class TeamControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
+    void getTeamAggregateStats_shouldReturnAggregatedStats() throws Exception {
+        // Given - create multiple players with batting and pitching stats
+        Player judge = createTestPlayer(592450, "Aaron Judge", "RF");
+        Player stanton = createTestPlayer(519317, "Giancarlo Stanton", "DH");
+        Player cole = createTestPlayer(650402, "Gerrit Cole", "P");
+
+        createTestBattingStats(judge, yankees, 2024);
+        createTestBattingStats(stanton, yankees, 2024);
+        createTestPitchingStats(cole, yankees, 2024);
+
+        // When/Then
+        mockMvc.perform(get("/api/teams/{id}/aggregate-stats", yankees.getId())
+                        .param("season", "2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamId").value(yankees.getId()))
+                .andExpect(jsonPath("$.season").value(2024))
+                .andExpect(jsonPath("$.batting").exists())
+                .andExpect(jsonPath("$.batting.homeRuns").value(40)) // 20 + 20 from two players
+                .andExpect(jsonPath("$.batting.battingAvg").exists())
+                .andExpect(jsonPath("$.pitching").exists())
+                .andExpect(jsonPath("$.pitching.wins").value(15))
+                .andExpect(jsonPath("$.pitching.era").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getTeamAggregateStats_shouldReturnNullAggregatesWhenNoStats() throws Exception {
+        // When/Then - team exists but has no stats
+        mockMvc.perform(get("/api/teams/{id}/aggregate-stats", yankees.getId())
+                        .param("season", "2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamId").value(yankees.getId()))
+                .andExpect(jsonPath("$.season").value(2024))
+                .andExpect(jsonPath("$.batting").doesNotExist())
+                .andExpect(jsonPath("$.pitching").doesNotExist());
+    }
+
+    @Test
     void getAllTeams_shouldRequireAuthentication() throws Exception {
         // Spring Security redirects unauthenticated requests to login page
         mockMvc.perform(get("/api/teams"))
