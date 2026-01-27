@@ -2,6 +2,43 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Issue Review Workflow
+
+Before implementing any new feature or significant change, have the following agents review the issue/plan:
+
+### Required Reviews
+
+1. **`software-architect`** - Technical feasibility, implementation approach, risk assessment
+2. **`data-architecture-analyst`** - Schema changes, data modeling, query patterns
+3. **`sports-product-designer`** - UX considerations, feature design, user impact
+
+### Review Process
+
+```bash
+# Fetch issue details
+gh issue view <number>
+
+# Have each agent review (use Task tool with each agent)
+# 1. software-architect: "Review issue #X for technical approach and risks"
+# 2. data-architecture-analyst: "Review issue #X for data/schema implications"
+# 3. sports-product-designer: "Review issue #X for UX and product considerations"
+```
+
+### Review Outputs
+
+Each agent should provide:
+- **Assessment**: Is this well-defined and feasible?
+- **Concerns**: Technical risks, missing requirements, or design issues
+- **Recommendations**: Suggested approach, alternatives, or clarifications needed
+- **Dependencies**: Other issues or work this depends on
+
+### After Reviews
+
+- Address any concerns raised before implementation
+- Use `software-architect` to sequence multi-issue work
+- Create implementation plan incorporating agent feedback
+- Use `code-reviewer` agent after PR is created to review and address CI/Copilot feedback
+
 ## Build & Development Commands
 
 ### Backend (Java/Spring Boot)
