@@ -1,0 +1,397 @@
+/* Freshness Card */
+.freshness-card {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.freshness-card.fresh {
+  border-left-color: var(--success-color);
+}
+
+.freshness-card.stale {
+  border-left-color: var(--warning-color);
+}
+
+.freshness-card.critical {
+  border-left-color: var(--secondary-color);
+}
+
+.freshness-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.freshness-type {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.freshness-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--border-color);
+}
+
+.freshness-indicator.fresh {
+  background: var(--success-color);
+}
+
+.freshness-indicator.stale {
+  background: var(--warning-color);
+}
+
+.freshness-indicator.critical {
+  background: var(--secondary-color);
+}
+
+.freshness-description {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.freshness-sync-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.freshness-sync-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: white;
+}
+
+.freshness-sync-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Progress Card */
+.sync-progress-card {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--primary-color);
+}
+
+.sync-progress-card.completed {
+  border-left-color: var(--success-color);
+}
+
+.sync-progress-card.failed {
+  border-left-color: var(--secondary-color);
+}
+
+.sync-progress-card.cancelled {
+  border-left-color: var(--text-light);
+}
+
+.sync-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sync-progress-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sync-job-type {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.sync-season {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.sync-status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sync-status-badge.pending {
+  background: var(--border-color);
+  color: var(--text-color);
+}
+
+.sync-status-badge.running {
+  background: var(--primary-color);
+  color: white;
+}
+
+.sync-status-badge.completed {
+  background: var(--success-color);
+  color: white;
+}
+
+.sync-status-badge.failed {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.sync-status-badge.cancelled {
+  background: var(--text-light);
+  color: white;
+}
+
+.sync-status-badge.small {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.sync-progress-bar-container {
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sync-progress-bar {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.sync-progress-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.sync-current-step {
+  color: var(--text-light);
+}
+
+.sync-progress-percentage {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.sync-results {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.sync-result-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sync-result-label {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.sync-result-value {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.sync-error-message {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(191, 13, 62, 0.1);
+  border-radius: 4px;
+  color: var(--secondary-color);
+  font-size: 13px;
+}
+
+.sync-progress-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sync-triggered-by {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.sync-cancel-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--secondary-color);
+  background: transparent;
+  color: var(--secondary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.sync-cancel-btn:hover:not(:disabled) {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.sync-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* History Table */
+.sync-history-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sync-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.sync-history-table th,
+.sync-history-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sync-history-table th {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sync-history-table tr:hover {
+  background: var(--border-color);
+}
+
+.sync-history-table tr.failed {
+  background: rgba(191, 13, 62, 0.05);
+}
+
+.sync-history-table tr.failed:hover {
+  background: rgba(191, 13, 62, 0.1);
+}
+
+.sync-error-count {
+  color: var(--secondary-color);
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.sync-trigger-cell {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.sync-history-empty {
+  text-align: center;
+  color: var(--text-light);
+  padding: 24px;
+}
+
+/* Freshness Grid */
+.freshness-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .freshness-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .freshness-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sync-progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sync-results {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sync-progress-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .sync-cancel-btn {
+    width: 100%;
+  }
+
+  .sync-history-table {
+    font-size: 12px;
+  }
+
+  .sync-history-table th,
+  .sync-history-table td {
+    padding: 8px 6px;
+  }
+}
+
+/* Active Sync Section */
+.active-syncs-section {
+  margin-bottom: 24px;
+}
+
+.active-syncs-section h3 {
+  margin-bottom: 16px;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-syncs-section h3::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
