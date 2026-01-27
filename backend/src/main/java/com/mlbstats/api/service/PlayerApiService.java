@@ -121,6 +121,94 @@ public class PlayerApiService {
                 .toList();
     }
 
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'rbi_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopRbi(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopRbi(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'runs_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopRuns(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopRuns(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'hits_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopHits(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopHits(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'sb_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopStolenBases(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopStolenBases(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'ops_' + #season + '_' + #minAtBats + '_' + #limit")
+    public List<BattingStatsDto> getTopOps(Integer season, int minAtBats, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopOps(season, minAtBats).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'era_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopEra(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopEra(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'saves_' + #season + '_' + #limit")
+    public List<PitchingStatsDto> getTopSaves(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopSaves(season).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'whip_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopWhip(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopWhip(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
     public List<BattingGameLogDto> getPlayerBattingGameLog(Long playerId, Integer season) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
