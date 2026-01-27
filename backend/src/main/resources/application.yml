@@ -70,6 +70,7 @@ logging:
     org.springframework.web: INFO
     org.springframework.security: ${LOG_LEVEL:INFO}
     org.hibernate.SQL: WARN
+    org.flywaydb: ${LOG_LEVEL:INFO}
 
 # OpenAPI/Swagger - disabled by default in production
 springdoc:
