@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SyncJob, subscribeSyncJobProgress, cancelSyncJob } from '../../services/api';
+import { SyncJob, subscribeSyncJobProgress, cancelSyncJob, getSyncJob } from '../../services/api';
 import './sync.css';
 
 interface SyncProgressCardProps {
@@ -29,7 +29,20 @@ function SyncProgressCard({ job: initialJob, onComplete }: SyncProgressCardProps
         });
       },
       () => {
-        // Error handler - could add error state here
+        // Error handler - connection issues
+        console.error('SSE connection error for job', job.id);
+      },
+      async () => {
+        // Connection closed - fetch final status as fallback
+        try {
+          const finalJob = await getSyncJob(job.id);
+          setJob(finalJob);
+          if (finalJob.status === 'COMPLETED' || finalJob.status === 'FAILED' || finalJob.status === 'CANCELLED') {
+            onComplete?.(finalJob);
+          }
+        } catch (error) {
+          console.error('Failed to fetch final job status:', error);
+        }
       }
     );
 

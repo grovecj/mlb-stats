@@ -232,7 +232,8 @@ export async function cancelSyncJob(jobId: number): Promise<SyncJob> {
 export function subscribeSyncJobProgress(
   jobId: number,
   onProgress: (job: Partial<SyncJob> & { id: number; status: SyncJobStatus }) => void,
-  onError?: (error: Event) => void
+  onError?: (error: Event) => void,
+  onClose?: () => void
 ): () => void {
   const eventSource = new EventSource(`${API_BASE}/ingestion/jobs/${jobId}/stream`, {
     withCredentials: true,
@@ -244,10 +245,14 @@ export function subscribeSyncJobProgress(
   });
 
   eventSource.onerror = (error) => {
-    if (onError) {
+    eventSource.close();
+    // When server closes connection (expected after job completion), call onClose
+    // readyState 2 = CLOSED
+    if (eventSource.readyState === EventSource.CLOSED) {
+      onClose?.();
+    } else if (onError) {
       onError(error);
     }
-    eventSource.close();
   };
 
   return () => {
