@@ -66,6 +66,40 @@ public class Game {
     @JoinColumn(name = "away_probable_pitcher_id")
     private Player awayProbablePitcher;
 
+    // Live game state fields
+    @Column(name = "current_inning")
+    private Integer currentInning;
+
+    @Column(name = "inning_half")
+    private String inningHalf;
+
+    private Integer outs;
+
+    private Integer balls;
+
+    private Integer strikes;
+
+    @Column(name = "runner_on_first")
+    private Boolean runnerOnFirst = false;
+
+    @Column(name = "runner_on_second")
+    private Boolean runnerOnSecond = false;
+
+    @Column(name = "runner_on_third")
+    private Boolean runnerOnThird = false;
+
+    @Column(name = "home_hits")
+    private Integer homeHits;
+
+    @Column(name = "away_hits")
+    private Integer awayHits;
+
+    @Column(name = "home_errors")
+    private Integer homeErrors;
+
+    @Column(name = "away_errors")
+    private Integer awayErrors;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
