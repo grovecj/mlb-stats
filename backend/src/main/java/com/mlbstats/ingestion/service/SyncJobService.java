@@ -28,6 +28,14 @@ public class SyncJobService {
     private final SyncJobRepository syncJobRepository;
     private final Map<Long, CopyOnWriteArrayList<SseEmitter>> jobEmitters = new ConcurrentHashMap<>();
 
+    /**
+     * Creates a new sync job after checking for conflicts.
+     *
+     * Note: The conflict checks use optimistic concurrency. Under high concurrent load,
+     * two requests could theoretically pass checks simultaneously. For this admin-only
+     * feature with infrequent use, this is acceptable. For stricter guarantees, consider
+     * adding a partial unique index: CREATE UNIQUE INDEX ... WHERE status IN ('PENDING', 'RUNNING')
+     */
     @Transactional
     public SyncJob createJob(SyncJobType jobType, Integer season, TriggerType trigger, AppUser user) {
         // Check for running full sync (blocks all other syncs)
@@ -113,7 +121,7 @@ public class SyncJobService {
     public SyncJob cancelJob(Long jobId) {
         SyncJob job = getJob(jobId);
         if (!job.isRunning() && job.getStatus() != SyncJobStatus.PENDING) {
-            throw new IllegalStateException("Can only cancel pending or running jobs");
+            throw new SyncJobConflictException("Can only cancel pending or running jobs");
         }
         job.cancel();
         SyncJob savedJob = syncJobRepository.save(job);
@@ -281,18 +289,29 @@ public class SyncJobService {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("id", job.getId());
         data.put("jobType", job.getJobType());
+        data.put("jobTypeDisplay", job.getJobType().getDisplayName());
         data.put("status", job.getStatus());
         data.put("season", job.getSeason());
+        data.put("triggeredBy", job.getTriggeredBy());
+        data.put("startedByUserEmail", job.getStartedByUser() != null ? job.getStartedByUser().getEmail() : null);
         data.put("processedItems", job.getProcessedItems());
         data.put("totalItems", job.getTotalItems());
         data.put("progressPercentage", job.getProgressPercentage());
         data.put("currentStep", job.getCurrentStep());
         data.put("startedAt", job.getStartedAt());
         data.put("completedAt", job.getCompletedAt());
+        // Calculate duration
+        Long durationSeconds = null;
+        if (job.getStartedAt() != null) {
+            LocalDateTime endTime = job.getCompletedAt() != null ? job.getCompletedAt() : LocalDateTime.now();
+            durationSeconds = Duration.between(job.getStartedAt(), endTime).getSeconds();
+        }
+        data.put("durationSeconds", durationSeconds);
         data.put("recordsCreated", job.getRecordsCreated());
         data.put("recordsUpdated", job.getRecordsUpdated());
         data.put("errorCount", job.getErrorCount());
         data.put("errorMessage", job.getErrorMessage());
+        data.put("createdAt", job.getCreatedAt());
         return data;
     }
 

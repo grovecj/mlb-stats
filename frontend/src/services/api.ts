@@ -231,7 +231,7 @@ export async function cancelSyncJob(jobId: number): Promise<SyncJob> {
 
 export function subscribeSyncJobProgress(
   jobId: number,
-  onProgress: (job: SyncJob) => void,
+  onProgress: (job: Partial<SyncJob> & { id: number; status: SyncJobStatus }) => void,
   onError?: (error: Event) => void
 ): () => void {
   const eventSource = new EventSource(`${API_BASE}/ingestion/jobs/${jobId}/stream`, {
@@ -239,7 +239,7 @@ export function subscribeSyncJobProgress(
   });
 
   eventSource.addEventListener('progress', (event: MessageEvent) => {
-    const data = JSON.parse(event.data) as SyncJob;
+    const data = JSON.parse(event.data) as Partial<SyncJob> & { id: number; status: SyncJobStatus };
     onProgress(data);
   });
 

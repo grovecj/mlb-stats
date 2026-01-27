@@ -19,10 +19,14 @@ function SyncProgressCard({ job: initialJob, onComplete }: SyncProgressCardProps
     const unsubscribe = subscribeSyncJobProgress(
       job.id,
       (updatedJob) => {
-        setJob(updatedJob);
-        if (updatedJob.status === 'COMPLETED' || updatedJob.status === 'FAILED' || updatedJob.status === 'CANCELLED') {
-          onComplete?.(updatedJob);
-        }
+        // Merge with existing state to preserve any fields not in the SSE payload
+        setJob(prev => {
+          const merged = { ...prev, ...updatedJob };
+          if (merged.status === 'COMPLETED' || merged.status === 'FAILED' || merged.status === 'CANCELLED') {
+            onComplete?.(merged);
+          }
+          return merged;
+        });
       },
       () => {
         // Error handler - could add error state here

@@ -92,17 +92,23 @@ public class SyncJob {
         this.recordsCreated = created;
         this.recordsUpdated = updated;
         this.errorCount = errors;
+        // Ensure progress shows 100% on completion
+        if (this.totalItems != null) {
+            this.processedItems = this.totalItems;
+        }
     }
 
     public void fail(String errorMessage) {
         this.status = SyncJobStatus.FAILED;
         this.completedAt = LocalDateTime.now();
         this.errorMessage = errorMessage;
+        // Keep progress at current level on failure (don't force to 100%)
     }
 
     public void cancel() {
         this.status = SyncJobStatus.CANCELLED;
         this.completedAt = LocalDateTime.now();
+        // Keep progress at current level on cancel (don't force to 100%)
     }
 
     public void updateProgress(int processed, Integer total, String step) {

@@ -16,8 +16,11 @@ public interface SyncJobRepository extends JpaRepository<SyncJob, Long> {
 
     Optional<SyncJob> findFirstByJobTypeAndStatusIn(SyncJobType jobType, List<SyncJobStatus> statuses);
 
-    @Query("SELECT sj FROM SyncJob sj WHERE sj.jobType = :jobType AND sj.status = 'COMPLETED' ORDER BY sj.completedAt DESC LIMIT 1")
-    Optional<SyncJob> findLastCompletedByJobType(SyncJobType jobType);
+    Optional<SyncJob> findTopByJobTypeAndStatusOrderByCompletedAtDesc(SyncJobType jobType, SyncJobStatus status);
+
+    default Optional<SyncJob> findLastCompletedByJobType(SyncJobType jobType) {
+        return findTopByJobTypeAndStatusOrderByCompletedAtDesc(jobType, SyncJobStatus.COMPLETED);
+    }
 
     @Query("SELECT sj FROM SyncJob sj WHERE sj.status IN ('PENDING', 'RUNNING') ORDER BY sj.createdAt DESC")
     List<SyncJob> findActiveJobs();

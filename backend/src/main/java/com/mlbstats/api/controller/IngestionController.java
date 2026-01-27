@@ -5,7 +5,6 @@ import com.mlbstats.api.dto.SyncJobDto;
 import com.mlbstats.common.security.AppUserPrincipal;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.sync.SyncJob;
-import com.mlbstats.domain.sync.SyncJobType;
 import com.mlbstats.domain.sync.TriggerType;
 import com.mlbstats.domain.user.AppUser;
 import com.mlbstats.ingestion.service.IngestionOrchestrator;
