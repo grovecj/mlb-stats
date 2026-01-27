@@ -16,12 +16,19 @@ function formatDate(dateStr: string): string {
   });
 }
 
+// Default to previous year during offseason (Jan-March), current year during season
+function getDefaultSeason(): number {
+  const now = new Date();
+  const month = now.getMonth(); // 0-indexed, so Jan=0, Apr=3
+  return month < 3 ? now.getFullYear() - 1 : now.getFullYear();
+}
+
 function PlayerGameLog({ playerId, positionType }: PlayerGameLogProps) {
   const [battingLog, setBattingLog] = useState<BattingGameLog[]>([]);
   const [pitchingLog, setPitchingLog] = useState<PitchingGameLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'batting' | 'pitching'>('batting');
-  const [season, setSeason] = useState<number>(new Date().getFullYear());
+  const [season, setSeason] = useState<number>(getDefaultSeason);
 
   const isPitcher = positionType === 'Pitcher';
 
