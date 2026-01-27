@@ -8,6 +8,7 @@ import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.player.PlayerRepository;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
+import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
 import com.mlbstats.domain.stats.PlayerPitchingStatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,7 @@ public class PlayerApiService {
     private final PlayerBattingStatsRepository battingStatsRepository;
     private final PlayerPitchingStatsRepository pitchingStatsRepository;
     private final PlayerGameBattingRepository gameBattingRepository;
+    private final PlayerGamePitchingRepository gamePitchingRepository;
 
     public PageDto<PlayerDto> getAllPlayers(Pageable pageable) {
         Page<Player> page = playerRepository.findByActiveTrue(pageable);
@@ -116,6 +118,24 @@ public class PlayerApiService {
         return pitchingStatsRepository.findTopStrikeouts(season).stream()
                 .limit(limit)
                 .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    public List<BattingGameLogDto> getPlayerBattingGameLog(Long playerId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return gameBattingRepository.findByPlayerIdAndSeason(playerId, season).stream()
+                .map(BattingGameLogDto::fromEntity)
+                .toList();
+    }
+
+    public List<PitchingGameLogDto> getPlayerPitchingGameLog(Long playerId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return gamePitchingRepository.findByPlayerIdAndSeason(playerId, season).stream()
+                .map(PitchingGameLogDto::fromEntity)
                 .toList();
     }
 }
