@@ -58,13 +58,14 @@ public class GameMapper {
     }
 
     private void setProbablePitcher(ScheduleResponse.TeamGameData teamData, Game game, boolean isHome) {
+        Player pitcher = null;
         if (teamData.getProbablePitcher() != null && teamData.getProbablePitcher().getId() != null) {
-            Player pitcher = playerRepository.findByMlbId(teamData.getProbablePitcher().getId()).orElse(null);
-            if (isHome) {
-                game.setHomeProbablePitcher(pitcher);
-            } else {
-                game.setAwayProbablePitcher(pitcher);
-            }
+            pitcher = playerRepository.findByMlbId(teamData.getProbablePitcher().getId()).orElse(null);
+        }
+        if (isHome) {
+            game.setHomeProbablePitcher(pitcher);
+        } else {
+            game.setAwayProbablePitcher(pitcher);
         }
     }
 
