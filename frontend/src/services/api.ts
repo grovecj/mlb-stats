@@ -1,4 +1,4 @@
-import { Team, RosterEntry, TeamStanding } from '../types/team';
+import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/team';
 import { Player } from '../types/player';
 import { Game, BoxScore } from '../types/game';
 import { BattingStats, PitchingStats, PageResponse } from '../types/stats';
@@ -95,6 +95,11 @@ export async function getTeamStanding(id: number, season?: number): Promise<Team
   } catch {
     return null;
   }
+}
+
+export async function getTeamAggregateStats(id: number, season?: number): Promise<TeamAggregateStats> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<TeamAggregateStats>(`${API_BASE}/teams/${id}/aggregate-stats${params}`);
 }
 
 // Players

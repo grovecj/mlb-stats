@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Team, RosterEntry } from '../types/team';
+import { Team, RosterEntry, TeamAggregateStats as TeamAggregateStatsType } from '../types/team';
 import { Game } from '../types/game';
 import { BattingStats } from '../types/stats';
-import { getTeam, getTeamRoster, getTeamGames, getTeamStats } from '../services/api';
+import { getTeam, getTeamRoster, getTeamGames, getTeamStats, getTeamAggregateStats } from '../services/api';
 import { useTeamFavorite } from '../hooks/useFavorite';
 import TeamRoster from '../components/team/TeamRoster';
 import TeamStats from '../components/team/TeamStats';
+import TeamAggregateStats from '../components/team/TeamAggregateStats';
 import GameSchedule from '../components/game/GameSchedule';
 import FavoriteButton from '../components/common/FavoriteButton';
 
@@ -17,6 +18,8 @@ function TeamDetailPage() {
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [stats, setStats] = useState<BattingStats[]>([]);
+  const [aggregateStats, setAggregateStats] = useState<TeamAggregateStatsType | null>(null);
+  const [aggregateLoading, setAggregateLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'roster' | 'stats' | 'games'>('roster');
@@ -26,20 +29,23 @@ function TeamDetailPage() {
     async function fetchData() {
       if (!teamId) return;
       try {
-        const [teamData, rosterData, gamesData, statsData] = await Promise.all([
+        const [teamData, rosterData, gamesData, statsData, aggregateData] = await Promise.all([
           getTeam(teamId),
           getTeamRoster(teamId).catch(() => []),
           getTeamGames(teamId).catch(() => []),
           getTeamStats(teamId).catch(() => []),
+          getTeamAggregateStats(teamId).catch(() => null),
         ]);
         setTeam(teamData);
         setRoster(rosterData);
         setGames(gamesData);
         setStats(statsData);
+        setAggregateStats(aggregateData);
       } catch (_err) {
         setError('Failed to load team data');
       } finally {
         setLoading(false);
+        setAggregateLoading(false);
       }
     }
     fetchData();
@@ -105,7 +111,12 @@ function TeamDetailPage() {
       </div>
 
       {activeTab === 'roster' && <TeamRoster roster={roster} />}
-      {activeTab === 'stats' && <TeamStats stats={stats} />}
+      {activeTab === 'stats' && (
+        <>
+          <TeamAggregateStats stats={aggregateStats} loading={aggregateLoading} />
+          <TeamStats stats={stats} />
+        </>
+      )}
       {activeTab === 'games' && <GameSchedule games={recentGames} title="Recent Games" />}
     </div>
   );

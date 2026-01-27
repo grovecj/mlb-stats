@@ -3,6 +3,7 @@ package com.mlbstats.api.controller;
 import com.mlbstats.api.dto.BattingStatsDto;
 import com.mlbstats.api.dto.GameDto;
 import com.mlbstats.api.dto.RosterEntryDto;
+import com.mlbstats.api.dto.TeamAggregateStatsDto;
 import com.mlbstats.api.dto.TeamDto;
 import com.mlbstats.api.dto.TeamStandingDto;
 import com.mlbstats.api.service.TeamApiService;
@@ -67,6 +68,14 @@ public class TeamController {
             @PathVariable Long id,
             @RequestParam(required = false) Integer season) {
         return ResponseEntity.ok(teamApiService.getTeamBattingStats(id, season));
+    }
+
+    @GetMapping("/{id}/aggregate-stats")
+    @Operation(summary = "Get team aggregate stats", description = "Returns aggregate batting and pitching stats for a team")
+    public ResponseEntity<TeamAggregateStatsDto> getTeamAggregateStats(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(teamApiService.getTeamAggregateStats(id, season));
     }
 
     @GetMapping("/standings")

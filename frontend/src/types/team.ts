@@ -40,3 +40,46 @@ export interface TeamStanding {
   awayWins: number | null;
   awayLosses: number | null;
 }
+
+export interface TeamBattingAggregate {
+  gamesPlayed: number;
+  atBats: number;
+  runs: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  rbi: number;
+  stolenBases: number;
+  walks: number;
+  strikeouts: number;
+  plateAppearances: number;
+  battingAvg: number | null;
+  obp: number | null;
+  slg: number | null;
+  ops: number | null;
+}
+
+export interface TeamPitchingAggregate {
+  gamesPlayed: number;
+  wins: number;
+  losses: number;
+  saves: number;
+  inningsPitched: number;
+  hitsAllowed: number;
+  earnedRuns: number;
+  walks: number;
+  strikeouts: number;
+  homeRunsAllowed: number;
+  qualityStarts: number;
+  era: number | null;
+  whip: number | null;
+  kPer9: number | null;
+}
+
+export interface TeamAggregateStats {
+  teamId: number;
+  season: number;
+  batting: TeamBattingAggregate | null;
+  pitching: TeamPitchingAggregate | null;
+}
