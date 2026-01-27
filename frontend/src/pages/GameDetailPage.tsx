@@ -1,11 +1,73 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Game, BoxScore as BoxScoreType } from '../types/game';
+import { Game, BoxScore as BoxScoreType, ProbablePitcher } from '../types/game';
 import { getGame, getGameBoxScore } from '../services/api';
 import BoxScore from '../components/game/BoxScore';
 import BattingTable from '../components/game/BattingTable';
 import PitchingTable from '../components/game/PitchingTable';
 import '../components/game/BoxScoreTables.css';
+
+function PitchingMatchupCard({ awayPitcher, homePitcher, awayTeam, homeTeam }: {
+  awayPitcher: ProbablePitcher | null;
+  homePitcher: ProbablePitcher | null;
+  awayTeam: string;
+  homeTeam: string;
+}) {
+  return (
+    <div className="card" style={{ marginTop: '24px' }}>
+      <h3 className="card-title">Pitching Matchup</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '16px 0' }}>
+        <PitcherCard pitcher={awayPitcher} teamName={awayTeam} />
+        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-light)' }}>vs</div>
+        <PitcherCard pitcher={homePitcher} teamName={homeTeam} />
+      </div>
+    </div>
+  );
+}
+
+function PitcherCard({ pitcher, teamName }: { pitcher: ProbablePitcher | null; teamName: string }) {
+  if (!pitcher) {
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <div style={{
+          width: '80px',
+          height: '80px',
+          borderRadius: '50%',
+          backgroundColor: 'var(--background-color)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 8px',
+          color: 'var(--text-light)',
+          fontSize: '14px',
+        }}>
+          TBD
+        </div>
+        <div style={{ fontWeight: '500' }}>To Be Determined</div>
+        <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>{teamName}</div>
+      </div>
+    );
+  }
+
+  return (
+    <Link to={`/players/${pitcher.id}`} style={{ textDecoration: 'none', color: 'inherit', textAlign: 'center' }}>
+      <img
+        src={pitcher.headshotUrl || ''}
+        alt={pitcher.fullName}
+        style={{
+          width: '80px',
+          height: '80px',
+          borderRadius: '50%',
+          objectFit: 'cover',
+          border: '2px solid var(--border-color)',
+          marginBottom: '8px',
+        }}
+      />
+      <div style={{ fontWeight: '500' }}>{pitcher.fullName}</div>
+      <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>{teamName}</div>
+    </Link>
+  );
+}
 
 function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -159,6 +221,16 @@ function GameDetailPage() {
           <p>Box score data not yet available for this game.</p>
           <p>Admins can sync box scores from the Admin page.</p>
         </div>
+      )}
+
+      {(game.status === 'Scheduled' || game.status === 'Pre-Game') &&
+       (game.homeProbablePitcher || game.awayProbablePitcher) && (
+        <PitchingMatchupCard
+          awayPitcher={game.awayProbablePitcher}
+          homePitcher={game.homeProbablePitcher}
+          awayTeam={game.awayTeam?.name || 'Away'}
+          homeTeam={game.homeTeam?.name || 'Home'}
+        />
       )}
     </div>
   );
