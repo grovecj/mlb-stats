@@ -1,0 +1,41 @@
+{
+  "stats": [
+    {
+      "type": {
+        "displayName": "season"
+      },
+      "group": {
+        "displayName": "pitching"
+      },
+      "splits": [
+        {
+          "season": "2024",
+          "team": {
+            "id": 147,
+            "name": "New York Yankees"
+          },
+          "stat": {
+            "gamesPlayed": 33,
+            "gamesStarted": 33,
+            "wins": 15,
+            "losses": 4,
+            "saves": 0,
+            "holds": 0,
+            "inningsPitched": "209.0",
+            "strikeOuts": 260,
+            "baseOnBalls": 44,
+            "hitBatsmen": 7,
+            "earnedRuns": 64,
+            "homeRunsAllowed": 25,
+            "era": "2.75",
+            "whip": "0.98",
+            "numberOfPitches": 3280,
+            "strikes": 2200,
+            "completeGames": 2,
+            "shutouts": 1
+          }
+        }
+      ]
+    }
+  ]
+}

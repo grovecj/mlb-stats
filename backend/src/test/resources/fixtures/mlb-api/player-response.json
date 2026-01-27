@@ -1,0 +1,26 @@
+{
+  "people": [
+    {
+      "id": 592450,
+      "fullName": "Aaron Judge",
+      "firstName": "Aaron",
+      "lastName": "Judge",
+      "primaryNumber": "99",
+      "primaryPosition": {
+        "abbreviation": "RF",
+        "type": "Outfielder"
+      },
+      "batSide": {
+        "code": "R"
+      },
+      "pitchHand": {
+        "code": "R"
+      },
+      "birthDate": "1992-04-26",
+      "height": "6' 7\"",
+      "weight": 282,
+      "mlbDebutDate": "2016-08-13",
+      "active": true
+    }
+  ]
+}
