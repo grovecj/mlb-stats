@@ -204,14 +204,42 @@ http.get('/api/my-endpoint', () => {
 })
 ```
 
-## Frontend Theme Support
+## Frontend Styling
 
-Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.css`:
+### Recommended Stack (for new components)
+
+**Use Tailwind CSS + shadcn/ui** for new components:
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Accessible component library built on Radix + Tailwind
+
+Benefits: Better DX, automatic dark mode, accessible by default, consistent design system.
+
+```tsx
+// Example: New component using shadcn/ui
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm font-medium">{label}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Legacy CSS (existing components)
+
+The codebase currently uses plain CSS with CSS variables in `frontend/src/index.css`. When modifying existing components, maintain consistency with the current approach:
 
 | Variable | Usage |
 |----------|-------|
-| `--primary-color` | Brand color, links, headings |
-| `--secondary-color` | Accents, errors |
+| `--primary-color` | Brand color (#002d72 MLB blue) |
+| `--secondary-color` | Accents, errors (#bf0d3e MLB red) |
 | `--background-color` | Page background |
 | `--card-background` | Cards, panels, modals |
 | `--text-color` | Primary text |
@@ -220,14 +248,11 @@ Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.cs
 | `--success-color` | Success states |
 | `--warning-color` | Warning states |
 
-```css
-/* Always use variables instead of hardcoded colors */
-.component {
-  background: var(--card-background);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-```
+Dark mode uses `[data-theme="dark"]` selector. Always use variables, never hardcode colors.
+
+### Migration Strategy
+
+When touching existing components, consider migrating to Tailwind/shadcn if the change is significant. For minor fixes, maintain existing patterns. See `.claude/agents/frontend-ui-stylist.md` for detailed migration guidance.
 
 ## CSRF Token Handling
 
