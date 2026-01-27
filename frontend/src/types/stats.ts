@@ -67,3 +67,50 @@ export interface PageResponse<T> {
   first: boolean;
   last: boolean;
 }
+
+export interface BattingGameLog {
+  gameId: number;
+  gameDate: string;
+  opponent: string | null;
+  opponentAbbreviation: string | null;
+  opponentId: number | null;
+  isHome: boolean;
+  result: string | null;
+  teamScore: number | null;
+  opponentScore: number | null;
+  atBats: number;
+  runs: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  rbi: number;
+  walks: number;
+  strikeouts: number;
+  stolenBases: number;
+  battingOrder: number | null;
+  position: string | null;
+}
+
+export interface PitchingGameLog {
+  gameId: number;
+  gameDate: string;
+  opponent: string | null;
+  opponentAbbreviation: string | null;
+  opponentId: number | null;
+  isHome: boolean;
+  result: string | null;
+  teamScore: number | null;
+  opponentScore: number | null;
+  decision: string | null;
+  inningsPitched: number;
+  hitsAllowed: number;
+  runsAllowed: number;
+  earnedRuns: number;
+  walks: number;
+  strikeouts: number;
+  homeRunsAllowed: number;
+  pitchesThrown: number | null;
+  strikes: number | null;
+  isStarter: boolean;
+}
