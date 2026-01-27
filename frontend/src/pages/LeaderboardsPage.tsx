@@ -189,7 +189,7 @@ function LeaderboardsPage() {
                 color: 'var(--text-color)',
               }}
             >
-              {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((y) => (
+              {Array.from({ length: 10 }, (_, i) => getDefaultSeason() - i).map((y) => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
