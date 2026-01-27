@@ -66,13 +66,20 @@ function PlayerGameLog({ playerId, positionType }: PlayerGameLogProps) {
     {
       key: 'opponent',
       header: 'Opp',
-      render: (g: BattingGameLog) => (
-        <Link to={`/teams/${g.opponentId}`}>
-          {g.isHome ? 'vs' : '@'} {g.opponentAbbreviation}
-        </Link>
-      ),
+      render: (g: BattingGameLog) =>
+        g.opponentId ? (
+          <Link to={`/teams/${g.opponentId}`}>
+            {g.isHome ? 'vs' : '@'} {g.opponentAbbreviation ?? '-'}
+          </Link>
+        ) : (
+          <span>-</span>
+        ),
     },
-    { key: 'result', header: 'Result' },
+    {
+      key: 'result',
+      header: 'Result',
+      render: (g: BattingGameLog) => g.result || '-',
+    },
     { key: 'atBats', header: 'AB', className: 'number' },
     { key: 'runs', header: 'R', className: 'number' },
     { key: 'hits', header: 'H', className: 'number' },
@@ -96,13 +103,20 @@ function PlayerGameLog({ playerId, positionType }: PlayerGameLogProps) {
     {
       key: 'opponent',
       header: 'Opp',
-      render: (g: PitchingGameLog) => (
-        <Link to={`/teams/${g.opponentId}`}>
-          {g.isHome ? 'vs' : '@'} {g.opponentAbbreviation}
-        </Link>
-      ),
+      render: (g: PitchingGameLog) =>
+        g.opponentId ? (
+          <Link to={`/teams/${g.opponentId}`}>
+            {g.isHome ? 'vs' : '@'} {g.opponentAbbreviation ?? '-'}
+          </Link>
+        ) : (
+          <span>-</span>
+        ),
     },
-    { key: 'result', header: 'Result' },
+    {
+      key: 'result',
+      header: 'Result',
+      render: (g: PitchingGameLog) => g.result || '-',
+    },
     {
       key: 'decision',
       header: 'Dec',
@@ -160,7 +174,7 @@ function PlayerGameLog({ playerId, positionType }: PlayerGameLogProps) {
               color: 'var(--text-color)',
             }}
           >
-            {[2024, 2023, 2022, 2021, 2020].map((y) => (
+            {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((y) => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>

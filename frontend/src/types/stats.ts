@@ -71,9 +71,9 @@ export interface PageResponse<T> {
 export interface BattingGameLog {
   gameId: number;
   gameDate: string;
-  opponent: string;
-  opponentAbbreviation: string;
-  opponentId: number;
+  opponent: string | null;
+  opponentAbbreviation: string | null;
+  opponentId: number | null;
   isHome: boolean;
   result: string | null;
   teamScore: number | null;
@@ -95,9 +95,9 @@ export interface BattingGameLog {
 export interface PitchingGameLog {
   gameId: number;
   gameDate: string;
-  opponent: string;
-  opponentAbbreviation: string;
-  opponentId: number;
+  opponent: string | null;
+  opponentAbbreviation: string | null;
+  opponentId: number | null;
   isHome: boolean;
   result: string | null;
   teamScore: number | null;
