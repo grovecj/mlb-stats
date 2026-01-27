@@ -26,6 +26,7 @@ public class CacheConfig {
     public static final String GAMES_BY_DATE = "gamesByDate";
     public static final String BOX_SCORES = "boxScores";
     public static final String SEARCH = "search";
+    public static final String TEAM_AGGREGATE_STATS = "teamAggregateStats";
 
     private static final Map<String, CacheSpec> CACHE_SPECS = Map.ofEntries(
             Map.entry(TEAMS, new CacheSpec(Duration.ofHours(24), 1)),
@@ -40,7 +41,8 @@ public class CacheConfig {
             Map.entry(GAMES, new CacheSpec(Duration.ofHours(1), 500)),
             Map.entry(GAMES_BY_DATE, new CacheSpec(Duration.ofHours(1), 60)),
             Map.entry(BOX_SCORES, new CacheSpec(Duration.ofHours(24), 200)),
-            Map.entry(SEARCH, new CacheSpec(Duration.ofMinutes(5), 100))
+            Map.entry(SEARCH, new CacheSpec(Duration.ofMinutes(5), 100)),
+            Map.entry(TEAM_AGGREGATE_STATS, new CacheSpec(Duration.ofMinutes(30), 100))
     );
 
     @Bean
