@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { SyncJob, subscribeSyncJobProgress, cancelSyncJob, getSyncJob } from '../../services/api';
 import './sync.css';
 
@@ -10,11 +10,22 @@ interface SyncProgressCardProps {
 function SyncProgressCard({ job: initialJob, onComplete }: SyncProgressCardProps) {
   const [job, setJob] = useState<SyncJob>(initialJob);
   const [cancelling, setCancelling] = useState(false);
+  const completedRef = useRef(false);
 
   useEffect(() => {
     if (job.status !== 'RUNNING' && job.status !== 'PENDING') {
       return;
     }
+
+    // Reset completed flag when job starts
+    completedRef.current = false;
+
+    const handleComplete = (completedJob: SyncJob) => {
+      if (!completedRef.current) {
+        completedRef.current = true;
+        onComplete?.(completedJob);
+      }
+    };
 
     const unsubscribe = subscribeSyncJobProgress(
       job.id,
@@ -23,7 +34,7 @@ function SyncProgressCard({ job: initialJob, onComplete }: SyncProgressCardProps
         setJob(prev => {
           const merged = { ...prev, ...updatedJob };
           if (merged.status === 'COMPLETED' || merged.status === 'FAILED' || merged.status === 'CANCELLED') {
-            onComplete?.(merged);
+            handleComplete(merged);
           }
           return merged;
         });
@@ -38,7 +49,7 @@ function SyncProgressCard({ job: initialJob, onComplete }: SyncProgressCardProps
           const finalJob = await getSyncJob(job.id);
           setJob(finalJob);
           if (finalJob.status === 'COMPLETED' || finalJob.status === 'FAILED' || finalJob.status === 'CANCELLED') {
-            onComplete?.(finalJob);
+            handleComplete(finalJob);
           }
         } catch (error) {
           console.error('Failed to fetch final job status:', error);

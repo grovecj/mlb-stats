@@ -245,10 +245,11 @@ export function subscribeSyncJobProgress(
   });
 
   eventSource.onerror = (error) => {
+    // Capture readyState before closing, as close() sets it to CLOSED
+    const wasAlreadyClosed = eventSource.readyState === EventSource.CLOSED;
     eventSource.close();
     // When server closes connection (expected after job completion), call onClose
-    // readyState 2 = CLOSED
-    if (eventSource.readyState === EventSource.CLOSED) {
+    if (wasAlreadyClosed) {
       onClose?.();
     } else if (onError) {
       onError(error);
