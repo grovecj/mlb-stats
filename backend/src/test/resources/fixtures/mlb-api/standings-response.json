@@ -1,0 +1,138 @@
+{
+  "records": [
+    {
+      "standingsType": "regularSeason",
+      "league": {
+        "id": 103,
+        "name": "American League"
+      },
+      "division": {
+        "id": 201,
+        "name": "American League East"
+      },
+      "teamRecords": [
+        {
+          "team": {
+            "id": 147,
+            "name": "New York Yankees"
+          },
+          "wins": 94,
+          "losses": 68,
+          "winningPercentage": ".580",
+          "gamesBack": "-",
+          "wildCardGamesBack": "-",
+          "divisionRank": 1,
+          "leagueRank": 2,
+          "wildCardRank": 1,
+          "runsScored": 825,
+          "runsAllowed": 680,
+          "runDifferential": 145,
+          "streak": {
+            "streakType": "wins",
+            "streakNumber": 3,
+            "streakCode": "W3"
+          },
+          "records": {
+            "splitRecords": [
+              {
+                "wins": 52,
+                "losses": 29,
+                "type": "home"
+              },
+              {
+                "wins": 42,
+                "losses": 39,
+                "type": "away"
+              }
+            ]
+          }
+        },
+        {
+          "team": {
+            "id": 111,
+            "name": "Boston Red Sox"
+          },
+          "wins": 81,
+          "losses": 81,
+          "winningPercentage": ".500",
+          "gamesBack": "13.0",
+          "wildCardGamesBack": "10.0",
+          "divisionRank": 2,
+          "leagueRank": 7,
+          "wildCardRank": 7,
+          "runsScored": 750,
+          "runsAllowed": 760,
+          "runDifferential": -10,
+          "streak": {
+            "streakType": "losses",
+            "streakNumber": 2,
+            "streakCode": "L2"
+          },
+          "records": {
+            "splitRecords": [
+              {
+                "wins": 45,
+                "losses": 36,
+                "type": "home"
+              },
+              {
+                "wins": 36,
+                "losses": 45,
+                "type": "away"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "standingsType": "regularSeason",
+      "league": {
+        "id": 104,
+        "name": "National League"
+      },
+      "division": {
+        "id": 203,
+        "name": "National League West"
+      },
+      "teamRecords": [
+        {
+          "team": {
+            "id": 119,
+            "name": "Los Angeles Dodgers"
+          },
+          "wins": 98,
+          "losses": 64,
+          "winningPercentage": ".605",
+          "gamesBack": "-",
+          "wildCardGamesBack": "-",
+          "divisionRank": 1,
+          "leagueRank": 1,
+          "wildCardRank": 1,
+          "runsScored": 900,
+          "runsAllowed": 700,
+          "runDifferential": 200,
+          "streak": {
+            "streakType": "wins",
+            "streakNumber": 5,
+            "streakCode": "W5"
+          },
+          "records": {
+            "splitRecords": [
+              {
+                "wins": 55,
+                "losses": 26,
+                "type": "home"
+              },
+              {
+                "wins": 43,
+                "losses": 38,
+                "type": "away"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

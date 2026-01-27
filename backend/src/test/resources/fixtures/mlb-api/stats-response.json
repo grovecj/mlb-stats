@@ -1,0 +1,45 @@
+{
+  "stats": [
+    {
+      "type": {
+        "displayName": "season"
+      },
+      "group": {
+        "displayName": "hitting"
+      },
+      "splits": [
+        {
+          "season": "2024",
+          "team": {
+            "id": 147,
+            "name": "New York Yankees"
+          },
+          "stat": {
+            "gamesPlayed": 158,
+            "atBats": 580,
+            "runs": 122,
+            "hits": 180,
+            "doubles": 30,
+            "triples": 2,
+            "homeRuns": 58,
+            "rbi": 144,
+            "stolenBases": 10,
+            "caughtStealing": 3,
+            "baseOnBalls": 133,
+            "strikeOuts": 175,
+            "avg": ".310",
+            "obp": ".425",
+            "slg": ".701",
+            "ops": "1.126",
+            "plateAppearances": 735,
+            "totalBases": 406,
+            "intentionalWalks": 19,
+            "hitByPitch": 12,
+            "sacFlies": 8,
+            "groundIntoDoublePlay": 15
+          }
+        }
+      ]
+    }
+  ]
+}

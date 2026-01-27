@@ -1,0 +1,64 @@
+{
+  "roster": [
+    {
+      "person": {
+        "id": 592450,
+        "fullName": "Aaron Judge"
+      },
+      "jerseyNumber": "99",
+      "position": {
+        "abbreviation": "RF",
+        "type": "Outfielder"
+      },
+      "status": {
+        "code": "A",
+        "description": "Active"
+      }
+    },
+    {
+      "person": {
+        "id": 650402,
+        "fullName": "Gerrit Cole"
+      },
+      "jerseyNumber": "45",
+      "position": {
+        "abbreviation": "P",
+        "type": "Pitcher"
+      },
+      "status": {
+        "code": "A",
+        "description": "Active"
+      }
+    },
+    {
+      "person": {
+        "id": 596019,
+        "fullName": "Anthony Rizzo"
+      },
+      "jerseyNumber": "48",
+      "position": {
+        "abbreviation": "1B",
+        "type": "Infielder"
+      },
+      "status": {
+        "code": "A",
+        "description": "Active"
+      }
+    },
+    {
+      "person": {
+        "id": 545361,
+        "fullName": "Juan Soto"
+      },
+      "jerseyNumber": "22",
+      "position": {
+        "abbreviation": "LF",
+        "type": "Outfielder"
+      },
+      "status": {
+        "code": "A",
+        "description": "Active"
+      }
+    }
+  ]
+}

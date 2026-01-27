@@ -16,6 +16,7 @@ import com.mlbstats.ingestion.mapper.StatsMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +34,10 @@ public class StatsIngestionService {
     private final PlayerPitchingStatsRepository pitchingStatsRepository;
     private final StatsMapper statsMapper;
 
-    @Transactional
+    /**
+     * Syncs stats for all players. Each player is processed in a separate transaction
+     * to prevent session corruption from affecting other players.
+     */
     public int syncAllPlayerStats(Integer season) {
         log.info("Starting stats sync for season {}", season);
         List<Team> teams = teamRepository.findAll();
@@ -50,14 +54,15 @@ public class StatsIngestionService {
 
             for (TeamRoster entry : roster) {
                 try {
-                    int[] result = syncPlayerStatsWithCount(entry.getPlayer(), team, season);
+                    // Each player sync runs in its own transaction to isolate failures
+                    int[] result = syncSinglePlayerStats(entry.getPlayer().getId(), team.getId(), season);
                     battingStatsSaved += result[0];
                     pitchingStatsSaved += result[1];
                     totalPlayers++;
                 } catch (Exception e) {
                     errors++;
                     log.error("Failed to sync stats for player {} (mlbId={}): {}",
-                            entry.getPlayer().getFullName(), entry.getPlayer().getMlbId(), e.getMessage(), e);
+                            entry.getPlayer().getFullName(), entry.getPlayer().getMlbId(), e.getMessage());
                 }
             }
         }
@@ -65,6 +70,19 @@ public class StatsIngestionService {
         log.info("Completed stats sync. Processed {} players, saved {} batting stats, {} pitching stats, {} errors",
                 totalPlayers, battingStatsSaved, pitchingStatsSaved, errors);
         return totalPlayers;
+    }
+
+    /**
+     * Syncs a single player's stats in a new transaction.
+     * This isolates any Hibernate session issues to just this player.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public int[] syncSinglePlayerStats(Long playerId, Long teamId, Integer season) {
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Team not found: " + teamId));
+        return syncPlayerStatsWithCount(player, team, season);
     }
 
     @Transactional

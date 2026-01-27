@@ -1,0 +1,79 @@
+{
+  "teams": [
+    {
+      "id": 147,
+      "name": "New York Yankees",
+      "abbreviation": "NYY",
+      "locationName": "Bronx",
+      "venue": {
+        "name": "Yankee Stadium"
+      },
+      "league": {
+        "name": "American League"
+      },
+      "division": {
+        "name": "American League East"
+      }
+    },
+    {
+      "id": 111,
+      "name": "Boston Red Sox",
+      "abbreviation": "BOS",
+      "locationName": "Boston",
+      "venue": {
+        "name": "Fenway Park"
+      },
+      "league": {
+        "name": "American League"
+      },
+      "division": {
+        "name": "American League East"
+      }
+    },
+    {
+      "id": 121,
+      "name": "New York Mets",
+      "abbreviation": "NYM",
+      "locationName": "Flushing",
+      "venue": {
+        "name": "Citi Field"
+      },
+      "league": {
+        "name": "National League"
+      },
+      "division": {
+        "name": "National League East"
+      }
+    },
+    {
+      "id": 119,
+      "name": "Los Angeles Dodgers",
+      "abbreviation": "LAD",
+      "locationName": "Los Angeles",
+      "venue": {
+        "name": "Dodger Stadium"
+      },
+      "league": {
+        "name": "National League"
+      },
+      "division": {
+        "name": "National League West"
+      }
+    },
+    {
+      "id": 114,
+      "name": "Cleveland Guardians",
+      "abbreviation": "CLE",
+      "locationName": "Cleveland",
+      "venue": {
+        "name": "Progressive Field"
+      },
+      "league": {
+        "name": "American League"
+      },
+      "division": {
+        "name": "American League Central"
+      }
+    }
+  ]
+}

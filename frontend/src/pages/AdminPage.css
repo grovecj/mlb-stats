@@ -52,9 +52,32 @@
   color: var(--text-color);
 }
 
+.sync-panel h3 {
+  margin-bottom: 16px;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.sync-panel .section {
+  margin-top: 32px;
+}
+
 .sync-description {
   color: var(--text-light);
   margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.full-sync-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.full-sync-btn {
+  padding: 14px 32px;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
 .sync-buttons {

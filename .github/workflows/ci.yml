@@ -25,6 +25,14 @@ jobs:
         working-directory: backend
         run: ./mvnw verify spotbugs:check pmd:pmd -B
 
+      - name: Upload test results
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: backend-test-results
+          path: backend/target/surefire-reports/
+          retention-days: 7
+
       - name: Upload PMD report
         uses: actions/upload-artifact@v6
         if: always()
@@ -57,7 +65,15 @@ jobs:
 
       - name: Test
         working-directory: frontend
-        run: npm test -- --run --passWithNoTests
+        run: npm test -- --run --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          retention-days: 7
 
       - name: Build
         working-directory: frontend

@@ -90,6 +90,120 @@ For details on the MLB Stats API endpoints and image CDN URLs, see [docs/MLB_STA
 - `contexts/AuthContext.tsx` - Auth state, `useAuth()` hook with `isAdmin`, `isOwner`, `hasRole()`
 - `services/api.ts` - All backend API calls (includes CSRF token handling)
 
+## Testing
+
+### Backend Integration Tests
+
+Run all tests:
+```bash
+cd backend
+./mvnw test
+```
+
+Run a single test class:
+```bash
+./mvnw test -Dtest=TeamIngestionServiceTest
+```
+
+#### Test Structure
+
+- `src/test/java/com/mlbstats/BaseIntegrationTest.java` - Base class with MockMvc setup, entity factories, fixture loading
+- `src/test/resources/application-test.yml` - H2 in-memory database config
+- `src/test/resources/fixtures/mlb-api/` - JSON fixtures for mock API responses
+
+#### Adding New Ingestion Service Tests
+
+```java
+class MyIngestionServiceTest extends BaseIntegrationTest {
+    @MockitoBean
+    private MlbApiClient mlbApiClient;
+
+    @Autowired
+    private MyIngestionService myIngestionService;
+
+    @Test
+    void syncData_shouldCreateEntities() {
+        // Load fixture
+        MyResponse response = loadFixture("mlb-api/my-response.json", MyResponse.class);
+        when(mlbApiClient.getMyData()).thenReturn(response);
+
+        // Call service
+        int count = myIngestionService.syncData();
+
+        // Verify
+        assertThat(count).isEqualTo(5);
+        assertThat(myRepository.findAll()).hasSize(5);
+    }
+}
+```
+
+#### Adding New Controller Tests
+
+```java
+class MyControllerTest extends BaseIntegrationTest {
+    @Test
+    @WithMockUser(roles = "USER")
+    void getEndpoint_shouldReturnData() throws Exception {
+        createTestTeam(147, "New York Yankees", "NYY");
+
+        mockMvc.perform(get("/api/my-endpoint"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].name").value("New York Yankees"));
+    }
+}
+```
+
+### Frontend Tests
+
+Run all tests:
+```bash
+cd frontend
+npm test -- --run
+```
+
+Run with coverage:
+```bash
+npm test -- --run --coverage
+```
+
+#### Test Structure
+
+- `src/test/setup.ts` - MSW server setup, global test configuration
+- `src/test/mocks/handlers.ts` - Mock API endpoint handlers
+- `src/test/mocks/data/` - Mock data matching TypeScript types
+- `src/test/utils/render.tsx` - Custom render with providers
+
+#### Adding New Page Tests
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { screen, waitFor } from '@testing-library/react'
+import { render } from '../../test/utils/render'
+import MyPage from '../MyPage'
+
+describe('MyPage', () => {
+  it('displays data after loading', async () => {
+    render(<MyPage />)
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+    })
+
+    expect(screen.getByText('Expected Content')).toBeInTheDocument()
+  })
+})
+```
+
+#### Adding New Mock Handlers
+
+In `src/test/mocks/handlers.ts`:
+
+```typescript
+http.get('/api/my-endpoint', () => {
+  return HttpResponse.json(mockData)
+})
+```
+
 ## Frontend Theme Support
 
 Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.css`:

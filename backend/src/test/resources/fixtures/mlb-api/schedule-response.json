@@ -1,0 +1,107 @@
+{
+  "dates": [
+    {
+      "date": "2024-04-01",
+      "games": [
+        {
+          "gamePk": 745123,
+          "gameDate": "2024-04-01T18:05:00Z",
+          "gameType": "R",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final"
+          },
+          "teams": {
+            "home": {
+              "score": 5,
+              "team": {
+                "id": 147,
+                "name": "New York Yankees"
+              }
+            },
+            "away": {
+              "score": 3,
+              "team": {
+                "id": 111,
+                "name": "Boston Red Sox"
+              }
+            }
+          },
+          "venue": {
+            "name": "Yankee Stadium"
+          },
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "season": 2024
+        },
+        {
+          "gamePk": 745124,
+          "gameDate": "2024-04-01T19:10:00Z",
+          "gameType": "R",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final"
+          },
+          "teams": {
+            "home": {
+              "score": 7,
+              "team": {
+                "id": 119,
+                "name": "Los Angeles Dodgers"
+              }
+            },
+            "away": {
+              "score": 2,
+              "team": {
+                "id": 121,
+                "name": "New York Mets"
+              }
+            }
+          },
+          "venue": {
+            "name": "Dodger Stadium"
+          },
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "season": 2024
+        }
+      ]
+    },
+    {
+      "date": "2024-04-02",
+      "games": [
+        {
+          "gamePk": 745130,
+          "gameDate": "2024-04-02T13:05:00Z",
+          "gameType": "R",
+          "status": {
+            "abstractGameState": "Preview",
+            "detailedState": "Scheduled"
+          },
+          "teams": {
+            "home": {
+              "score": null,
+              "team": {
+                "id": 114,
+                "name": "Cleveland Guardians"
+              }
+            },
+            "away": {
+              "score": null,
+              "team": {
+                "id": 147,
+                "name": "New York Yankees"
+              }
+            }
+          },
+          "venue": {
+            "name": "Progressive Field"
+          },
+          "dayNight": "day",
+          "scheduledInnings": 9,
+          "season": 2024
+        }
+      ]
+    }
+  ]
+}

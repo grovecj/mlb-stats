@@ -171,43 +171,127 @@ export async function getTodaysGames(): Promise<Game[]> {
   return fetchJson<Game[]>(`${API_BASE}/games/today`);
 }
 
-// Ingestion
-export async function triggerFullSync(season?: number): Promise<{ status: string }> {
-  const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/full-sync${params}`);
+// Sync Job Types
+export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES';
+export type SyncJobStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+export type TriggerType = 'MANUAL' | 'SCHEDULED';
+export type FreshnessLevel = 'FRESH' | 'STALE' | 'CRITICAL';
+
+export interface SyncJob {
+  id: number;
+  jobType: SyncJobType;
+  jobTypeDisplay: string;
+  status: SyncJobStatus;
+  season: number | null;
+  triggeredBy: TriggerType;
+  startedByUserEmail: string | null;
+  totalItems: number | null;
+  processedItems: number | null;
+  progressPercentage: number;
+  currentStep: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  durationSeconds: number | null;
+  recordsCreated: number;
+  recordsUpdated: number;
+  errorCount: number;
+  errorMessage: string | null;
+  createdAt: string;
 }
 
-export async function triggerTeamsSync(): Promise<{ status: string }> {
-  return postJson(`${API_BASE}/ingestion/teams`);
+export interface DataFreshness {
+  type: SyncJobType;
+  typeDisplay: string;
+  lastSyncedAt: string | null;
+  level: FreshnessLevel;
+  description: string;
 }
 
-export async function triggerRostersSync(season?: number): Promise<{ status: string }> {
-  const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/rosters${params}`);
+// Ingestion - Sync Job Management
+export async function getDataFreshness(): Promise<DataFreshness[]> {
+  return fetchJson<DataFreshness[]>(`${API_BASE}/ingestion/freshness`);
 }
 
-export async function triggerGamesSync(season?: number): Promise<{ status: string }> {
-  const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/games${params}`);
+export async function getRecentSyncJobs(limit = 20): Promise<SyncJob[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  return fetchJson<SyncJob[]>(`${API_BASE}/ingestion/jobs?${params}`);
 }
 
-export async function triggerStatsSync(season?: number): Promise<{ status: string }> {
+export async function getActiveSyncJobs(): Promise<SyncJob[]> {
+  return fetchJson<SyncJob[]>(`${API_BASE}/ingestion/jobs/active`);
+}
+
+export async function getSyncJob(jobId: number): Promise<SyncJob> {
+  return fetchJson<SyncJob>(`${API_BASE}/ingestion/jobs/${jobId}`);
+}
+
+export async function cancelSyncJob(jobId: number): Promise<SyncJob> {
+  return postJson<SyncJob>(`${API_BASE}/ingestion/jobs/${jobId}/cancel`);
+}
+
+export function subscribeSyncJobProgress(
+  jobId: number,
+  onProgress: (job: Partial<SyncJob> & { id: number; status: SyncJobStatus }) => void,
+  onError?: (error: Event) => void
+): () => void {
+  const eventSource = new EventSource(`${API_BASE}/ingestion/jobs/${jobId}/stream`, {
+    withCredentials: true,
+  });
+
+  eventSource.addEventListener('progress', (event: MessageEvent) => {
+    const data = JSON.parse(event.data) as Partial<SyncJob> & { id: number; status: SyncJobStatus };
+    onProgress(data);
+  });
+
+  eventSource.onerror = (error) => {
+    if (onError) {
+      onError(error);
+    }
+    eventSource.close();
+  };
+
+  return () => {
+    eventSource.close();
+  };
+}
+
+// Ingestion - Sync Triggers
+export async function triggerFullSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/stats${params}`);
+  return postJson<SyncJob>(`${API_BASE}/ingestion/full-sync${params}`);
+}
+
+export async function triggerTeamsSync(): Promise<SyncJob> {
+  return postJson<SyncJob>(`${API_BASE}/ingestion/teams`);
+}
+
+export async function triggerRostersSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/rosters${params}`);
+}
+
+export async function triggerGamesSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/games${params}`);
+}
+
+export async function triggerStatsSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/stats${params}`);
 }
 
 export async function triggerIncompletePlayersSync(): Promise<{ status: string; synced: string }> {
   return postJson(`${API_BASE}/ingestion/players/incomplete`);
 }
 
-export async function triggerStandingsSync(season?: number): Promise<{ status: string; season: string; teams: string }> {
+export async function triggerStandingsSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/standings${params}`);
+  return postJson<SyncJob>(`${API_BASE}/ingestion/standings${params}`);
 }
 
-export async function triggerBoxScoresSync(season?: number): Promise<{ status: string; season: string; games: string }> {
+export async function triggerBoxScoresSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
-  return postJson(`${API_BASE}/ingestion/boxscores${params}`);
+  return postJson<SyncJob>(`${API_BASE}/ingestion/boxscores${params}`);
 }
 
 // Data Manager

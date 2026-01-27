@@ -19,6 +19,22 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(SyncJobConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleSyncJobConflict(SyncJobConflictException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", HttpStatus.CONFLICT.getReasonPhrase());
+        body.put("message", ex.getMessage());
+        if (ex.getExistingJobId() != null) {
+            body.put("existingJobId", ex.getExistingJobId());
+        }
+        if (ex.getJobType() != null) {
+            body.put("jobType", ex.getJobType());
+        }
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(IngestionException.class)
     public ResponseEntity<Map<String, Object>> handleIngestionException(IngestionException ex) {
         log.error("Ingestion error: {}", ex.getMessage(), ex);
