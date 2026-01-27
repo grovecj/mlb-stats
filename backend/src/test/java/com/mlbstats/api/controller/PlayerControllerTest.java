@@ -199,4 +199,92 @@ class PlayerControllerTest extends BaseIntegrationTest {
         mockMvc.perform(get("/api/players"))
                 .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByPosition() throws Exception {
+        // Judge is RF, Cole is P
+        mockMvc.perform(get("/api/players")
+                        .param("position", "RF"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Aaron Judge"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByPositionType() throws Exception {
+        // Cole is Pitcher
+        mockMvc.perform(get("/api/players")
+                        .param("positionType", "Pitcher"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Gerrit Cole"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByBats() throws Exception {
+        // Modify judge to bat left
+        judge.setBats("L");
+        playerRepository.save(judge);
+
+        mockMvc.perform(get("/api/players")
+                        .param("bats", "L"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Aaron Judge"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByThrows() throws Exception {
+        // Modify cole to throw left
+        cole.setThrowsHand("L");
+        playerRepository.save(cole);
+
+        mockMvc.perform(get("/api/players")
+                        .param("throws", "L"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Gerrit Cole"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByActiveStatus() throws Exception {
+        // Set judge as inactive
+        judge.setActive(false);
+        playerRepository.save(judge);
+
+        mockMvc.perform(get("/api/players")
+                        .param("active", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Gerrit Cole"));
+
+        mockMvc.perform(get("/api/players")
+                        .param("active", "false"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Aaron Judge"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getPlayers_shouldFilterByMultipleCriteria() throws Exception {
+        // Add a third player: left-handed pitcher
+        Player leftyPitcher = createTestPlayer(123456, "Clayton Kershaw", "P");
+        leftyPitcher.setPositionType("Pitcher");
+        leftyPitcher.setThrowsHand("L");
+        playerRepository.save(leftyPitcher);
+
+        // Filter by position type and throws - should find only Kershaw
+        mockMvc.perform(get("/api/players")
+                        .param("positionType", "Pitcher")
+                        .param("throws", "L"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].fullName").value("Clayton Kershaw"));
+    }
 }

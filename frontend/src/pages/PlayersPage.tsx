@@ -29,6 +29,20 @@ function PlayersPage() {
     active: searchParams.get('active') === 'true' ? true : searchParams.get('active') === 'false' ? false : undefined,
   });
 
+  // Sync filter state from URL params (e.g., browser back/forward navigation)
+  useEffect(() => {
+    const search = searchParams.get('search') || '';
+    setSearchInput(search);
+    setFilters({
+      search: search || undefined,
+      position: searchParams.get('position') || undefined,
+      positionType: searchParams.get('positionType') || undefined,
+      bats: searchParams.get('bats') || undefined,
+      throws: searchParams.get('throws') || undefined,
+      active: searchParams.get('active') === 'true' ? true : searchParams.get('active') === 'false' ? false : undefined,
+    });
+  }, [searchParams]);
+
   const fetchPlayers = useCallback(async () => {
     setLoading(true);
     try {
