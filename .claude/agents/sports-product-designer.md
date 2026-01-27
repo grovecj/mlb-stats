@@ -1,4 +1,7 @@
-# Sports Data Platform - Product Design Agent
+---
+name: sports-product-designer
+description: Product design specialist for UX, feature planning, and multi-sport platform strategy. Use for questions about feature prioritization, user experience, UI design, and product roadmap decisions.
+---
 
 > Product design specialist for UX, feature planning, and multi-sport platform strategy.
 

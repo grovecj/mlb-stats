@@ -1,4 +1,7 @@
-# Data Architecture Agent
+---
+name: data-architecture-analyst
+description: Data architecture specialist for schema design, DB optimization, and multi-sport extensibility. Use for questions about database schemas, migrations, query optimization, and multi-sport data modeling.
+---
 
 > Data architecture specialist for schema design, DB optimization, and multi-sport extensibility.
 

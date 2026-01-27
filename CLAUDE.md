@@ -2,6 +2,43 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Issue Review Workflow
+
+Before implementing any new feature or significant change, have the following agents review the issue/plan:
+
+### Required Reviews
+
+1. **`software-architect`** - Technical feasibility, implementation approach, risk assessment
+2. **`data-architecture-analyst`** - Schema changes, data modeling, query patterns
+3. **`sports-product-designer`** - UX considerations, feature design, user impact
+
+### Review Process
+
+```bash
+# Fetch issue details
+gh issue view <number>
+
+# Have each agent review (use Task tool with each agent)
+# 1. software-architect: "Review issue #X for technical approach and risks"
+# 2. data-architecture-analyst: "Review issue #X for data/schema implications"
+# 3. sports-product-designer: "Review issue #X for UX and product considerations"
+```
+
+### Review Outputs
+
+Each agent should provide:
+- **Assessment**: Is this well-defined and feasible?
+- **Concerns**: Technical risks, missing requirements, or design issues
+- **Recommendations**: Suggested approach, alternatives, or clarifications needed
+- **Dependencies**: Other issues or work this depends on
+
+### After Reviews
+
+- Address any concerns raised before implementation
+- Use `software-architect` to sequence multi-issue work
+- Create implementation plan incorporating agent feedback
+- Use `code-reviewer` agent after PR is created to review and address CI/Copilot feedback
+
 ## Build & Development Commands
 
 ### Backend (Java/Spring Boot)
@@ -206,12 +243,50 @@ http.get('/api/my-endpoint', () => {
 
 ## Frontend Theme Support
 
-Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.css`:
+In `src/test/mocks/handlers.ts`:
+
+```typescript
+http.get('/api/my-endpoint', () => {
+  return HttpResponse.json(mockData)
+})
+```
+
+## Frontend Styling
+
+### Recommended Stack (for new components)
+
+**Use Tailwind CSS + shadcn/ui** for new components:
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Accessible component library built on Radix + Tailwind
+
+Benefits: Better DX, automatic dark mode, accessible by default, consistent design system.
+
+```tsx
+// Example: New component using shadcn/ui
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm font-medium">{label}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Legacy CSS (existing components)
+
+The codebase currently uses plain CSS with CSS variables in `frontend/src/index.css`. When modifying existing components, maintain consistency with the current approach:
 
 | Variable | Usage |
 |----------|-------|
-| `--primary-color` | Brand color, links, headings |
-| `--secondary-color` | Accents, errors |
+| `--primary-color` | Brand color (#002d72 MLB blue) |
+| `--secondary-color` | Accents, errors (#bf0d3e MLB red) |
 | `--background-color` | Page background |
 | `--card-background` | Cards, panels, modals |
 | `--text-color` | Primary text |
@@ -220,14 +295,11 @@ Use CSS variables for dark mode compatibility. Defined in `frontend/src/index.cs
 | `--success-color` | Success states |
 | `--warning-color` | Warning states |
 
-```css
-/* Always use variables instead of hardcoded colors */
-.component {
-  background: var(--card-background);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-```
+Dark mode uses `[data-theme="dark"]` selector. Always use variables, never hardcode colors.
+
+### Migration Strategy
+
+When touching existing components, consider migrating to Tailwind/shadcn if the change is significant. For minor fixes, maintain existing patterns. See `.claude/agents/frontend-ui-stylist.md` for detailed migration guidance.
 
 ## CSRF Token Handling
 
