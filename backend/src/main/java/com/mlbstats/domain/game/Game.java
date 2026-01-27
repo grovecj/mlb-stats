@@ -1,5 +1,6 @@
 package com.mlbstats.domain.game;
 
+import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.team.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -56,6 +57,14 @@ public class Game {
 
     @Column(name = "scheduled_innings")
     private Integer scheduledInnings = 9;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "home_probable_pitcher_id")
+    private Player homeProbablePitcher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "away_probable_pitcher_id")
+    private Player awayProbablePitcher;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
