@@ -1,7 +1,7 @@
 import { Team, RosterEntry, TeamStanding } from '../types/team';
 import { Player } from '../types/player';
 import { Game, BoxScore } from '../types/game';
-import { BattingStats, PitchingStats, PageResponse } from '../types/stats';
+import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
 
@@ -116,6 +116,16 @@ export async function getPlayerBattingStats(id: number, season?: number): Promis
 export async function getPlayerPitchingStats(id: number, season?: number): Promise<PitchingStats[]> {
   const params = season ? `?season=${season}` : '';
   return fetchJson<PitchingStats[]>(`${API_BASE}/players/${id}/pitching-stats${params}`);
+}
+
+export async function getPlayerBattingGameLog(id: number, season?: number): Promise<BattingGameLog[]> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<BattingGameLog[]>(`${API_BASE}/players/${id}/batting-game-log${params}`);
+}
+
+export async function getPlayerPitchingGameLog(id: number, season?: number): Promise<PitchingGameLog[]> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<PitchingGameLog[]>(`${API_BASE}/players/${id}/pitching-game-log${params}`);
 }
 
 export async function getHomeRunLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
