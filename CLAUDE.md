@@ -241,6 +241,16 @@ http.get('/api/my-endpoint', () => {
 })
 ```
 
+## Frontend Theme Support
+
+In `src/test/mocks/handlers.ts`:
+
+```typescript
+http.get('/api/my-endpoint', () => {
+  return HttpResponse.json(mockData)
+})
+```
+
 ## Frontend Styling
 
 ### Recommended Stack (for new components)
