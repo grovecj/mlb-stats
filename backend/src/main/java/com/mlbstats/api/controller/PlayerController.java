@@ -93,4 +93,20 @@ public class PlayerController {
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(playerApiService.getTopStrikeouts(season, limit));
     }
+
+    @GetMapping("/{id}/batting-game-log")
+    @Operation(summary = "Get player batting game log", description = "Returns game-by-game batting stats for a player")
+    public ResponseEntity<List<BattingGameLogDto>> getPlayerBattingGameLog(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(playerApiService.getPlayerBattingGameLog(id, season));
+    }
+
+    @GetMapping("/{id}/pitching-game-log")
+    @Operation(summary = "Get player pitching game log", description = "Returns game-by-game pitching stats for a player")
+    public ResponseEntity<List<PitchingGameLogDto>> getPlayerPitchingGameLog(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(playerApiService.getPlayerPitchingGameLog(id, season));
+    }
 }

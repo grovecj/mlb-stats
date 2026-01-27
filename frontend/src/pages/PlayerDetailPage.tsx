@@ -6,6 +6,7 @@ import { getPlayer, getPlayerBattingStats, getPlayerPitchingStats } from '../ser
 import { usePlayerFavorite } from '../hooks/useFavorite';
 import PlayerStats from '../components/player/PlayerStats';
 import PlayerGameLog from '../components/player/PlayerGameLog';
+import CareerStats from '../components/player/CareerStats';
 import FavoriteButton from '../components/common/FavoriteButton';
 
 function PlayerDetailPage() {
@@ -120,9 +121,11 @@ function PlayerDetailPage() {
 
       <PlayerStats battingStats={battingStats} pitchingStats={pitchingStats} />
 
-      {battingStats.length > 1 && (
-        <PlayerGameLog stats={battingStats} />
+      {playerId && (
+        <PlayerGameLog playerId={playerId} positionType={player.positionType} />
       )}
+
+      <CareerStats stats={battingStats} />
     </div>
   );
 }
