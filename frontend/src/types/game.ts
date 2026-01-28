@@ -1,5 +1,12 @@
 import { Team } from './team';
 
+export interface ProbablePitcher {
+  id: number;
+  mlbId: number;
+  fullName: string;
+  headshotUrl: string | null;
+}
+
 export interface Game {
   id: number;
   mlbId: number;
@@ -14,6 +21,8 @@ export interface Game {
   venueName: string;
   dayNight: string;
   scheduledInnings: number;
+  homeProbablePitcher: ProbablePitcher | null;
+  awayProbablePitcher: ProbablePitcher | null;
 }
 
 export interface GameBatting {

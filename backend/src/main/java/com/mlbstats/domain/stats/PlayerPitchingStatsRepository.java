@@ -33,6 +33,12 @@ public interface PlayerPitchingStatsRepository extends JpaRepository<PlayerPitch
     @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season ORDER BY pps.strikeouts DESC")
     List<PlayerPitchingStats> findTopStrikeouts(@Param("season") Integer season);
 
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season ORDER BY pps.saves DESC")
+    List<PlayerPitchingStats> findTopSaves(@Param("season") Integer season);
+
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season AND pps.inningsPitched >= :minInnings ORDER BY pps.whip ASC")
+    List<PlayerPitchingStats> findTopWhip(@Param("season") Integer season, @Param("minInnings") BigDecimal minInnings);
+
     long countBySeason(Integer season);
 
     void deleteBySeason(Integer season);

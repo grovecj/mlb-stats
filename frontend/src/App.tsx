@@ -16,6 +16,7 @@ import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
 import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
+import LeaderboardsPage from './pages/LeaderboardsPage';
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -49,6 +50,7 @@ function AppContent() {
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/teams/:id" element={<TeamDetailPage />} />
           <Route path="/standings" element={<StandingsPage />} />
+          <Route path="/leaderboards" element={<LeaderboardsPage />} />
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/players/:id" element={<PlayerDetailPage />} />
           <Route path="/games" element={<GamesPage />} />

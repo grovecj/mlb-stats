@@ -175,6 +175,54 @@ export async function getStrikeoutLeaders(season?: number, limit = 10): Promise<
   return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/strikeouts?${params}`);
 }
 
+export async function getRbiLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/rbi?${params}`);
+}
+
+export async function getRunsLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/runs?${params}`);
+}
+
+export async function getHitsLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/hits?${params}`);
+}
+
+export async function getStolenBaseLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/stolen-bases?${params}`);
+}
+
+export async function getOpsLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit), minAtBats: '100' });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/ops?${params}`);
+}
+
+export async function getEraLeaders(season?: number, limit = 10): Promise<PitchingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit), minInnings: '50' });
+  if (season) params.set('season', String(season));
+  return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/era?${params}`);
+}
+
+export async function getSavesLeaders(season?: number, limit = 10): Promise<PitchingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/saves?${params}`);
+}
+
+export async function getWhipLeaders(season?: number, limit = 10): Promise<PitchingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit), minInnings: '50' });
+  if (season) params.set('season', String(season));
+  return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/whip?${params}`);
+}
+
 // Games
 export async function getGames(options: {
   season?: number;

@@ -200,6 +200,155 @@ class PlayerControllerTest extends BaseIntegrationTest {
                 .andExpect(status().is3xxRedirection());
     }
 
+    // Leaderboard tests (from PR #139)
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getRbiLeaders_shouldReturnTopHitters() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, judge, 2024);
+        var stats = createTestBattingStats(judge, yankees, 2024);
+        stats.setRbi(130);
+        battingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/rbi")
+                        .param("season", "2024")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].rbi").value(130));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getRunsLeaders_shouldReturnTopHitters() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, judge, 2024);
+        var stats = createTestBattingStats(judge, yankees, 2024);
+        stats.setRuns(120);
+        battingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/runs")
+                        .param("season", "2024")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].runs").value(120));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getHitsLeaders_shouldReturnTopHitters() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, judge, 2024);
+        var stats = createTestBattingStats(judge, yankees, 2024);
+        stats.setHits(200);
+        battingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/hits")
+                        .param("season", "2024")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].hits").value(200));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getStolenBaseLeaders_shouldReturnTopHitters() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, judge, 2024);
+        var stats = createTestBattingStats(judge, yankees, 2024);
+        stats.setStolenBases(50);
+        battingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/stolen-bases")
+                        .param("season", "2024")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].stolenBases").value(50));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getOpsLeaders_shouldReturnTopHitters() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, judge, 2024);
+        var stats = createTestBattingStats(judge, yankees, 2024);
+        stats.setAtBats(400);
+        stats.setOps(new java.math.BigDecimal("1.050"));
+        battingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/ops")
+                        .param("season", "2024")
+                        .param("minAtBats", "100")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getEraLeaders_shouldReturnTopPitchers() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, cole, 2024);
+        var stats = createTestPitchingStats(cole, yankees, 2024);
+        stats.setEra(new java.math.BigDecimal("2.50"));
+        pitchingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/era")
+                        .param("season", "2024")
+                        .param("minInnings", "50")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getSavesLeaders_shouldReturnTopPitchers() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, cole, 2024);
+        var stats = createTestPitchingStats(cole, yankees, 2024);
+        stats.setSaves(40);
+        pitchingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/saves")
+                        .param("season", "2024")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].saves").value(40));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getWhipLeaders_shouldReturnTopPitchers() throws Exception {
+        // Given
+        createTestRosterEntry(yankees, cole, 2024);
+        var stats = createTestPitchingStats(cole, yankees, 2024);
+        stats.setWhip(new java.math.BigDecimal("0.95"));
+        pitchingStatsRepository.save(stats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/leaders/whip")
+                        .param("season", "2024")
+                        .param("minInnings", "50")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))));
+    }
+
+    // Filter tests (from PR #140)
+
     @Test
     @WithMockUser(roles = "USER")
     void getPlayers_shouldFilterByPosition() throws Exception {

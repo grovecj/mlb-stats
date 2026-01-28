@@ -29,6 +29,21 @@ public interface PlayerBattingStatsRepository extends JpaRepository<PlayerBattin
     @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.atBats >= :minAtBats ORDER BY pbs.battingAvg DESC")
     List<PlayerBattingStats> findTopBattingAverage(@Param("season") Integer season, @Param("minAtBats") Integer minAtBats);
 
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season ORDER BY pbs.rbi DESC")
+    List<PlayerBattingStats> findTopRbi(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season ORDER BY pbs.runs DESC")
+    List<PlayerBattingStats> findTopRuns(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season ORDER BY pbs.hits DESC")
+    List<PlayerBattingStats> findTopHits(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season ORDER BY pbs.stolenBases DESC")
+    List<PlayerBattingStats> findTopStolenBases(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.atBats >= :minAtBats ORDER BY pbs.ops DESC")
+    List<PlayerBattingStats> findTopOps(@Param("season") Integer season, @Param("minAtBats") Integer minAtBats);
+
     long countBySeason(Integer season);
 
     void deleteBySeason(Integer season);
