@@ -329,6 +329,8 @@ body {
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 20px;
+  background-color: var(--card-background);
+  color: var(--text-color);
 }
 
 .search-input:focus {
