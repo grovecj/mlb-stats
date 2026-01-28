@@ -51,6 +51,14 @@ public class ScheduleResponse {
     public static class TeamGameData {
         private Integer score;
         private TeamRefData team;
+        private ProbablePitcherData probablePitcher;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ProbablePitcherData {
+        private Integer id;
+        private String fullName;
     }
 
     @Data

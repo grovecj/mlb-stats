@@ -16,6 +16,8 @@ export const mockGames: Game[] = [
     venueName: 'Yankee Stadium',
     dayNight: 'night',
     scheduledInnings: 9,
+    homeProbablePitcher: null,
+    awayProbablePitcher: null,
   },
   {
     id: 2,
@@ -31,6 +33,8 @@ export const mockGames: Game[] = [
     venueName: 'Dodger Stadium',
     dayNight: 'night',
     scheduledInnings: 9,
+    homeProbablePitcher: null,
+    awayProbablePitcher: null,
   },
   {
     id: 3,
@@ -38,7 +42,7 @@ export const mockGames: Game[] = [
     season: 2024,
     gameDate: new Date().toISOString().split('T')[0], // Today
     gameType: 'R',
-    status: 'Preview',
+    status: 'Scheduled',
     homeTeam: mockTeams[0], // Yankees
     awayTeam: mockTeams[2], // Dodgers
     homeScore: null,
@@ -46,6 +50,18 @@ export const mockGames: Game[] = [
     venueName: 'Yankee Stadium',
     dayNight: 'night',
     scheduledInnings: 9,
+    homeProbablePitcher: {
+      id: 1,
+      mlbId: 650402,
+      fullName: 'Gerrit Cole',
+      headshotUrl: 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/650402/headshot/67/current',
+    },
+    awayProbablePitcher: {
+      id: 2,
+      mlbId: 477132,
+      fullName: 'Clayton Kershaw',
+      headshotUrl: 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/477132/headshot/67/current',
+    },
   },
 ]
 
