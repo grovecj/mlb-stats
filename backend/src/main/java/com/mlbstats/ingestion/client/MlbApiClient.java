@@ -62,7 +62,7 @@ public class MlbApiClient {
         log.info("Fetching schedule from {} to {}", startDate, endDate);
         try {
             return restClient.get()
-                    .uri("/schedule?sportId=1&startDate={startDate}&endDate={endDate}&gameType=R,P",
+                    .uri("/schedule?sportId=1&startDate={startDate}&endDate={endDate}&gameType=R,P&hydrate=probablePitcher",
                             startDate.format(DATE_FORMAT), endDate.format(DATE_FORMAT))
                     .retrieve()
                     .body(ScheduleResponse.class);

@@ -17,7 +17,9 @@ public record GameDto(
         Integer awayScore,
         String venueName,
         String dayNight,
-        Integer scheduledInnings
+        Integer scheduledInnings,
+        ProbablePitcherDto homeProbablePitcher,
+        ProbablePitcherDto awayProbablePitcher
 ) {
     public static GameDto fromEntity(Game game) {
         return new GameDto(
@@ -33,7 +35,9 @@ public record GameDto(
                 game.getAwayScore(),
                 game.getVenueName(),
                 game.getDayNight(),
-                game.getScheduledInnings()
+                game.getScheduledInnings(),
+                ProbablePitcherDto.fromEntity(game.getHomeProbablePitcher()),
+                ProbablePitcherDto.fromEntity(game.getAwayProbablePitcher())
         );
     }
 }

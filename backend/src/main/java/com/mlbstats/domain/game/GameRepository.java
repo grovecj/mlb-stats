@@ -23,14 +23,18 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     @Query("SELECT g FROM Game g WHERE g.gameDate BETWEEN :startDate AND :endDate ORDER BY g.gameDate")
     List<Game> findByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam WHERE g.gameDate = :date ORDER BY g.gameDate")
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
+           "WHERE g.gameDate = :date ORDER BY g.gameDate")
     List<Game> findByDateWithTeams(@Param("date") LocalDate date);
 
     @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
            "WHERE g.homeTeam.id = :teamId OR g.awayTeam.id = :teamId ORDER BY g.gameDate DESC")
     List<Game> findByTeamId(@Param("teamId") Long teamId);
 
     @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
            "WHERE (g.homeTeam.id = :teamId OR g.awayTeam.id = :teamId) AND g.season = :season ORDER BY g.gameDate")
     List<Game> findByTeamIdAndSeason(@Param("teamId") Long teamId, @Param("season") Integer season);
 
@@ -40,7 +44,8 @@ public interface GameRepository extends JpaRepository<Game, Long> {
            "WHERE g.season = :season AND g.status = :status ORDER BY g.gameDate")
     List<Game> findBySeasonAndStatus(@Param("season") Integer season, @Param("status") String status);
 
-    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam WHERE g.id = :id")
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher WHERE g.id = :id")
     Optional<Game> findByIdWithTeams(@Param("id") Long id);
 
     boolean existsByMlbId(Integer mlbId);
