@@ -103,9 +103,27 @@ export async function getTeamAggregateStats(id: number, season?: number): Promis
 }
 
 // Players
-export async function getPlayers(page = 0, size = 20, search?: string): Promise<PageResponse<Player>> {
+export interface PlayerFilters {
+  search?: string;
+  position?: string;
+  positionType?: string;
+  bats?: string;
+  throws?: string;
+  active?: boolean;
+}
+
+export async function getPlayers(
+  page = 0,
+  size = 20,
+  filters?: PlayerFilters
+): Promise<PageResponse<Player>> {
   const params = new URLSearchParams({ page: String(page), size: String(size) });
-  if (search) params.set('search', search);
+  if (filters?.search) params.set('search', filters.search);
+  if (filters?.position) params.set('position', filters.position);
+  if (filters?.positionType) params.set('positionType', filters.positionType);
+  if (filters?.bats) params.set('bats', filters.bats);
+  if (filters?.throws) params.set('throws', filters.throws);
+  if (filters?.active !== undefined) params.set('active', String(filters.active));
   return fetchJson<PageResponse<Player>>(`${API_BASE}/players?${params}`);
 }
 

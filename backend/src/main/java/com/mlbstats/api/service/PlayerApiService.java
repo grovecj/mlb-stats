@@ -6,6 +6,8 @@ import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.player.PlayerRepository;
+import com.mlbstats.domain.player.PlayerSearchCriteria;
+import com.mlbstats.domain.player.PlayerSpecification;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
@@ -37,6 +39,11 @@ public class PlayerApiService {
 
     public PageDto<PlayerDto> searchPlayers(String search, Pageable pageable) {
         Page<Player> page = playerRepository.searchPlayers(search, pageable);
+        return PageDto.fromPage(page, PlayerDto::fromEntity);
+    }
+
+    public PageDto<PlayerDto> searchPlayersWithFilters(PlayerSearchCriteria criteria, Pageable pageable) {
+        Page<Player> page = playerRepository.findAll(PlayerSpecification.withCriteria(criteria), pageable);
         return PageDto.fromPage(page, PlayerDto::fromEntity);
     }
 

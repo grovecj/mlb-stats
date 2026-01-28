@@ -2,6 +2,7 @@ package com.mlbstats.api.controller;
 
 import com.mlbstats.api.dto.*;
 import com.mlbstats.api.service.PlayerApiService;
+import com.mlbstats.domain.player.PlayerSearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +23,28 @@ public class PlayerController {
     private final PlayerApiService playerApiService;
 
     @GetMapping
-    @Operation(summary = "Get players", description = "Returns a paginated list of players, optionally filtered by search term")
+    @Operation(summary = "Get players", description = "Returns a paginated list of players with optional filters")
     public ResponseEntity<PageDto<PlayerDto>> getPlayers(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String positionType,
+            @RequestParam(required = false) String bats,
+            @RequestParam(required = false, name = "throws") String throwsHand,
+            @RequestParam(required = false) Boolean active,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("fullName"));
 
-        PageDto<PlayerDto> players;
-        if (search != null && !search.isBlank()) {
-            players = playerApiService.searchPlayers(search, pageable);
+        PlayerSearchCriteria criteria = new PlayerSearchCriteria(
+                search, position, positionType, bats, throwsHand, active
+        );
+
+        if (criteria.hasAnyFilter()) {
+            return ResponseEntity.ok(playerApiService.searchPlayersWithFilters(criteria, pageable));
         } else {
-            players = playerApiService.getAllPlayers(pageable);
+            return ResponseEntity.ok(playerApiService.getAllPlayers(pageable));
         }
-        return ResponseEntity.ok(players);
     }
 
     @GetMapping("/{id}")
