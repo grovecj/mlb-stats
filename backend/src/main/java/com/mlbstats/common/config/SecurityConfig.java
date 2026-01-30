@@ -42,8 +42,12 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/error").permitAll()
-                // Static assets
+                // Static assets and SPA entry points
+                .requestMatchers("/", "/index.html").permitAll()
                 .requestMatchers("/assets/**", "/favicon.ico", "/*.js", "/*.css").permitAll()
+                // Frontend routes (SPA handles auth client-side)
+                .requestMatchers("/teams/**", "/players/**", "/games/**").permitAll()
+                .requestMatchers("/standings", "/leaderboards", "/account", "/admin").permitAll()
                 // Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Public API endpoints
