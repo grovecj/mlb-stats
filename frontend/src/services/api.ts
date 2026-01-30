@@ -1,6 +1,6 @@
 import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/team';
 import { Player } from '../types/player';
-import { Game, BoxScore } from '../types/game';
+import { Game, BoxScore, Linescore } from '../types/game';
 import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
@@ -246,6 +246,10 @@ export async function getGame(id: number): Promise<Game> {
 
 export async function getGameBoxScore(id: number): Promise<BoxScore> {
   return fetchJson<BoxScore>(`${API_BASE}/games/${id}/boxscore`);
+}
+
+export async function getGameLinescore(id: number): Promise<Linescore> {
+  return fetchJson<Linescore>(`${API_BASE}/games/${id}/linescore`);
 }
 
 export async function getTodaysGames(): Promise<Game[]> {

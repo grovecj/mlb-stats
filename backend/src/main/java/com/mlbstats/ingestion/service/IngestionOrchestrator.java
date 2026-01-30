@@ -25,6 +25,7 @@ public class IngestionOrchestrator {
     private final PlayerIngestionService playerIngestionService;
     private final StandingsIngestionService standingsIngestionService;
     private final BoxScoreIngestionService boxScoreIngestionService;
+    private final LinescoreIngestionService linescoreIngestionService;
     private final SyncJobService syncJobService;
 
     @Caching(evict = {
@@ -319,17 +320,21 @@ public class IngestionOrchestrator {
     @Async
     @Caching(evict = {
             @CacheEvict(value = CacheConfig.BOX_SCORES, allEntries = true),
+            @CacheEvict(value = CacheConfig.LINESCORES, allEntries = true),
             @CacheEvict(value = CacheConfig.LEADERBOARDS, allEntries = true)
     })
     public void runTrackedBoxScoresSync(Long jobId, int season) {
         log.info("Starting tracked box scores sync for season {} (job {})", season, jobId);
         try {
             syncJobService.startJob(jobId);
-            syncJobService.updateProgress(jobId, 0, 1, "Syncing box scores...");
+            syncJobService.updateProgress(jobId, 0, 2, "Syncing box scores...");
 
             int boxScoreCount = boxScoreIngestionService.syncBoxScoresForSeason(season);
 
-            syncJobService.completeJob(jobId, boxScoreCount, 0, 0);
+            syncJobService.updateProgress(jobId, 1, 2, "Syncing linescores...");
+            int linescoreCount = linescoreIngestionService.syncLinescoresForSeason(season);
+
+            syncJobService.completeJob(jobId, boxScoreCount + linescoreCount, 0, 0);
             log.info("Tracked box scores sync completed (job {})", jobId);
         } catch (Exception e) {
             log.error("Tracked box scores sync failed (job {})", jobId, e);
@@ -403,16 +408,24 @@ public class IngestionOrchestrator {
 
     @Caching(evict = {
             @CacheEvict(value = CacheConfig.BOX_SCORES, allEntries = true),
+            @CacheEvict(value = CacheConfig.LINESCORES, allEntries = true),
             @CacheEvict(value = CacheConfig.LEADERBOARDS, allEntries = true)
     })
     public int runBoxScoresSync(int season) {
         log.info("Running box scores sync for season {}", season);
-        return boxScoreIngestionService.syncBoxScoresForSeason(season);
+        int boxScoreCount = boxScoreIngestionService.syncBoxScoresForSeason(season);
+        int linescoreCount = linescoreIngestionService.syncLinescoresForSeason(season);
+        return boxScoreCount + linescoreCount;
     }
 
-    @CacheEvict(value = CacheConfig.BOX_SCORES, key = "#gameId")
+    @Caching(evict = {
+            @CacheEvict(value = CacheConfig.BOX_SCORES, key = "#gameId"),
+            @CacheEvict(value = CacheConfig.LINESCORES, key = "#gameId")
+    })
     public int runBoxScoreForGame(Long gameId) {
         log.info("Running box score sync for game {}", gameId);
-        return boxScoreIngestionService.syncBoxScoreForGame(gameId);
+        boxScoreIngestionService.syncBoxScoreForGame(gameId);
+        linescoreIngestionService.syncLinescoreForGame(gameId);
+        return 1;
     }
 }

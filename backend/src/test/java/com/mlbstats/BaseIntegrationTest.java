@@ -3,6 +3,8 @@ package com.mlbstats;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mlbstats.domain.game.Game;
+import com.mlbstats.domain.game.GameInning;
+import com.mlbstats.domain.game.GameInningRepository;
 import com.mlbstats.domain.game.GameRepository;
 import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.player.PlayerRepository;
@@ -64,6 +66,9 @@ public abstract class BaseIntegrationTest {
     protected GameRepository gameRepository;
 
     @Autowired
+    protected GameInningRepository gameInningRepository;
+
+    @Autowired
     protected PlayerBattingStatsRepository battingStatsRepository;
 
     @Autowired
@@ -85,6 +90,7 @@ public abstract class BaseIntegrationTest {
         pitchingStatsRepository.deleteAll();
         teamStandingRepository.deleteAll();
         teamRosterRepository.deleteAll();
+        gameInningRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
         teamRepository.deleteAll();
@@ -269,5 +275,17 @@ public abstract class BaseIntegrationTest {
         standing.setRunDifferential(100);
         standing.setStreakCode("W3");
         return teamStandingRepository.save(standing);
+    }
+
+    /**
+     * Create and save a game inning for linescore.
+     */
+    protected GameInning createTestInning(Game game, Integer inningNumber, Integer awayRuns, Integer homeRuns) {
+        GameInning inning = new GameInning();
+        inning.setGame(game);
+        inning.setInningNumber(inningNumber);
+        inning.setAwayRuns(awayRuns);
+        inning.setHomeRuns(homeRuns);
+        return gameInningRepository.save(inning);
     }
 }

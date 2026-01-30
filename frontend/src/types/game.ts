@@ -71,3 +71,35 @@ export interface BoxScore {
   homeBatting: GameBatting[];
   homePitching: GamePitching[];
 }
+
+export interface LinescoreInning {
+  inning: number;
+  awayRuns: number | null;
+  homeRuns: number | null;
+}
+
+export interface TeamTotals {
+  runs: number | null;
+  hits: number | null;
+  errors: number | null;
+}
+
+export interface LiveState {
+  currentInning: number | null;
+  inningHalf: string | null;
+  outs: number | null;
+  balls: number | null;
+  strikes: number | null;
+  runnerOnFirst: boolean | null;
+  runnerOnSecond: boolean | null;
+  runnerOnThird: boolean | null;
+  isLive: boolean;
+}
+
+export interface Linescore {
+  gameId: number;
+  innings: LinescoreInning[];
+  awayTotals: TeamTotals;
+  homeTotals: TeamTotals;
+  liveState: LiveState;
+}

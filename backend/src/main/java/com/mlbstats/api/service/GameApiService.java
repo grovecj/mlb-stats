@@ -5,6 +5,8 @@ import com.mlbstats.common.config.CacheConfig;
 import com.mlbstats.common.exception.ResourceNotFoundException;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.domain.game.Game;
+import com.mlbstats.domain.game.GameInning;
+import com.mlbstats.domain.game.GameInningRepository;
 import com.mlbstats.domain.game.GameRepository;
 import com.mlbstats.domain.stats.PlayerGameBatting;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class GameApiService {
 
     private final GameRepository gameRepository;
+    private final GameInningRepository gameInningRepository;
     private final PlayerGameBattingRepository gameBattingRepository;
     private final PlayerGamePitchingRepository gamePitchingRepository;
 
@@ -105,5 +108,15 @@ public class GameApiService {
                 homeBatting,
                 homePitching
         );
+    }
+
+    @Cacheable(value = CacheConfig.LINESCORES, key = "#gameId")
+    public LinescoreDto getLinescore(Long gameId) {
+        Game game = gameRepository.findByIdWithTeams(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Game", gameId));
+
+        List<GameInning> innings = gameInningRepository.findByGameIdOrderByInningNumber(gameId);
+
+        return LinescoreDto.fromEntities(game, innings);
     }
 }

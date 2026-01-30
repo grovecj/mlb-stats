@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Game, BoxScore as BoxScoreType, ProbablePitcher } from '../types/game';
-import { getGame, getGameBoxScore } from '../services/api';
+import { Game, BoxScore as BoxScoreType, Linescore as LinescoreType, ProbablePitcher } from '../types/game';
+import { getGame, getGameBoxScore, getGameLinescore } from '../services/api';
 import BoxScore from '../components/game/BoxScore';
+import Linescore from '../components/game/Linescore';
 import BattingTable from '../components/game/BattingTable';
 import PitchingTable from '../components/game/PitchingTable';
 import '../components/game/BoxScoreTables.css';
@@ -73,6 +74,7 @@ function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [game, setGame] = useState<Game | null>(null);
   const [boxScore, setBoxScore] = useState<BoxScoreType | null>(null);
+  const [linescore, setLinescore] = useState<LinescoreType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'batting' | 'pitching'>('batting');
@@ -81,12 +83,14 @@ function GameDetailPage() {
     async function fetchGame() {
       if (!id) return;
       try {
-        const [gameData, boxScoreData] = await Promise.all([
+        const [gameData, boxScoreData, linescoreData] = await Promise.all([
           getGame(parseInt(id)),
           getGameBoxScore(parseInt(id)).catch(() => null),
+          getGameLinescore(parseInt(id)).catch(() => null),
         ]);
         setGame(gameData);
         setBoxScore(boxScoreData);
+        setLinescore(linescoreData);
       } catch (_err) {
         setError('Failed to load game');
       } finally {
@@ -114,6 +118,17 @@ function GameDetailPage() {
       </div>
 
       <BoxScore game={game} />
+
+      {linescore && linescore.innings.length > 0 && (
+        <div className="card" style={{ marginTop: '24px' }}>
+          <h3 className="card-title">Linescore</h3>
+          <Linescore
+            linescore={linescore}
+            awayTeam={game.awayTeam}
+            homeTeam={game.homeTeam}
+          />
+        </div>
+      )}
 
       <div className="grid grid-2" style={{ marginTop: '24px' }}>
         <div className="card">
