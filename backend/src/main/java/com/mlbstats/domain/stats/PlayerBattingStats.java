@@ -103,6 +103,47 @@ public class PlayerBattingStats {
     @Column(name = "ground_into_dp")
     private Integer groundIntoDp;
 
+    // Advanced Sabermetric Stats
+
+    @Column(precision = 4, scale = 1)
+    private BigDecimal war;
+
+    @Column(precision = 4, scale = 3)
+    private BigDecimal woba;
+
+    @Column(name = "wrc_plus")
+    private Integer wrcPlus;
+
+    @Column(name = "hard_hit_pct", precision = 4, scale = 1)
+    private BigDecimal hardHitPct;
+
+    @Column(name = "barrel_pct", precision = 4, scale = 1)
+    private BigDecimal barrelPct;
+
+    @Column(name = "avg_exit_velocity", precision = 4, scale = 1)
+    private BigDecimal avgExitVelocity;
+
+    @Column(name = "avg_launch_angle", precision = 4, scale = 1)
+    private BigDecimal avgLaunchAngle;
+
+    @Column(name = "sprint_speed", precision = 4, scale = 1)
+    private BigDecimal sprintSpeed;
+
+    @Column(precision = 4, scale = 3)
+    private BigDecimal xba;
+
+    @Column(precision = 4, scale = 3)
+    private BigDecimal xslg;
+
+    @Column(precision = 4, scale = 3)
+    private BigDecimal xwoba;
+
+    @Column(name = "k_pct", precision = 4, scale = 1)
+    private BigDecimal kPct;
+
+    @Column(name = "bb_pct", precision = 4, scale = 1)
+    private BigDecimal bbPct;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
