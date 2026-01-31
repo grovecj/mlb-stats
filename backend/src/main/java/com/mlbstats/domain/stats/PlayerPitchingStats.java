@@ -98,6 +98,50 @@ public class PlayerPitchingStats {
     @Column(name = "quality_starts")
     private Integer qualityStarts;
 
+    // Advanced Sabermetric Stats
+
+    @Column(precision = 4, scale = 1)
+    private BigDecimal war;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal fip;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal xfip;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal siera;
+
+    @Column(name = "k_pct", precision = 4, scale = 1)
+    private BigDecimal kPct;
+
+    @Column(name = "bb_pct", precision = 4, scale = 1)
+    private BigDecimal bbPct;
+
+    @Column(name = "gb_pct", precision = 4, scale = 1)
+    private BigDecimal gbPct;
+
+    @Column(name = "fb_pct", precision = 4, scale = 1)
+    private BigDecimal fbPct;
+
+    @Column(name = "hard_hit_pct_against", precision = 4, scale = 1)
+    private BigDecimal hardHitPctAgainst;
+
+    @Column(name = "avg_exit_velocity_against", precision = 4, scale = 1)
+    private BigDecimal avgExitVelocityAgainst;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal xera;
+
+    @Column(name = "avg_spin_rate")
+    private Integer avgSpinRate;
+
+    @Column(name = "whiff_pct", precision = 4, scale = 1)
+    private BigDecimal whiffPct;
+
+    @Column(name = "chase_pct", precision = 4, scale = 1)
+    private BigDecimal chasePct;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
