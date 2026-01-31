@@ -39,7 +39,7 @@ function ComparePage() {
     return () => window.removeEventListener('resize', handleResize);
   }, [selections.length]);
 
-  // Load initial state from URL
+  // Load initial state from URL on mount only
   useEffect(() => {
     const playersParam = searchParams.get('players');
     const seasonsParam = searchParams.get('seasons');
@@ -78,7 +78,8 @@ function ComparePage() {
 
       loadPlayers();
     }
-  }, []); // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally empty - only parse URL on initial mount
 
   // Sync state to URL
   const syncToUrl = useCallback((newSelections: PlayerSelection[], newMode: 'season' | 'career') => {
