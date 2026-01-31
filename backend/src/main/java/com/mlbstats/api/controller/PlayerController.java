@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -183,5 +184,49 @@ public class PlayerController {
             @PathVariable Long id,
             @RequestParam(required = false) Integer season) {
         return ResponseEntity.ok(playerApiService.getPlayerPitchingGameLog(id, season));
+    }
+
+    @GetMapping("/compare")
+    @Operation(summary = "Compare players", description = "Compare 2-4 players side-by-side with batting and pitching stats")
+    public ResponseEntity<PlayerComparisonDto> comparePlayers(
+            @RequestParam String players,
+            @RequestParam(required = false) String seasons,
+            @RequestParam(defaultValue = "season") String mode) {
+
+        List<Long> playerIds;
+        try {
+            playerIds = Arrays.stream(players.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .toList();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (playerIds.size() < 2 || playerIds.size() > 4) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean careerMode = "career".equalsIgnoreCase(mode);
+
+        List<Integer> seasonList = null;
+        if (!careerMode) {
+            if (seasons == null || seasons.isBlank()) {
+                return ResponseEntity.badRequest().build();
+            }
+            try {
+                seasonList = Arrays.stream(seasons.split(","))
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .toList();
+            } catch (NumberFormatException e) {
+                return ResponseEntity.badRequest().build();
+            }
+            if (seasonList.size() != playerIds.size()) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        return ResponseEntity.ok(playerApiService.comparePlayerStats(playerIds, seasonList, careerMode));
     }
 }

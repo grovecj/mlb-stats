@@ -1,0 +1,191 @@
+.comparison-container {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-spacer {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.player-header-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.player-header-headshot {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--border-color);
+  margin-bottom: 8px;
+}
+
+.player-header-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.player-header-name:hover {
+  text-decoration: underline;
+}
+
+.player-header-position {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.player-header-season,
+.player-header-career {
+  font-size: 12px;
+  padding: 2px 8px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 4px;
+}
+
+.comparison-section {
+  margin-bottom: 24px;
+}
+
+.comparison-section:last-child {
+  margin-bottom: 0;
+}
+
+.comparison-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.comparison-table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+  text-align: left;
+}
+
+.stat-label-col {
+  width: 80px;
+  font-weight: 500;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.stat-value {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.stat-value.leader {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.comparison-table tr:hover {
+  background-color: var(--border-color);
+}
+
+.no-stats-message {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .comparison-container {
+    padding: 12px;
+  }
+
+  .comparison-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-spacer {
+    display: none;
+  }
+
+  .player-header-card {
+    flex: 1 1 45%;
+    min-width: 120px;
+  }
+
+  .player-header-headshot {
+    width: 56px;
+    height: 56px;
+  }
+
+  .player-header-name {
+    font-size: 13px;
+  }
+
+  .comparison-table {
+    font-size: 12px;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px 6px;
+  }
+
+  .stat-label-col {
+    width: 60px;
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .player-header-card {
+    flex: 1 1 100%;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 6px 4px;
+  }
+}

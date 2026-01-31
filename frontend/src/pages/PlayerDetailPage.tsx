@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Player } from '../types/player';
 import { BattingStats, PitchingStats } from '../types/stats';
 import { getPlayer, getPlayerBattingStats, getPlayerPitchingStats } from '../services/api';
@@ -8,9 +8,11 @@ import PlayerStats from '../components/player/PlayerStats';
 import PlayerGameLog from '../components/player/PlayerGameLog';
 import CareerStats from '../components/player/CareerStats';
 import FavoriteButton from '../components/common/FavoriteButton';
+import { getDefaultSeason } from '../utils/season';
 
 function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const playerId = id ? parseInt(id) : undefined;
   const [player, setPlayer] = useState<Player | null>(null);
   const [battingStats, setBattingStats] = useState<BattingStats[]>([]);
@@ -71,12 +73,21 @@ function PlayerDetailPage() {
           <div className="detail-header-content">
             <div className="detail-header-title">
               <h1>{player.fullName}</h1>
-              <FavoriteButton
-                isFavorite={isFavorite}
-                loading={favoriteLoading}
-                toggling={toggling}
-                onToggle={toggleFavorite}
-              />
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  className="tab-btn"
+                  onClick={() => navigate(`/compare?players=${playerId}&seasons=${getDefaultSeason()}`)}
+                  style={{ padding: '6px 12px' }}
+                >
+                  Compare
+                </button>
+                <FavoriteButton
+                  isFavorite={isFavorite}
+                  loading={favoriteLoading}
+                  toggling={toggling}
+                  onToggle={toggleFavorite}
+                />
+              </div>
             </div>
             <div style={{ marginTop: '8px' }}>
               {player.position && (

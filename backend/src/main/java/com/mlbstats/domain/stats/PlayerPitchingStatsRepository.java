@@ -42,4 +42,10 @@ public interface PlayerPitchingStatsRepository extends JpaRepository<PlayerPitch
     long countBySeason(Integer season);
 
     void deleteBySeason(Integer season);
+
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player WHERE pps.player.id IN :playerIds")
+    List<PlayerPitchingStats> findByPlayerIdIn(@Param("playerIds") List<Long> playerIds);
+
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player WHERE pps.player.id = :playerId AND pps.season = :season AND pps.gameType = 'R'")
+    Optional<PlayerPitchingStats> findByPlayerIdAndSeasonSingle(@Param("playerId") Long playerId, @Param("season") Integer season);
 }
