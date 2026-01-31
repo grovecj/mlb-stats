@@ -257,7 +257,7 @@ export async function getTodaysGames(): Promise<Game[]> {
 }
 
 // Sync Job Types
-export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES';
+export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES' | 'LINESCORES';
 export type SyncJobStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 export type TriggerType = 'MANUAL' | 'SCHEDULED';
 export type FreshnessLevel = 'FRESH' | 'STALE' | 'CRITICAL';
@@ -383,6 +383,11 @@ export async function triggerStandingsSync(season?: number): Promise<SyncJob> {
 export async function triggerBoxScoresSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
   return postJson<SyncJob>(`${API_BASE}/ingestion/boxscores${params}`);
+}
+
+export async function triggerLinescoresSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/linescores${params}`);
 }
 
 // Data Manager
