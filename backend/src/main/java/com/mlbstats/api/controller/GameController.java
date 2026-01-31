@@ -2,6 +2,7 @@ package com.mlbstats.api.controller;
 
 import com.mlbstats.api.dto.BoxScoreDto;
 import com.mlbstats.api.dto.GameDto;
+import com.mlbstats.api.dto.LinescoreDto;
 import com.mlbstats.api.dto.PageDto;
 import com.mlbstats.api.service.GameApiService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,5 +72,11 @@ public class GameController {
     @Operation(summary = "Get game box score", description = "Returns detailed batting and pitching stats for a game")
     public ResponseEntity<BoxScoreDto> getBoxScore(@PathVariable Long id) {
         return ResponseEntity.ok(gameApiService.getBoxScore(id));
+    }
+
+    @GetMapping("/{id}/linescore")
+    @Operation(summary = "Get game linescore", description = "Returns inning-by-inning scoring for a game")
+    public ResponseEntity<LinescoreDto> getLinescore(@PathVariable Long id) {
+        return ResponseEntity.ok(gameApiService.getLinescore(id));
     }
 }

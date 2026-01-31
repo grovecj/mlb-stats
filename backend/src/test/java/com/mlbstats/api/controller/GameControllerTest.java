@@ -136,4 +136,62 @@ class GameControllerTest extends BaseIntegrationTest {
         mockMvc.perform(get("/api/games"))
                 .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getLinescore_shouldReturnInningByInningScoring() throws Exception {
+        // Given
+        var game = createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1));
+        game.setHomeHits(9);
+        game.setAwayHits(7);
+        game.setHomeErrors(0);
+        game.setAwayErrors(1);
+        gameRepository.save(game);
+
+        // Create innings: BOS scores 1 in 1st, 2 in 6th; NYY scores 2 in 3rd, 1 in 5th, 2 in 7th
+        createTestInning(game, 1, 1, 0);
+        createTestInning(game, 2, 0, 0);
+        createTestInning(game, 3, 0, 2);
+        createTestInning(game, 4, 0, 0);
+        createTestInning(game, 5, 0, 1);
+        createTestInning(game, 6, 2, 0);
+        createTestInning(game, 7, 0, 2);
+        createTestInning(game, 8, 0, 0);
+        createTestInning(game, 9, 0, 0);
+
+        // When/Then
+        mockMvc.perform(get("/api/games/{id}/linescore", game.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gameId").value(game.getId()))
+                .andExpect(jsonPath("$.innings", hasSize(9)))
+                .andExpect(jsonPath("$.innings[0].inning").value(1))
+                .andExpect(jsonPath("$.innings[0].awayRuns").value(1))
+                .andExpect(jsonPath("$.innings[0].homeRuns").value(0))
+                .andExpect(jsonPath("$.awayTotals.runs").value(3))
+                .andExpect(jsonPath("$.awayTotals.hits").value(7))
+                .andExpect(jsonPath("$.awayTotals.errors").value(1))
+                .andExpect(jsonPath("$.homeTotals.runs").value(5))
+                .andExpect(jsonPath("$.homeTotals.hits").value(9))
+                .andExpect(jsonPath("$.homeTotals.errors").value(0));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getLinescore_shouldReturn404WhenGameNotFound() throws Exception {
+        mockMvc.perform(get("/api/games/{id}/linescore", 99999L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getLinescore_shouldReturnEmptyInningsWhenNoData() throws Exception {
+        // Given
+        var game = createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1));
+
+        // When/Then - no innings created
+        mockMvc.perform(get("/api/games/{id}/linescore", game.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gameId").value(game.getId()))
+                .andExpect(jsonPath("$.innings", hasSize(0)));
+    }
 }

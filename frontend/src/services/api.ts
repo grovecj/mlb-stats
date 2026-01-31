@@ -1,6 +1,6 @@
 import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/team';
 import { Player } from '../types/player';
-import { Game, BoxScore } from '../types/game';
+import { Game, BoxScore, Linescore } from '../types/game';
 import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
@@ -248,12 +248,16 @@ export async function getGameBoxScore(id: number): Promise<BoxScore> {
   return fetchJson<BoxScore>(`${API_BASE}/games/${id}/boxscore`);
 }
 
+export async function getGameLinescore(id: number): Promise<Linescore> {
+  return fetchJson<Linescore>(`${API_BASE}/games/${id}/linescore`);
+}
+
 export async function getTodaysGames(): Promise<Game[]> {
   return fetchJson<Game[]>(`${API_BASE}/games/today`);
 }
 
 // Sync Job Types
-export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES';
+export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES' | 'LINESCORES';
 export type SyncJobStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 export type TriggerType = 'MANUAL' | 'SCHEDULED';
 export type FreshnessLevel = 'FRESH' | 'STALE' | 'CRITICAL';
@@ -379,6 +383,11 @@ export async function triggerStandingsSync(season?: number): Promise<SyncJob> {
 export async function triggerBoxScoresSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
   return postJson<SyncJob>(`${API_BASE}/ingestion/boxscores${params}`);
+}
+
+export async function triggerLinescoresSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/linescores${params}`);
 }
 
 // Data Manager
