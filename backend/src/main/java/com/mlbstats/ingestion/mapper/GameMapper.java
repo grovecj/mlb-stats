@@ -12,14 +12,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
 @Component
 @RequiredArgsConstructor
 public class GameMapper {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final ZoneId EASTERN_ZONE = ZoneId.of("America/New_York");
 
     private final PlayerRepository playerRepository;
 
@@ -32,8 +32,12 @@ public class GameMapper {
         game.setScheduledInnings(dto.getScheduledInnings() != null ? dto.getScheduledInnings() : 9);
 
         if (dto.getGameDate() != null) {
-            game.setGameDate(parseDate(dto.getGameDate()));
-            game.setScheduledTime(parseTime(dto.getGameDate()));
+            // Parse both date and time from the same zoned instant to ensure consistency
+            ZonedDateTime easternTime = parseToEastern(dto.getGameDate());
+            if (easternTime != null) {
+                game.setGameDate(easternTime.toLocalDate());
+                game.setScheduledTime(easternTime.toLocalTime());
+            }
         }
 
         if (dto.getStatus() != null) {
@@ -80,7 +84,10 @@ public class GameMapper {
 
         // Update scheduled time if not already set (backfill for existing games)
         if (existing.getScheduledTime() == null && dto.getGameDate() != null) {
-            existing.setScheduledTime(parseTime(dto.getGameDate()));
+            ZonedDateTime easternTime = parseToEastern(dto.getGameDate());
+            if (easternTime != null) {
+                existing.setScheduledTime(easternTime.toLocalTime());
+            }
         }
 
         if (dto.getTeams() != null) {
@@ -95,30 +102,19 @@ public class GameMapper {
         }
     }
 
-    private LocalDate parseDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) {
-            return null;
-        }
-        try {
-            return LocalDate.parse(dateStr.substring(0, 10), DATE_FORMAT);
-        } catch (DateTimeParseException e) {
-            return null;
-        }
-    }
-
     /**
-     * Parse the scheduled time from an ISO 8601 datetime string.
+     * Parse an ISO 8601 datetime string to Eastern time.
      * MLB API returns times in UTC (e.g., "2024-04-15T23:05:00Z").
-     * We convert to US Eastern time since that's the primary timezone for MLB scheduling.
+     * We convert to US Eastern time and derive both date and time from the same instant
+     * to ensure consistency (e.g., a game at 23:00 UTC on April 15 is 7:00 PM ET on April 15).
      */
-    private LocalTime parseTime(String dateStr) {
+    private ZonedDateTime parseToEastern(String dateStr) {
         if (dateStr == null || dateStr.length() < 20) {
             return null;
         }
         try {
             OffsetDateTime utcTime = OffsetDateTime.parse(dateStr);
-            // Convert to Eastern time for display
-            return utcTime.atZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime();
+            return utcTime.atZoneSameInstant(EASTERN_ZONE);
         } catch (DateTimeParseException e) {
             return null;
         }

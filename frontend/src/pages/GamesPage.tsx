@@ -155,6 +155,7 @@ function GamesPage() {
               setTeamFilter(e.target.value ? Number(e.target.value) : undefined)
             }
             className="team-filter-select"
+            aria-label="Filter games by team"
           >
             <option value="">All Teams</option>
             {teams.map((team) => (

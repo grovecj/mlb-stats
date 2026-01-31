@@ -111,7 +111,16 @@ function MonthView({ currentDate, teamId, onDaySelect }: MonthViewProps) {
                 } ${isSelected ? 'month-day-selected' : ''} ${
                   count && count.totalGames > 0 ? 'month-day-has-games' : ''
                 }`}
+                role="button"
+                tabIndex={0}
                 onClick={() => onDaySelect?.(calDay)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onDaySelect?.(calDay);
+                  }
+                }}
+                aria-label={`Select ${format(calDay, 'EEEE, MMMM d')}${count && count.totalGames > 0 ? `, ${count.totalGames} games` : ''}`}
               >
                 <span className={`month-day-number ${isCurrentDay ? 'today' : ''}`}>
                   {format(calDay, 'd')}
@@ -162,7 +171,16 @@ function MonthView({ currentDate, teamId, onDaySelect }: MonthViewProps) {
               <div
                 key={calDay.toISOString()}
                 className={`month-list-item ${isCurrentDay ? 'month-list-item-today' : ''}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => onDaySelect?.(calDay)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onDaySelect?.(calDay);
+                  }
+                }}
+                aria-label={`Select ${format(calDay, 'EEEE, MMMM d')}, ${count.totalGames} ${count.totalGames === 1 ? 'game' : 'games'}`}
               >
                 <div className="month-list-date">
                   <span className="month-list-day">{format(calDay, 'EEE')}</span>

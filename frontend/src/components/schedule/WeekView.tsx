@@ -101,7 +101,16 @@ function WeekView({ currentDate, teamId, onDaySelect }: WeekViewProps) {
               className={`week-day ${isCurrentDay ? 'week-day-today' : ''} ${
                 isSelected ? 'week-day-selected' : ''
               }`}
+              role="button"
+              tabIndex={0}
               onClick={() => onDaySelect?.(day)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onDaySelect?.(day);
+                }
+              }}
+              aria-label={`Select ${format(day, 'EEEE, MMMM d')}`}
             >
               <div className="week-day-header">
                 <span className="week-day-name">{format(day, 'EEE')}</span>
