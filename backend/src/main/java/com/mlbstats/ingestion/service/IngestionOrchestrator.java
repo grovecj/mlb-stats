@@ -348,6 +348,32 @@ public class IngestionOrchestrator {
         return job;
     }
 
+    @Async
+    @Caching(evict = {
+            @CacheEvict(value = CacheConfig.LINESCORES, allEntries = true)
+    })
+    public void runTrackedLinescoresSync(Long jobId, int season) {
+        log.info("Starting tracked linescores sync for season {} (job {})", season, jobId);
+        try {
+            syncJobService.startJob(jobId);
+            syncJobService.updateProgress(jobId, 0, 1, "Syncing linescores...");
+
+            int linescoreCount = linescoreIngestionService.syncLinescoresForSeason(season);
+
+            syncJobService.completeJob(jobId, linescoreCount, 0, 0);
+            log.info("Tracked linescores sync completed (job {})", jobId);
+        } catch (Exception e) {
+            log.error("Tracked linescores sync failed (job {})", jobId, e);
+            syncJobService.failJob(jobId, e.getMessage());
+        }
+    }
+
+    public SyncJob createAndRunTrackedLinescoresSync(int season, TriggerType trigger, AppUser user) {
+        SyncJob job = syncJobService.createJob(SyncJobType.LINESCORES, season, trigger, user);
+        runTrackedLinescoresSync(job.getId(), season);
+        return job;
+    }
+
     // Legacy untracked methods for backward compatibility
 
     @Caching(evict = {
