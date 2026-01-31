@@ -91,4 +91,17 @@ public interface GameRepository extends JpaRepository<Game, Long> {
             @Param("teamId") Long teamId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    // Dashboard batch queries
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
+           "WHERE g.gameDate = :date AND (g.homeTeam.id IN :teamIds OR g.awayTeam.id IN :teamIds) " +
+           "ORDER BY g.scheduledTime")
+    List<Game> findByDateAndTeamIds(@Param("date") LocalDate date, @Param("teamIds") List<Long> teamIds);
+
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
+           "WHERE g.gameDate > :date AND (g.homeTeam.id IN :teamIds OR g.awayTeam.id IN :teamIds) " +
+           "ORDER BY g.gameDate, g.scheduledTime")
+    List<Game> findUpcomingByTeamIds(@Param("date") LocalDate date, @Param("teamIds") List<Long> teamIds);
 }

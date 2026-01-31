@@ -5,8 +5,11 @@ import { BattingStats, PitchingStats } from '../types/stats';
 import { getTodaysGames, getHomeRunLeaders, getWinsLeaders } from '../services/api';
 import GameCard from '../components/game/GameCard';
 import DataTable from '../components/common/DataTable';
+import FavoritesDashboard from '../components/dashboard/FavoritesDashboard';
+import { useAuth } from '../contexts/AuthContext';
 
 function HomePage() {
+  const { isAuthenticated } = useAuth();
   const [todaysGames, setTodaysGames] = useState<Game[]>([]);
   const [hrLeaders, setHrLeaders] = useState<BattingStats[]>([]);
   const [winLeaders, setWinLeaders] = useState<PitchingStats[]>([]);
@@ -82,6 +85,8 @@ function HomePage() {
   return (
     <div>
       <h1 className="page-title">MLB Stats Dashboard</h1>
+
+      {isAuthenticated && <FavoritesDashboard />}
 
       <section className="section">
         <h2 className="section-title">Today's Games</h2>

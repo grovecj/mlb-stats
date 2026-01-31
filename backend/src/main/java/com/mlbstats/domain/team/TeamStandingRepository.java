@@ -2,6 +2,7 @@ package com.mlbstats.domain.team;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface TeamStandingRepository extends JpaRepository<TeamStanding, Long
     long countBySeason(Integer season);
 
     void deleteBySeason(Integer season);
+
+    @Query("SELECT ts FROM TeamStanding ts JOIN FETCH ts.team WHERE ts.team.id IN :teamIds AND ts.season = :season")
+    List<TeamStanding> findByTeamIdsAndSeason(@Param("teamIds") List<Long> teamIds, @Param("season") Integer season);
 }

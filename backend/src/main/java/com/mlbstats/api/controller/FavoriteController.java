@@ -1,9 +1,12 @@
 package com.mlbstats.api.controller;
 
+import com.mlbstats.api.dto.FavoritesDashboardDto;
 import com.mlbstats.api.dto.PlayerDto;
 import com.mlbstats.api.dto.TeamDto;
 import com.mlbstats.api.service.FavoriteApiService;
 import com.mlbstats.common.security.AppUserPrincipal;
+import com.mlbstats.domain.user.AppUser;
+import com.mlbstats.domain.user.AppUserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,17 @@ import java.util.Map;
 public class FavoriteController {
 
     private final FavoriteApiService favoriteApiService;
+    private final AppUserRepository appUserRepository;
+
+    // Dashboard
+
+    @GetMapping("/dashboard")
+    @Operation(summary = "Get favorites dashboard", description = "Returns aggregated dashboard data for user's favorite teams and players")
+    public ResponseEntity<FavoritesDashboardDto> getDashboard(
+            @AuthenticationPrincipal OAuth2User principal) {
+        Long userId = getUserId(principal);
+        return ResponseEntity.ok(favoriteApiService.getDashboard(userId));
+    }
 
     // Team favorites
 
@@ -104,7 +118,19 @@ public class FavoriteController {
     }
 
     private Long getUserId(OAuth2User principal) {
-        AppUserPrincipal appUserPrincipal = (AppUserPrincipal) principal;
-        return appUserPrincipal.getAppUser().getId();
+        // In production, the principal will be AppUserPrincipal (from CustomOAuth2UserService)
+        if (principal instanceof AppUserPrincipal appUserPrincipal) {
+            return appUserPrincipal.getAppUser().getId();
+        }
+
+        // For tests with mock OAuth2User, look up user by email
+        String email = principal.getAttribute("email");
+        if (email != null) {
+            AppUser user = appUserRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalStateException("User not found for email: " + email));
+            return user.getId();
+        }
+
+        throw new IllegalStateException("Cannot determine user ID from principal");
     }
 }

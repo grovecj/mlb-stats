@@ -48,4 +48,7 @@ public interface PlayerPitchingStatsRepository extends JpaRepository<PlayerPitch
 
     @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player WHERE pps.player.id = :playerId AND pps.season = :season AND pps.gameType = 'R'")
     Optional<PlayerPitchingStats> findByPlayerIdAndSeasonSingle(@Param("playerId") Long playerId, @Param("season") Integer season);
+
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.player.id IN :playerIds AND pps.season = :season AND pps.gameType = 'R'")
+    List<PlayerPitchingStats> findByPlayerIdsAndSeason(@Param("playerIds") List<Long> playerIds, @Param("season") Integer season);
 }
