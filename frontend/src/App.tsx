@@ -17,6 +17,7 @@ import LandingPage from './pages/LandingPage';
 import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
 import LeaderboardsPage from './pages/LeaderboardsPage';
+import ComparePage from './pages/ComparePage';
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -51,6 +52,7 @@ function AppContent() {
           <Route path="/teams/:id" element={<TeamDetailPage />} />
           <Route path="/standings" element={<StandingsPage />} />
           <Route path="/leaderboards" element={<LeaderboardsPage />} />
+          <Route path="/compare" element={<ComparePage />} />
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/players/:id" element={<PlayerDetailPage />} />
           <Route path="/games" element={<GamesPage />} />

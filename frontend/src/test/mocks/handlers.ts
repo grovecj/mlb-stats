@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw'
 import { mockTeams, mockStandings } from './data/teams'
 import { mockPlayers, mockPlayersPage } from './data/players'
 import { mockGames, mockGamesPage } from './data/games'
+import type { PlayerComparisonResponse } from '../../types/comparison'
 
 export const handlers = [
   // Auth endpoints
@@ -150,5 +151,92 @@ export const handlers = [
     return HttpResponse.json([
       { playerId: 2, playerName: 'Gerrit Cole', era: 2.75 },
     ])
+  }),
+
+  // Player comparison endpoint
+  http.get('/api/players/compare', ({ request }) => {
+    const url = new URL(request.url)
+    const playersParam = url.searchParams.get('players')
+    const mode = url.searchParams.get('mode') || 'season'
+
+    if (!playersParam) {
+      return new HttpResponse(null, { status: 400 })
+    }
+
+    const playerIds = playersParam.split(',').map(id => parseInt(id))
+
+    // Build mock comparison response
+    const comparisonPlayers = playerIds.map(id => {
+      const player = mockPlayers.find(p => p.id === id)
+      if (!player) return null
+
+      const isPitcher = player.positionType === 'Pitcher'
+
+      return {
+        player,
+        season: mode === 'career' ? null : 2024,
+        battingStats: isPitcher ? null : {
+          gamesPlayed: 150,
+          atBats: 500,
+          runs: 100,
+          hits: 150,
+          doubles: 30,
+          triples: 2,
+          homeRuns: id === 1 ? 58 : 41,
+          rbi: 120,
+          stolenBases: 5,
+          caughtStealing: 2,
+          walks: 80,
+          strikeouts: 150,
+          battingAvg: 0.300,
+          obp: 0.400,
+          slg: 0.600,
+          ops: 1.000,
+          plateAppearances: 600,
+          totalBases: 300,
+          extraBaseHits: 60,
+        },
+        pitchingStats: isPitcher ? {
+          gamesPlayed: 30,
+          gamesStarted: 30,
+          wins: 15,
+          losses: 8,
+          saves: 0,
+          holds: 0,
+          inningsPitched: 180.0,
+          hitsAllowed: 150,
+          runsAllowed: 60,
+          earnedRuns: 55,
+          homeRunsAllowed: 20,
+          walks: 40,
+          strikeouts: 200,
+          era: 2.75,
+          whip: 1.05,
+          kPer9: 10.0,
+          bbPer9: 2.0,
+          completeGames: 2,
+          shutouts: 1,
+        } : null,
+      }
+    }).filter(Boolean)
+
+    const response: PlayerComparisonResponse = {
+      mode: mode as 'season' | 'career',
+      players: comparisonPlayers as PlayerComparisonResponse['players'],
+      leaders: {
+        batting: {
+          homeRuns: 1, // Aaron Judge
+          rbi: 1,
+          battingAvg: 1,
+        },
+        pitching: {
+          wins: 2, // Gerrit Cole
+          strikeouts: 2,
+          era: 2,
+        },
+      },
+    }
+
+    return HttpResponse.json(response)
   }),
 ]

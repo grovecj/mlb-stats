@@ -2,6 +2,7 @@ import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/te
 import { Player } from '../types/player';
 import { Game, BoxScore, Linescore, CalendarGame, GameCount } from '../types/game';
 import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
+import { PlayerComparisonResponse, PlayerSelection } from '../types/comparison';
 
 const API_BASE = '/api';
 
@@ -221,6 +222,21 @@ export async function getWhipLeaders(season?: number, limit = 10): Promise<Pitch
   const params = new URLSearchParams({ limit: String(limit), minInnings: '50' });
   if (season) params.set('season', String(season));
   return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/whip?${params}`);
+}
+
+export async function comparePlayerStats(
+  players: PlayerSelection[],
+  mode: 'season' | 'career'
+): Promise<PlayerComparisonResponse> {
+  const playerIds = players.map(p => p.playerId).join(',');
+  const params = new URLSearchParams({ players: playerIds, mode });
+
+  if (mode === 'season') {
+    const seasons = players.map(p => String(p.season)).join(',');
+    params.set('seasons', seasons);
+  }
+
+  return fetchJson<PlayerComparisonResponse>(`${API_BASE}/players/compare?${params}`);
 }
 
 // Games

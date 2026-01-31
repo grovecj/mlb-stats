@@ -436,4 +436,231 @@ class PlayerControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].fullName").value("Clayton Kershaw"));
     }
+
+    // Player comparison tests (from Issue #88)
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldCompareTwoPlayersSeasonMode() throws Exception {
+        // Given
+        Player soto = createTestPlayer(545361, "Juan Soto", "LF");
+        createTestRosterEntry(yankees, judge, 2024);
+        createTestRosterEntry(yankees, soto, 2024);
+
+        var judgeStats = createTestBattingStats(judge, yankees, 2024);
+        judgeStats.setHomeRuns(58);
+        battingStatsRepository.save(judgeStats);
+
+        var sotoStats = createTestBattingStats(soto, yankees, 2024);
+        sotoStats.setHomeRuns(41);
+        battingStatsRepository.save(sotoStats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", judge.getId() + "," + soto.getId())
+                        .param("seasons", "2024,2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mode").value("season"))
+                .andExpect(jsonPath("$.players", hasSize(2)))
+                .andExpect(jsonPath("$.players[0].player.fullName").value("Aaron Judge"))
+                .andExpect(jsonPath("$.players[0].season").value(2024))
+                .andExpect(jsonPath("$.players[0].battingStats.homeRuns").value(58))
+                .andExpect(jsonPath("$.players[1].player.fullName").value("Juan Soto"))
+                .andExpect(jsonPath("$.players[1].battingStats.homeRuns").value(41))
+                .andExpect(jsonPath("$.leaders.batting.homeRuns").value(judge.getId()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldComparePlayersCareerMode() throws Exception {
+        // Given
+        Player soto = createTestPlayer(545361, "Juan Soto", "LF");
+        createTestRosterEntry(yankees, judge, 2023);
+        createTestRosterEntry(yankees, judge, 2024);
+        createTestRosterEntry(yankees, soto, 2024);
+
+        // Judge: 2023 stats
+        var judgeStats2023 = createTestBattingStats(judge, yankees, 2023);
+        judgeStats2023.setHomeRuns(37);
+        judgeStats2023.setHits(100);
+        judgeStats2023.setAtBats(400);
+        judgeStats2023.setPlateAppearances(450);
+        battingStatsRepository.save(judgeStats2023);
+
+        // Judge: 2024 stats
+        var judgeStats2024 = createTestBattingStats(judge, yankees, 2024);
+        judgeStats2024.setHomeRuns(58);
+        judgeStats2024.setHits(120);
+        judgeStats2024.setAtBats(400);
+        judgeStats2024.setPlateAppearances(500);
+        battingStatsRepository.save(judgeStats2024);
+
+        // Soto: 2024 stats only
+        var sotoStats = createTestBattingStats(soto, yankees, 2024);
+        sotoStats.setHomeRuns(41);
+        sotoStats.setHits(150);
+        sotoStats.setAtBats(500);
+        sotoStats.setPlateAppearances(600);
+        battingStatsRepository.save(sotoStats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", judge.getId() + "," + soto.getId())
+                        .param("mode", "career"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mode").value("career"))
+                .andExpect(jsonPath("$.players", hasSize(2)))
+                .andExpect(jsonPath("$.players[0].season").isEmpty())
+                // Judge career: 37 + 58 = 95 HR
+                .andExpect(jsonPath("$.players[0].battingStats.homeRuns").value(95))
+                // Soto career: 41 HR
+                .andExpect(jsonPath("$.players[1].battingStats.homeRuns").value(41))
+                // Judge should be HR leader
+                .andExpect(jsonPath("$.leaders.batting.homeRuns").value(judge.getId()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldReturnBadRequestForTooFewPlayers() throws Exception {
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", String.valueOf(judge.getId()))
+                        .param("seasons", "2024"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldReturnBadRequestForTooManyPlayers() throws Exception {
+        Player p1 = createTestPlayer(1, "Player 1", "1B");
+        Player p2 = createTestPlayer(2, "Player 2", "2B");
+        Player p3 = createTestPlayer(3, "Player 3", "3B");
+        Player p4 = createTestPlayer(4, "Player 4", "SS");
+        Player p5 = createTestPlayer(5, "Player 5", "LF");
+
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", p1.getId() + "," + p2.getId() + "," + p3.getId() + "," + p4.getId() + "," + p5.getId())
+                        .param("seasons", "2024,2024,2024,2024,2024"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldReturnBadRequestWhenSeasonsMismatch() throws Exception {
+        Player soto = createTestPlayer(545361, "Juan Soto", "LF");
+
+        // 2 players but only 1 season
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", judge.getId() + "," + soto.getId())
+                        .param("seasons", "2024"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldHandleMissingStats() throws Exception {
+        // Given - no stats created for judge
+        Player soto = createTestPlayer(545361, "Juan Soto", "LF");
+        createTestBattingStats(soto, yankees, 2024);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", judge.getId() + "," + soto.getId())
+                        .param("seasons", "2024,2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.players[0].battingStats").isEmpty())
+                .andExpect(jsonPath("$.players[1].battingStats").exists());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldComparePitcherStats() throws Exception {
+        // Given
+        Player pitcher2 = createTestPlayer(477132, "Max Scherzer", "P");
+        createTestRosterEntry(yankees, cole, 2024);
+        createTestRosterEntry(yankees, pitcher2, 2024);
+
+        var coleStats = createTestPitchingStats(cole, yankees, 2024);
+        coleStats.setWins(15);
+        coleStats.setEra(new java.math.BigDecimal("3.00"));
+        pitchingStatsRepository.save(coleStats);
+
+        var scherzerStats = createTestPitchingStats(pitcher2, yankees, 2024);
+        scherzerStats.setWins(11);
+        scherzerStats.setEra(new java.math.BigDecimal("3.50"));
+        pitchingStatsRepository.save(scherzerStats);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", cole.getId() + "," + pitcher2.getId())
+                        .param("seasons", "2024,2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.players[0].pitchingStats.wins").value(15))
+                .andExpect(jsonPath("$.players[1].pitchingStats.wins").value(11))
+                // Cole should be wins leader
+                .andExpect(jsonPath("$.leaders.pitching.wins").value(cole.getId()))
+                // Cole should be ERA leader (lower is better)
+                .andExpect(jsonPath("$.leaders.pitching.era").value(cole.getId()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldCompareFourPlayers() throws Exception {
+        // Given
+        Player p1 = createTestPlayer(1, "Player 1", "1B");
+        Player p2 = createTestPlayer(2, "Player 2", "2B");
+        Player p3 = createTestPlayer(3, "Player 3", "3B");
+        Player p4 = createTestPlayer(4, "Player 4", "SS");
+
+        var stats1 = createTestBattingStats(p1, yankees, 2024);
+        stats1.setHomeRuns(40);
+        battingStatsRepository.save(stats1);
+
+        var stats2 = createTestBattingStats(p2, yankees, 2024);
+        stats2.setHomeRuns(30);
+        battingStatsRepository.save(stats2);
+
+        var stats3 = createTestBattingStats(p3, yankees, 2024);
+        stats3.setHomeRuns(50);
+        battingStatsRepository.save(stats3);
+
+        var stats4 = createTestBattingStats(p4, yankees, 2024);
+        stats4.setHomeRuns(25);
+        battingStatsRepository.save(stats4);
+
+        // When/Then
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", p1.getId() + "," + p2.getId() + "," + p3.getId() + "," + p4.getId())
+                        .param("seasons", "2024,2024,2024,2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.players", hasSize(4)))
+                // Player 3 has most HRs
+                .andExpect(jsonPath("$.leaders.batting.homeRuns").value(p3.getId()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void comparePlayers_shouldCompareDifferentSeasons() throws Exception {
+        // Given
+        Player soto = createTestPlayer(545361, "Juan Soto", "LF");
+
+        var judgeStats2023 = createTestBattingStats(judge, yankees, 2023);
+        judgeStats2023.setHomeRuns(37);
+        battingStatsRepository.save(judgeStats2023);
+
+        var sotoStats2024 = createTestBattingStats(soto, yankees, 2024);
+        sotoStats2024.setHomeRuns(41);
+        battingStatsRepository.save(sotoStats2024);
+
+        // When/Then - compare Judge 2023 vs Soto 2024
+        mockMvc.perform(get("/api/players/compare")
+                        .param("players", judge.getId() + "," + soto.getId())
+                        .param("seasons", "2023,2024"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.players[0].season").value(2023))
+                .andExpect(jsonPath("$.players[0].battingStats.homeRuns").value(37))
+                .andExpect(jsonPath("$.players[1].season").value(2024))
+                .andExpect(jsonPath("$.players[1].battingStats.homeRuns").value(41))
+                // Soto should be HR leader with 41 vs 37
+                .andExpect(jsonPath("$.leaders.batting.homeRuns").value(soto.getId()));
+    }
 }
