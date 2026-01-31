@@ -136,4 +136,88 @@ class GameControllerTest extends BaseIntegrationTest {
         mockMvc.perform(get("/api/games"))
                 .andExpect(status().is3xxRedirection());
     }
+
+    // ==================== Calendar Endpoint Tests ====================
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getCalendarGames_shouldReturnLightweightGameData() throws Exception {
+        // Given
+        createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1));
+        createTestGame(745124, dodgers, mets, LocalDate.of(2024, 4, 3));
+        createTestGame(745125, yankees, redSox, LocalDate.of(2024, 4, 7));
+
+        // When/Then
+        mockMvc.perform(get("/api/games/calendar")
+                        .param("startDate", "2024-04-01")
+                        .param("endDate", "2024-04-05"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].homeTeamAbbr").value("NYY"))
+                .andExpect(jsonPath("$[0].awayTeamAbbr").value("BOS"))
+                .andExpect(jsonPath("$[0].homeScore").value(5))
+                .andExpect(jsonPath("$[0].awayScore").value(3))
+                // Verify lightweight - no full team objects
+                .andExpect(jsonPath("$[0].homeTeam").doesNotExist())
+                .andExpect(jsonPath("$[0].venueName").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getCalendarGames_shouldFilterByTeam() throws Exception {
+        // Given
+        createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1));
+        createTestGame(745124, dodgers, mets, LocalDate.of(2024, 4, 2));
+        createTestGame(745125, redSox, yankees, LocalDate.of(2024, 4, 3));
+
+        // When/Then - filter to Yankees games only
+        mockMvc.perform(get("/api/games/calendar")
+                        .param("startDate", "2024-04-01")
+                        .param("endDate", "2024-04-05")
+                        .param("teamId", yankees.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getGameCounts_shouldReturnCountsPerDay() throws Exception {
+        // Given - 2 games on Apr 1, 1 game on Apr 3
+        createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1));
+        createTestGame(745124, dodgers, mets, LocalDate.of(2024, 4, 1));
+        createTestGame(745125, yankees, mets, LocalDate.of(2024, 4, 3));
+
+        // When/Then
+        mockMvc.perform(get("/api/games/calendar/counts")
+                        .param("startDate", "2024-04-01")
+                        .param("endDate", "2024-04-05"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].date").value("2024-04-01"))
+                .andExpect(jsonPath("$[0].totalGames").value(2))
+                .andExpect(jsonPath("$[1].date").value("2024-04-03"))
+                .andExpect(jsonPath("$[1].totalGames").value(1));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void getGameCounts_shouldReturnHomeAwayBreakdownForTeam() throws Exception {
+        // Given
+        createTestGame(745123, yankees, redSox, LocalDate.of(2024, 4, 1)); // NYY home
+        createTestGame(745124, mets, yankees, LocalDate.of(2024, 4, 2));   // NYY away
+
+        // When/Then - filter to Yankees
+        mockMvc.perform(get("/api/games/calendar/counts")
+                        .param("startDate", "2024-04-01")
+                        .param("endDate", "2024-04-05")
+                        .param("teamId", yankees.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].date").value("2024-04-01"))
+                .andExpect(jsonPath("$[0].homeGames").value(1))
+                .andExpect(jsonPath("$[0].awayGames").value(0))
+                .andExpect(jsonPath("$[1].date").value("2024-04-02"))
+                .andExpect(jsonPath("$[1].homeGames").value(0))
+                .andExpect(jsonPath("$[1].awayGames").value(1));
+    }
 }

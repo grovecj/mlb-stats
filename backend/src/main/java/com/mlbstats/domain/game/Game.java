@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "games")
@@ -29,6 +30,9 @@ public class Game {
 
     @Column(name = "game_date", nullable = false)
     private LocalDate gameDate;
+
+    @Column(name = "scheduled_time")
+    private LocalTime scheduledTime;
 
     @Column(name = "game_type")
     private String gameType;

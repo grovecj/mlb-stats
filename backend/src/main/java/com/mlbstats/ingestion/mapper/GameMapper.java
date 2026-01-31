@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -30,6 +33,7 @@ public class GameMapper {
 
         if (dto.getGameDate() != null) {
             game.setGameDate(parseDate(dto.getGameDate()));
+            game.setScheduledTime(parseTime(dto.getGameDate()));
         }
 
         if (dto.getStatus() != null) {
@@ -74,6 +78,11 @@ public class GameMapper {
             existing.setStatus(dto.getStatus().getDetailedState());
         }
 
+        // Update scheduled time if not already set (backfill for existing games)
+        if (existing.getScheduledTime() == null && dto.getGameDate() != null) {
+            existing.setScheduledTime(parseTime(dto.getGameDate()));
+        }
+
         if (dto.getTeams() != null) {
             if (dto.getTeams().getHome() != null) {
                 existing.setHomeScore(dto.getTeams().getHome().getScore());
@@ -92,6 +101,24 @@ public class GameMapper {
         }
         try {
             return LocalDate.parse(dateStr.substring(0, 10), DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Parse the scheduled time from an ISO 8601 datetime string.
+     * MLB API returns times in UTC (e.g., "2024-04-15T23:05:00Z").
+     * We convert to US Eastern time since that's the primary timezone for MLB scheduling.
+     */
+    private LocalTime parseTime(String dateStr) {
+        if (dateStr == null || dateStr.length() < 20) {
+            return null;
+        }
+        try {
+            OffsetDateTime utcTime = OffsetDateTime.parse(dateStr);
+            // Convert to Eastern time for display
+            return utcTime.atZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime();
         } catch (DateTimeParseException e) {
             return null;
         }

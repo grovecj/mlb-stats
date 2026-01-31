@@ -1,8 +1,6 @@
 package com.mlbstats.api.controller;
 
-import com.mlbstats.api.dto.BoxScoreDto;
-import com.mlbstats.api.dto.GameDto;
-import com.mlbstats.api.dto.PageDto;
+import com.mlbstats.api.dto.*;
 import com.mlbstats.api.service.GameApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -71,5 +69,27 @@ public class GameController {
     @Operation(summary = "Get game box score", description = "Returns detailed batting and pitching stats for a game")
     public ResponseEntity<BoxScoreDto> getBoxScore(@PathVariable Long id) {
         return ResponseEntity.ok(gameApiService.getBoxScore(id));
+    }
+
+    // ==================== Calendar APIs ====================
+
+    @GetMapping("/calendar")
+    @Operation(summary = "Get calendar games",
+               description = "Returns lightweight game data for calendar views. Optimized for week/month display.")
+    public ResponseEntity<List<CalendarGameDto>> getCalendarGames(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) Long teamId) {
+        return ResponseEntity.ok(gameApiService.getCalendarGames(startDate, endDate, teamId));
+    }
+
+    @GetMapping("/calendar/counts")
+    @Operation(summary = "Get game counts by date",
+               description = "Returns game counts per day for monthly calendar overview")
+    public ResponseEntity<List<GameCountDto>> getGameCounts(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) Long teamId) {
+        return ResponseEntity.ok(gameApiService.getGameCounts(startDate, endDate, teamId));
     }
 }
