@@ -88,6 +88,35 @@ export const handlers = [
     return HttpResponse.json(game)
   }),
 
+  // Calendar endpoints
+  http.get('/api/games/calendar', () => {
+    // Return lightweight calendar game data
+    return HttpResponse.json(mockGames.map(g => ({
+      id: g.id,
+      gameDate: g.gameDate,
+      scheduledTime: '19:05:00',
+      status: g.status,
+      homeTeamId: g.homeTeam?.id || 147,
+      homeTeamAbbr: g.homeTeam?.abbreviation || 'NYY',
+      awayTeamId: g.awayTeam?.id || 111,
+      awayTeamAbbr: g.awayTeam?.abbreviation || 'BOS',
+      homeScore: g.homeScore,
+      awayScore: g.awayScore,
+    })))
+  }),
+
+  http.get('/api/games/calendar/counts', () => {
+    // Return game counts per day
+    const countsByDate = mockGames.reduce((acc, g) => {
+      if (!acc[g.gameDate]) {
+        acc[g.gameDate] = { date: g.gameDate, totalGames: 0, homeGames: 0, awayGames: 0 }
+      }
+      acc[g.gameDate].totalGames++
+      return acc
+    }, {} as Record<string, { date: string; totalGames: number; homeGames: number; awayGames: number }>)
+    return HttpResponse.json(Object.values(countsByDate))
+  }),
+
   // Public stats endpoint
   http.get('/api/public/stats', () => {
     return HttpResponse.json({
