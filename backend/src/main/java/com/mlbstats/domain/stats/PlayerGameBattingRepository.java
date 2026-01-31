@@ -32,6 +32,10 @@ public interface PlayerGameBattingRepository extends JpaRepository<PlayerGameBat
            "JOIN FETCH pgb.game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
            "JOIN FETCH pgb.team " +
            "WHERE pgb.player.id IN :playerIds " +
-           "AND pgb.id IN (SELECT MAX(pgb2.id) FROM PlayerGameBatting pgb2 WHERE pgb2.player.id IN :playerIds GROUP BY pgb2.player.id)")
+           "AND g.gameDate = (" +
+           "    SELECT MAX(g2.gameDate) FROM PlayerGameBatting pgb2 " +
+           "    JOIN pgb2.game g2 " +
+           "    WHERE pgb2.player.id = pgb.player.id" +
+           ")")
     List<PlayerGameBatting> findLatestByPlayerIds(@Param("playerIds") List<Long> playerIds);
 }

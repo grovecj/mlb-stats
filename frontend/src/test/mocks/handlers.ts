@@ -161,7 +161,7 @@ export const handlers = [
         team,
         todaysGame: {
           id: 1,
-          gameDate: new Date().toISOString().split('T')[0],
+          gameDate: '2024-08-15',
           scheduledTime: '19:05:00',
           status: 'Scheduled',
           opponent: mockTeams[2],

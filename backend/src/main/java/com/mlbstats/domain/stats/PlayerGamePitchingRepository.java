@@ -32,6 +32,10 @@ public interface PlayerGamePitchingRepository extends JpaRepository<PlayerGamePi
            "JOIN FETCH pgp.game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
            "JOIN FETCH pgp.team " +
            "WHERE pgp.player.id IN :playerIds " +
-           "AND pgp.id IN (SELECT MAX(pgp2.id) FROM PlayerGamePitching pgp2 WHERE pgp2.player.id IN :playerIds GROUP BY pgp2.player.id)")
+           "AND g.gameDate = (" +
+           "    SELECT MAX(g2.gameDate) FROM PlayerGamePitching pgp2 " +
+           "    JOIN pgp2.game g2 " +
+           "    WHERE pgp2.player.id = pgp.player.id" +
+           ")")
     List<PlayerGamePitching> findLatestByPlayerIds(@Param("playerIds") List<Long> playerIds);
 }

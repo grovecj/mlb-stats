@@ -137,8 +137,8 @@ public class FavoriteApiService {
                 playerDashboards,
                 totalTeamCount > MAX_DASHBOARD_TEAMS,
                 totalPlayerCount > MAX_DASHBOARD_PLAYERS,
-                (int) totalTeamCount,
-                (int) totalPlayerCount
+                Math.toIntExact(totalTeamCount),
+                Math.toIntExact(totalPlayerCount)
         );
     }
 
