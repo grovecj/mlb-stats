@@ -91,9 +91,11 @@ function Linescore({ linescore, awayTeam, homeTeam }: LinescoreProps) {
               {inningNumbers.map(num => {
                 const inning = innings.find(i => i.inning === num);
                 const runs = inning?.homeRuns ?? null;
-                // Show 'X' for bottom of 9th+ if home team is winning and game is final
+                // Show 'X' for bottom of 9th+ if home team is winning and game is final,
+                // but only if the inning actually exists in the data (home team didn't bat)
                 const isWalkOff = num >= 9 &&
                   !liveState.isLive &&
+                  inning !== undefined &&
                   runs === null &&
                   (homeTotals.runs ?? 0) > (awayTotals.runs ?? 0);
                 return (

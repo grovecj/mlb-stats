@@ -62,20 +62,33 @@
   color: var(--text-color);
 }
 
+/* R/H/E total columns - sticky on right for mobile scroll */
 .linescore-total-col {
   width: 36px;
   min-width: 36px;
   font-weight: 700;
   border-left: 2px solid var(--border-color);
   background-color: var(--background-color);
+  position: sticky;
+  z-index: 1;
 }
+
+.linescore-total-col:nth-last-child(3) { right: 72px; } /* R column */
+.linescore-total-col:nth-last-child(2) { right: 36px; } /* H column */
+.linescore-total-col:nth-last-child(1) { right: 0; }    /* E column */
 
 .linescore-total-cell {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   border-left: 2px solid var(--border-color);
   background-color: var(--background-color);
+  position: sticky;
+  z-index: 1;
 }
+
+.linescore-total-cell:nth-last-child(3) { right: 72px; } /* R column */
+.linescore-total-cell:nth-last-child(2) { right: 36px; } /* H column */
+.linescore-total-cell:nth-last-child(1) { right: 0; }    /* E column */
 
 .linescore-scored {
   color: var(--primary-color);
@@ -168,4 +181,9 @@
     width: 30px;
     min-width: 30px;
   }
+
+  .linescore-total-col:nth-last-child(3),
+  .linescore-total-cell:nth-last-child(3) { right: 60px; } /* R column */
+  .linescore-total-col:nth-last-child(2),
+  .linescore-total-cell:nth-last-child(2) { right: 30px; } /* H column */
 }

@@ -39,7 +39,12 @@ public class LinescoreIngestionService {
         return syncLinescore(game);
     }
 
-    @Transactional
+    /**
+     * Sync linescores for all final games in a season.
+     * Note: This intentionally only syncs "Final" games to avoid incomplete data.
+     * For in-progress games, use syncLinescoreForGame which allows any started game.
+     * Each game is synced in its own transaction to avoid long-running transactions.
+     */
     public int syncLinescoresForSeason(Integer season) {
         log.info("Syncing linescores for season {}", season);
         List<Game> games = gameRepository.findBySeasonAndStatus(season, "Final");
@@ -48,7 +53,8 @@ public class LinescoreIngestionService {
         for (Game game : games) {
             // Skip if already has linescore data
             if (gameInningRepository.findByGameIdOrderByInningNumber(game.getId()).isEmpty()) {
-                count += syncLinescore(game);
+                // Each game synced in its own transaction via syncLinescoreForGame
+                count += syncLinescoreForGame(game.getId());
                 // Small delay to avoid overwhelming the API
                 try {
                     Thread.sleep(50);
