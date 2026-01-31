@@ -66,15 +66,15 @@ ALTER TABLE player_pitching_stats ADD COLUMN chase_pct DECIMAL(4,1);
 -- =============================================================================
 
 -- Batting leaderboard indexes (advanced stats)
-CREATE INDEX idx_batting_stats_season_war ON player_batting_stats(season, war DESC);
-CREATE INDEX idx_batting_stats_season_woba ON player_batting_stats(season, woba DESC);
-CREATE INDEX idx_batting_stats_season_wrc_plus ON player_batting_stats(season, wrc_plus DESC);
-CREATE INDEX idx_batting_stats_season_exit_velo ON player_batting_stats(season, avg_exit_velocity DESC);
-CREATE INDEX idx_batting_stats_season_barrel ON player_batting_stats(season, barrel_pct DESC);
+CREATE INDEX IF NOT EXISTS idx_batting_stats_season_war ON player_batting_stats(season, war DESC);
+CREATE INDEX IF NOT EXISTS idx_batting_stats_season_woba ON player_batting_stats(season, woba DESC);
+CREATE INDEX IF NOT EXISTS idx_batting_stats_season_wrc_plus ON player_batting_stats(season, wrc_plus DESC);
+CREATE INDEX IF NOT EXISTS idx_batting_stats_season_exit_velo ON player_batting_stats(season, avg_exit_velocity DESC);
+CREATE INDEX IF NOT EXISTS idx_batting_stats_season_barrel ON player_batting_stats(season, barrel_pct DESC);
 
 -- Pitching leaderboard indexes (advanced stats)
-CREATE INDEX idx_pitching_stats_season_war ON player_pitching_stats(season, war DESC);
-CREATE INDEX idx_pitching_stats_season_fip ON player_pitching_stats(season, fip ASC);
-CREATE INDEX idx_pitching_stats_season_xfip ON player_pitching_stats(season, xfip ASC);
-CREATE INDEX idx_pitching_stats_season_xera ON player_pitching_stats(season, xera ASC);
-CREATE INDEX idx_pitching_stats_season_whiff ON player_pitching_stats(season, whiff_pct DESC);
+CREATE INDEX IF NOT EXISTS idx_pitching_stats_season_war ON player_pitching_stats(season, war DESC);
+CREATE INDEX IF NOT EXISTS idx_pitching_stats_season_fip ON player_pitching_stats(season, fip ASC);
+CREATE INDEX IF NOT EXISTS idx_pitching_stats_season_xfip ON player_pitching_stats(season, xfip ASC);
+CREATE INDEX IF NOT EXISTS idx_pitching_stats_season_xera ON player_pitching_stats(season, xera ASC);
+CREATE INDEX IF NOT EXISTS idx_pitching_stats_season_whiff ON player_pitching_stats(season, whiff_pct DESC);
