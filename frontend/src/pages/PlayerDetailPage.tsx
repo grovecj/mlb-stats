@@ -8,12 +8,7 @@ import PlayerStats from '../components/player/PlayerStats';
 import PlayerGameLog from '../components/player/PlayerGameLog';
 import CareerStats from '../components/player/CareerStats';
 import FavoriteButton from '../components/common/FavoriteButton';
-
-function getDefaultSeason(): number {
-  const now = new Date();
-  const month = now.getMonth();
-  return month < 3 ? now.getFullYear() - 1 : now.getFullYear();
-}
+import { getDefaultSeason } from '../utils/season';
 
 function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();

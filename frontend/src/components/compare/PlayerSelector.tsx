@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getPlayers } from '../../services/api';
 import { Player } from '../../types/player';
 import { PlayerSelection } from '../../types/comparison';
+import { getSeasonOptions } from '../../utils/season';
 import './PlayerSelector.css';
 
 interface PlayerSelectorProps {
@@ -92,15 +93,8 @@ function PlayerSelector({
     );
   };
 
-  const generateSeasonOptions = () => {
-    const seasons: number[] = [];
-    for (let year = currentSeason; year >= 2020; year--) {
-      seasons.push(year);
-    }
-    return seasons;
-  };
-
   const canAddMore = selections.length < maxPlayers;
+  const seasonOptions = getSeasonOptions(currentSeason);
 
   return (
     <div className="player-selector" ref={containerRef}>
@@ -131,7 +125,7 @@ function PlayerSelector({
                   onChange={(e) => handleSeasonChange(selection.playerId, parseInt(e.target.value))}
                   className="season-select"
                 >
-                  {generateSeasonOptions().map(year => (
+                  {seasonOptions.map(year => (
                     <option key={year} value={year}>{year}</option>
                   ))}
                 </select>

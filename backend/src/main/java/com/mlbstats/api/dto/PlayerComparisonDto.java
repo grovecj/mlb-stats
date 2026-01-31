@@ -77,6 +77,7 @@ public record PlayerComparisonDto(
             int gamesPlayed = 0, atBats = 0, runs = 0, hits = 0, doubles = 0, triples = 0;
             int homeRuns = 0, rbi = 0, stolenBases = 0, caughtStealing = 0, walks = 0, strikeouts = 0;
             int plateAppearances = 0, totalBases = 0, extraBaseHits = 0;
+            int hitByPitch = 0, sacFlies = 0;
 
             for (PlayerBattingStats s : statsList) {
                 gamesPlayed += nullSafe(s.getGamesPlayed());
@@ -94,13 +95,17 @@ public record PlayerComparisonDto(
                 plateAppearances += nullSafe(s.getPlateAppearances());
                 totalBases += nullSafe(s.getTotalBases());
                 extraBaseHits += nullSafe(s.getExtraBaseHits());
+                hitByPitch += nullSafe(s.getHitByPitch());
+                sacFlies += nullSafe(s.getSacFlies());
             }
 
             // Recalculate rate stats
             BigDecimal battingAvg = atBats > 0 ? divide(hits, atBats, 3) : null;
             BigDecimal slg = atBats > 0 ? divide(totalBases, atBats, 3) : null;
-            BigDecimal obp = plateAppearances > 0
-                    ? divide(hits + walks, plateAppearances, 3)
+            // OBP = (H + BB + HBP) / (AB + BB + HBP + SF)
+            int obpDenominator = atBats + walks + hitByPitch + sacFlies;
+            BigDecimal obp = obpDenominator > 0
+                    ? divide(hits + walks + hitByPitch, obpDenominator, 3)
                     : null;
             BigDecimal ops = (obp != null && slg != null) ? obp.add(slg) : null;
 
@@ -178,7 +183,7 @@ public record PlayerComparisonDto(
             int gamesPlayed = 0, gamesStarted = 0, wins = 0, losses = 0, saves = 0, holds = 0;
             int hitsAllowed = 0, runsAllowed = 0, earnedRuns = 0, homeRunsAllowed = 0;
             int walks = 0, strikeouts = 0, completeGames = 0, shutouts = 0;
-            BigDecimal inningsPitched = BigDecimal.ZERO;
+            int totalOuts = 0;  // Track outs for proper IP aggregation
 
             for (PlayerPitchingStats s : statsList) {
                 gamesPlayed += nullSafe(s.getGamesPlayed());
@@ -196,9 +201,15 @@ public record PlayerComparisonDto(
                 completeGames += nullSafe(s.getCompleteGames());
                 shutouts += nullSafe(s.getShutouts());
                 if (s.getInningsPitched() != null) {
-                    inningsPitched = inningsPitched.add(s.getInningsPitched());
+                    totalOuts += inningsPitchedToOuts(s.getInningsPitched());
                 }
             }
+
+            // Convert total outs back to innings pitched (baseball notation)
+            BigDecimal inningsPitched = outsToInningsPitched(totalOuts);
+
+            // For rate stat calculations, use true decimal innings
+            BigDecimal trueDecimalInnings = BigDecimal.valueOf(totalOuts).divide(BigDecimal.valueOf(3), 6, RoundingMode.HALF_UP);
 
             // Recalculate rate stats
             // ERA = (earnedRuns / inningsPitched) * 9
@@ -207,18 +218,18 @@ public record PlayerComparisonDto(
             BigDecimal kPer9 = null;
             BigDecimal bbPer9 = null;
 
-            if (inningsPitched.compareTo(BigDecimal.ZERO) > 0) {
+            if (totalOuts > 0) {
                 era = BigDecimal.valueOf(earnedRuns)
                         .multiply(BigDecimal.valueOf(9))
-                        .divide(inningsPitched, 2, RoundingMode.HALF_UP);
+                        .divide(trueDecimalInnings, 2, RoundingMode.HALF_UP);
                 whip = BigDecimal.valueOf(walks + hitsAllowed)
-                        .divide(inningsPitched, 2, RoundingMode.HALF_UP);
+                        .divide(trueDecimalInnings, 2, RoundingMode.HALF_UP);
                 kPer9 = BigDecimal.valueOf(strikeouts)
                         .multiply(BigDecimal.valueOf(9))
-                        .divide(inningsPitched, 2, RoundingMode.HALF_UP);
+                        .divide(trueDecimalInnings, 2, RoundingMode.HALF_UP);
                 bbPer9 = BigDecimal.valueOf(walks)
                         .multiply(BigDecimal.valueOf(9))
-                        .divide(inningsPitched, 2, RoundingMode.HALF_UP);
+                        .divide(trueDecimalInnings, 2, RoundingMode.HALF_UP);
             }
 
             return new ComparisonPitchingStats(
@@ -228,6 +239,27 @@ public record PlayerComparisonDto(
                     era, whip, kPer9, bbPer9,
                     completeGames, shutouts
             );
+        }
+
+        /**
+         * Convert baseball notation innings pitched to total outs.
+         * Baseball IP uses .1 = 1/3 inning, .2 = 2/3 inning (outs, not decimal).
+         * Example: 6.2 IP = 6 innings + 2 outs = 20 outs total.
+         */
+        private static int inningsPitchedToOuts(BigDecimal ip) {
+            int fullInnings = ip.intValue();
+            int fractionalPart = ip.remainder(BigDecimal.ONE).multiply(BigDecimal.TEN).intValue();
+            return (fullInnings * 3) + fractionalPart;
+        }
+
+        /**
+         * Convert total outs back to baseball notation innings pitched.
+         * Example: 20 outs = 6.2 IP (6 full innings + 2 outs).
+         */
+        private static BigDecimal outsToInningsPitched(int outs) {
+            int fullInnings = outs / 3;
+            int remainingOuts = outs % 3;
+            return BigDecimal.valueOf(fullInnings).add(BigDecimal.valueOf(remainingOuts).divide(BigDecimal.TEN, 1, RoundingMode.UNNECESSARY));
         }
 
         private static int nullSafe(Integer value) {

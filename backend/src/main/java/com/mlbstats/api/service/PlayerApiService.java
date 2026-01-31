@@ -316,18 +316,23 @@ public class PlayerApiService {
                     Integer season = seasons.get(i);
                     Player player = playersMap.get(playerId);
 
-                    PlayerBattingStats battingStats = battingStatsRepository
-                            .findByPlayerIdAndSeasonSingle(playerId, season)
-                            .orElse(null);
-                    PlayerPitchingStats pitchingStats = pitchingStatsRepository
-                            .findByPlayerIdAndSeasonSingle(playerId, season)
-                            .orElse(null);
+                    // Use list-returning methods and aggregate (handles traded players with multiple team rows)
+                    List<PlayerBattingStats> battingStatsList = battingStatsRepository
+                            .findByPlayerIdAndSeason(playerId, season);
+                    List<PlayerPitchingStats> pitchingStatsList = pitchingStatsRepository
+                            .findByPlayerIdAndSeason(playerId, season);
+
+                    // Aggregate stats across all teams for the season
+                    PlayerComparisonDto.ComparisonBattingStats battingStats =
+                            PlayerComparisonDto.ComparisonBattingStats.aggregateCareer(battingStatsList);
+                    PlayerComparisonDto.ComparisonPitchingStats pitchingStats =
+                            PlayerComparisonDto.ComparisonPitchingStats.aggregateCareer(pitchingStatsList);
 
                     return new PlayerComparisonDto.PlayerComparisonEntry(
                             PlayerDto.fromEntity(player),
                             season,
-                            PlayerComparisonDto.ComparisonBattingStats.fromEntity(battingStats),
-                            PlayerComparisonDto.ComparisonPitchingStats.fromEntity(pitchingStats)
+                            battingStats,
+                            pitchingStats
                     );
                 }).toList();
     }

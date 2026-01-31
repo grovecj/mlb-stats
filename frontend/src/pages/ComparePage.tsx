@@ -5,12 +5,7 @@ import { PlayerComparisonResponse, PlayerSelection } from '../types/comparison';
 import PlayerSelector from '../components/compare/PlayerSelector';
 import ComparisonTable from '../components/compare/ComparisonTable';
 import { event } from '../utils/analytics';
-
-function getDefaultSeason(): number {
-  const now = new Date();
-  const month = now.getMonth();
-  return month < 3 ? now.getFullYear() - 1 : now.getFullYear();
-}
+import { getDefaultSeason } from '../utils/season';
 
 function ComparePage() {
   const [searchParams, setSearchParams] = useSearchParams();

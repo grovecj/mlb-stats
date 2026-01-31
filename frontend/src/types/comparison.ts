@@ -52,8 +52,8 @@ export interface PlayerComparisonEntry {
 }
 
 export interface ComparisonLeaders {
-  batting: Record<string, number>;
-  pitching: Record<string, number>;
+  batting: Partial<Record<string, number>>;
+  pitching: Partial<Record<string, number>>;
 }
 
 export interface PlayerComparisonResponse {

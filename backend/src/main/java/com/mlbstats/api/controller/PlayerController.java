@@ -193,10 +193,15 @@ public class PlayerController {
             @RequestParam(required = false) String seasons,
             @RequestParam(defaultValue = "season") String mode) {
 
-        List<Long> playerIds = Arrays.stream(players.split(","))
-                .map(String::trim)
-                .map(Long::parseLong)
-                .toList();
+        List<Long> playerIds;
+        try {
+            playerIds = Arrays.stream(players.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .toList();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        }
 
         if (playerIds.size() < 2 || playerIds.size() > 4) {
             return ResponseEntity.badRequest().build();
@@ -209,10 +214,14 @@ public class PlayerController {
             if (seasons == null || seasons.isBlank()) {
                 return ResponseEntity.badRequest().build();
             }
-            seasonList = Arrays.stream(seasons.split(","))
-                    .map(String::trim)
-                    .map(Integer::parseInt)
-                    .toList();
+            try {
+                seasonList = Arrays.stream(seasons.split(","))
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .toList();
+            } catch (NumberFormatException e) {
+                return ResponseEntity.badRequest().build();
+            }
             if (seasonList.size() != playerIds.size()) {
                 return ResponseEntity.badRequest().build();
             }
