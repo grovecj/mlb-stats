@@ -43,8 +43,8 @@ CREATE TABLE player_batting_splits (
     CONSTRAINT uk_batting_splits_player_season_type UNIQUE(player_id, season, split_type)
 );
 
-CREATE INDEX idx_batting_splits_player_season ON player_batting_splits(player_id, season);
-CREATE INDEX idx_batting_splits_type ON player_batting_splits(split_type);
+CREATE INDEX IF NOT EXISTS idx_batting_splits_player_season ON player_batting_splits(player_id, season);
+CREATE INDEX IF NOT EXISTS idx_batting_splits_type ON player_batting_splits(split_type);
 
 -- =============================================================================
 -- PITCHING SPLITS TABLE
@@ -84,5 +84,5 @@ CREATE TABLE player_pitching_splits (
     CONSTRAINT uk_pitching_splits_player_season_type UNIQUE(player_id, season, split_type)
 );
 
-CREATE INDEX idx_pitching_splits_player_season ON player_pitching_splits(player_id, season);
-CREATE INDEX idx_pitching_splits_type ON player_pitching_splits(split_type);
+CREATE INDEX IF NOT EXISTS idx_pitching_splits_player_season ON player_pitching_splits(player_id, season);
+CREATE INDEX IF NOT EXISTS idx_pitching_splits_type ON player_pitching_splits(split_type);
