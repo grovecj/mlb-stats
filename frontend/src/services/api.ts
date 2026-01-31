@@ -1,6 +1,6 @@
 import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/team';
 import { Player } from '../types/player';
-import { Game, BoxScore } from '../types/game';
+import { Game, BoxScore, CalendarGame, GameCount } from '../types/game';
 import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
 
 const API_BASE = '/api';
@@ -250,6 +250,33 @@ export async function getGameBoxScore(id: number): Promise<BoxScore> {
 
 export async function getTodaysGames(): Promise<Game[]> {
   return fetchJson<Game[]>(`${API_BASE}/games/today`);
+}
+
+// Calendar views - lightweight endpoints for week/month displays
+export async function getCalendarGames(options: {
+  startDate: string;
+  endDate: string;
+  teamId?: number;
+}): Promise<CalendarGame[]> {
+  const params = new URLSearchParams({
+    startDate: options.startDate,
+    endDate: options.endDate,
+  });
+  if (options.teamId) params.set('teamId', String(options.teamId));
+  return fetchJson<CalendarGame[]>(`${API_BASE}/games/calendar?${params}`);
+}
+
+export async function getGameCounts(options: {
+  startDate: string;
+  endDate: string;
+  teamId?: number;
+}): Promise<GameCount[]> {
+  const params = new URLSearchParams({
+    startDate: options.startDate,
+    endDate: options.endDate,
+  });
+  if (options.teamId) params.set('teamId', String(options.teamId));
+  return fetchJson<GameCount[]>(`${API_BASE}/games/calendar/counts?${params}`);
 }
 
 // Sync Job Types

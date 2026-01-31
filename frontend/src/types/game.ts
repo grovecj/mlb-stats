@@ -71,3 +71,24 @@ export interface BoxScore {
   homeBatting: GameBatting[];
   homePitching: GamePitching[];
 }
+
+// Calendar view types - lightweight for week/month displays
+export interface CalendarGame {
+  id: number;
+  gameDate: string;
+  scheduledTime: string | null;
+  status: string;
+  homeTeamId: number;
+  homeTeamAbbr: string;
+  awayTeamId: number;
+  awayTeamAbbr: string;
+  homeScore: number | null;
+  awayScore: number | null;
+}
+
+export interface GameCount {
+  date: string;
+  totalGames: number;
+  homeGames: number;
+  awayGames: number;
+}

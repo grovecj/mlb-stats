@@ -1,0 +1,181 @@
+.games-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.schedule-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  padding: 8px 20px;
+  border: none;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn:not(:last-child) {
+  border-right: 1px solid var(--border-color);
+}
+
+.view-toggle-btn:hover {
+  background-color: var(--background-color);
+}
+
+.view-toggle-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Navigation */
+.schedule-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.schedule-date {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  min-width: 200px;
+  text-align: center;
+}
+
+.today-btn {
+  padding: 8px 16px;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.today-btn:hover {
+  background-color: #001a4d;
+}
+
+/* Team Filter */
+.team-filter-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.team-filter-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.no-games {
+  text-align: center;
+  color: var(--text-light);
+  padding: 48px 24px;
+}
+
+/* Dark mode */
+[data-theme="dark"] .schedule-controls {
+  background-color: var(--card-background);
+}
+
+[data-theme="dark"] .view-toggle-btn {
+  background-color: var(--card-background);
+}
+
+[data-theme="dark"] .view-toggle-btn:hover {
+  background-color: var(--background-color);
+}
+
+[data-theme="dark"] .nav-btn {
+  background-color: var(--card-background);
+}
+
+[data-theme="dark"] .team-filter-select {
+  background-color: var(--card-background);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .schedule-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-toggle {
+    align-self: center;
+  }
+
+  .schedule-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .team-filter {
+    width: 100%;
+  }
+
+  .team-filter-select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .schedule-nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .schedule-date {
+    min-width: auto;
+  }
+
+  .nav-btn,
+  .today-btn {
+    width: 100%;
+  }
+}
