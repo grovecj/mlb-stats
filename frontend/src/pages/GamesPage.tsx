@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
-import { addWeeks, subWeeks, format, startOfWeek, endOfWeek } from 'date-fns';
+import {
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+  format,
+  startOfWeek,
+  endOfWeek,
+} from 'date-fns';
 import { Game } from '../types/game';
 import { Team } from '../types/team';
 import { getGames, getTeams } from '../services/api';
 import GameCard from '../components/game/GameCard';
 import WeekView from '../components/schedule/WeekView';
+import MonthView from '../components/schedule/MonthView';
 import './GamesPage.css';
 
-type ViewMode = 'day' | 'week';
+type ViewMode = 'day' | 'week' | 'month';
 
 function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -59,9 +68,13 @@ function GamesPage() {
         newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
         return newDate;
       });
-    } else {
+    } else if (viewMode === 'week') {
       setCurrentDate((prev) =>
         direction === 'next' ? addWeeks(prev, 1) : subWeeks(prev, 1)
+      );
+    } else {
+      setCurrentDate((prev) =>
+        direction === 'next' ? addMonths(prev, 1) : subMonths(prev, 1)
       );
     }
   };
@@ -78,10 +91,19 @@ function GamesPage() {
   const formatDateDisplay = (): string => {
     if (viewMode === 'day') {
       return format(currentDate, 'EEEE, MMMM d, yyyy');
+    } else if (viewMode === 'week') {
+      const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
+      const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
+      return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`;
     }
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`;
+    return format(currentDate, 'MMMM yyyy');
+  };
+
+  const getNavLabel = (direction: 'prev' | 'next'): string => {
+    const prefix = direction === 'prev' ? 'Prev' : 'Next';
+    if (viewMode === 'day') return prefix;
+    if (viewMode === 'week') return `${prefix} Week`;
+    return `${prefix} Month`;
   };
 
   return (
@@ -103,16 +125,22 @@ function GamesPage() {
           >
             Week
           </button>
+          <button
+            className={`view-toggle-btn ${viewMode === 'month' ? 'active' : ''}`}
+            onClick={() => setViewMode('month')}
+          >
+            Month
+          </button>
         </div>
 
         {/* Navigation */}
         <div className="schedule-nav">
           <button className="nav-btn" onClick={() => navigateDate('prev')}>
-            &larr; {viewMode === 'day' ? 'Prev' : 'Prev Week'}
+            &larr; {getNavLabel('prev')}
           </button>
           <span className="schedule-date">{formatDateDisplay()}</span>
           <button className="nav-btn" onClick={() => navigateDate('next')}>
-            {viewMode === 'day' ? 'Next' : 'Next Week'} &rarr;
+            {getNavLabel('next')} &rarr;
           </button>
           <button className="today-btn" onClick={goToToday}>
             Today
@@ -139,7 +167,13 @@ function GamesPage() {
       </div>
 
       {/* View Content */}
-      {viewMode === 'week' ? (
+      {viewMode === 'month' ? (
+        <MonthView
+          currentDate={currentDate}
+          teamId={teamFilter}
+          onDaySelect={handleDaySelect}
+        />
+      ) : viewMode === 'week' ? (
         <WeekView
           currentDate={currentDate}
           teamId={teamFilter}
