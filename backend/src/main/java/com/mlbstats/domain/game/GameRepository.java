@@ -25,6 +25,22 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
            "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
+           "WHERE g.gameDate BETWEEN :startDate AND :endDate " +
+           "ORDER BY g.gameDate, g.scheduledTime")
+    List<Game> findByDateRangeWithTeams(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
+           "WHERE (g.homeTeam.id = :teamId OR g.awayTeam.id = :teamId) " +
+           "AND g.gameDate BETWEEN :startDate AND :endDate " +
+           "ORDER BY g.gameDate, g.scheduledTime")
+    List<Game> findByDateRangeAndTeamWithTeams(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("teamId") Long teamId);
+
+    @Query("SELECT g FROM Game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "LEFT JOIN FETCH g.homeProbablePitcher LEFT JOIN FETCH g.awayProbablePitcher " +
            "WHERE g.gameDate = :date ORDER BY g.gameDate")
     List<Game> findByDateWithTeams(@Param("date") LocalDate date);
 
@@ -58,4 +74,21 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     void deleteBySeason(Integer season);
 
     Optional<Game> findTopByOrderByGameDateDesc();
+
+    // Calendar aggregation queries
+    @Query("SELECT g.gameDate as date, COUNT(g) as count FROM Game g " +
+           "WHERE g.gameDate BETWEEN :startDate AND :endDate " +
+           "GROUP BY g.gameDate ORDER BY g.gameDate")
+    List<Object[]> countGamesByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT g.gameDate as date, " +
+           "SUM(CASE WHEN g.homeTeam.id = :teamId THEN 1 ELSE 0 END) as homeGames, " +
+           "SUM(CASE WHEN g.awayTeam.id = :teamId THEN 1 ELSE 0 END) as awayGames " +
+           "FROM Game g WHERE (g.homeTeam.id = :teamId OR g.awayTeam.id = :teamId) " +
+           "AND g.gameDate BETWEEN :startDate AND :endDate " +
+           "GROUP BY g.gameDate ORDER BY g.gameDate")
+    List<Object[]> countTeamGamesByDateRange(
+            @Param("teamId") Long teamId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }

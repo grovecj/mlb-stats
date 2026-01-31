@@ -119,4 +119,47 @@ public class GameApiService {
 
         return LinescoreDto.fromEntities(game, innings);
     }
+
+    // ==================== Calendar APIs ====================
+
+    /**
+     * Get lightweight game data for calendar views.
+     * Uses optimized query with JOIN FETCH to avoid N+1.
+     */
+    @Cacheable(value = CacheConfig.CALENDAR_GAMES, key = "#startDate + '-' + #endDate + '-' + #teamId")
+    public List<CalendarGameDto> getCalendarGames(LocalDate startDate, LocalDate endDate, Long teamId) {
+        List<Game> games;
+        if (teamId != null) {
+            games = gameRepository.findByDateRangeAndTeamWithTeams(startDate, endDate, teamId);
+        } else {
+            games = gameRepository.findByDateRangeWithTeams(startDate, endDate);
+        }
+        return games.stream()
+                .map(CalendarGameDto::fromEntity)
+                .toList();
+    }
+
+    /**
+     * Get game counts by date for monthly calendar overview.
+     * Very lightweight - just date and count per day.
+     */
+    @Cacheable(value = CacheConfig.CALENDAR_COUNTS, key = "#startDate + '-' + #endDate + '-' + #teamId")
+    public List<GameCountDto> getGameCounts(LocalDate startDate, LocalDate endDate, Long teamId) {
+        if (teamId != null) {
+            return gameRepository.countTeamGamesByDateRange(teamId, startDate, endDate).stream()
+                    .map(row -> GameCountDto.forTeam(
+                            (LocalDate) row[0],
+                            ((Number) row[1]).intValue(),
+                            ((Number) row[2]).intValue()
+                    ))
+                    .toList();
+        } else {
+            return gameRepository.countGamesByDateRange(startDate, endDate).stream()
+                    .map(row -> GameCountDto.forAllTeams(
+                            (LocalDate) row[0],
+                            ((Number) row[1]).intValue()
+                    ))
+                    .toList();
+        }
+    }
 }

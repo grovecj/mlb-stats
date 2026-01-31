@@ -26,6 +26,8 @@ public class CacheConfig {
     public static final String GAMES_BY_DATE = "gamesByDate";
     public static final String BOX_SCORES = "boxScores";
     public static final String LINESCORES = "linescores";
+    public static final String CALENDAR_GAMES = "calendarGames";
+    public static final String CALENDAR_COUNTS = "calendarCounts";
     public static final String SEARCH = "search";
     public static final String TEAM_AGGREGATE_STATS = "teamAggregateStats";
 
@@ -43,6 +45,8 @@ public class CacheConfig {
             Map.entry(GAMES_BY_DATE, new CacheSpec(Duration.ofHours(1), 60)),
             Map.entry(BOX_SCORES, new CacheSpec(Duration.ofHours(24), 200)),
             Map.entry(LINESCORES, new CacheSpec(Duration.ofHours(24), 500)),
+            Map.entry(CALENDAR_GAMES, new CacheSpec(Duration.ofMinutes(15), 100)),
+            Map.entry(CALENDAR_COUNTS, new CacheSpec(Duration.ofMinutes(30), 200)),
             Map.entry(SEARCH, new CacheSpec(Duration.ofMinutes(5), 100)),
             Map.entry(TEAM_AGGREGATE_STATS, new CacheSpec(Duration.ofMinutes(30), 100))
     );

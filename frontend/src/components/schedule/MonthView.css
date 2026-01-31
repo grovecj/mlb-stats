@@ -1,0 +1,278 @@
+.month-view {
+  margin-bottom: 24px;
+}
+
+.month-view-loading,
+.month-view-error {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.month-view-error {
+  color: var(--secondary-color);
+}
+
+/* Desktop Calendar Grid */
+.month-view-grid {
+  display: block;
+}
+
+.month-view-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.month-header-cell {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 0;
+}
+
+.month-view-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.month-day {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 80px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.month-day:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.month-day-outside {
+  background-color: transparent;
+  opacity: 0.4;
+}
+
+.month-day-outside:hover {
+  opacity: 0.6;
+}
+
+.month-day-today {
+  border-color: var(--primary-color);
+  border-width: 2px;
+}
+
+.month-day-selected {
+  background-color: rgba(0, 45, 114, 0.05);
+}
+
+.month-day-has-games {
+  background-color: rgba(0, 45, 114, 0.03);
+}
+
+.month-day-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.month-day-number.today {
+  background-color: var(--primary-color);
+  color: white;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.month-day-count {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.month-count-total {
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.month-day-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.month-count-home,
+.month-count-away {
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.month-count-home {
+  background-color: rgba(0, 128, 0, 0.1);
+  color: var(--success-color);
+}
+
+.month-count-away {
+  background-color: rgba(0, 45, 114, 0.1);
+  color: var(--primary-color);
+}
+
+/* Mobile List View - Hidden by default */
+.month-view-list {
+  display: none;
+}
+
+.month-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.month-list-item:hover {
+  border-color: var(--primary-color);
+}
+
+.month-list-item-today {
+  border-color: var(--primary-color);
+  border-width: 2px;
+}
+
+.month-list-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.month-list-day {
+  font-size: 11px;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.month-list-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.month-list-number.today {
+  background-color: var(--primary-color);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.month-list-count {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.month-list-breakdown {
+  display: flex;
+  gap: 12px;
+}
+
+.month-list-breakdown .month-count-home,
+.month-list-breakdown .month-count-away {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.month-list-arrow {
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+.month-list-empty {
+  text-align: center;
+  color: var(--text-light);
+  padding: 24px;
+}
+
+/* Dark mode */
+[data-theme="dark"] .month-day {
+  background-color: var(--card-background);
+}
+
+[data-theme="dark"] .month-day-selected {
+  background-color: rgba(100, 150, 220, 0.1);
+}
+
+[data-theme="dark"] .month-day-has-games {
+  background-color: rgba(100, 150, 220, 0.05);
+}
+
+[data-theme="dark"] .month-list-item {
+  background-color: var(--card-background);
+}
+
+[data-theme="dark"] .month-count-home {
+  background-color: rgba(0, 200, 0, 0.15);
+}
+
+[data-theme="dark"] .month-count-away {
+  background-color: rgba(100, 150, 220, 0.15);
+}
+
+/* Responsive - Switch to list view on mobile */
+@media (max-width: 768px) {
+  .month-view-grid {
+    display: none;
+  }
+
+  .month-view-list {
+    display: block;
+  }
+}
+
+/* Tablet - Smaller grid cells */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .month-day {
+    min-height: 70px;
+    padding: 6px;
+  }
+
+  .month-day-number {
+    font-size: 12px;
+  }
+
+  .month-count-total {
+    font-size: 10px;
+  }
+
+  .month-count-home,
+  .month-count-away {
+    font-size: 9px;
+  }
+}
