@@ -40,7 +40,7 @@ CREATE TABLE player_batting_splits (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
 
-    CONSTRAINT uk_batting_splits_player_season_type UNIQUE(player_id, season, split_type)
+    CONSTRAINT uk_batting_splits_player_season_type_team UNIQUE(player_id, season, split_type, team_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_batting_splits_player_season ON player_batting_splits(player_id, season);
@@ -81,7 +81,7 @@ CREATE TABLE player_pitching_splits (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
 
-    CONSTRAINT uk_pitching_splits_player_season_type UNIQUE(player_id, season, split_type)
+    CONSTRAINT uk_pitching_splits_player_season_type_team UNIQUE(player_id, season, split_type, team_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_pitching_splits_player_season ON player_pitching_splits(player_id, season);
