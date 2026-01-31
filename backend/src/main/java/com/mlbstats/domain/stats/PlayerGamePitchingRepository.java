@@ -27,4 +27,15 @@ public interface PlayerGamePitchingRepository extends JpaRepository<PlayerGamePi
 
     @Query("SELECT pgp FROM PlayerGamePitching pgp JOIN FETCH pgp.game g WHERE pgp.player.id = :playerId AND g.season = :season ORDER BY g.gameDate DESC")
     List<PlayerGamePitching> findByPlayerIdAndSeason(@Param("playerId") Long playerId, @Param("season") Integer season);
+
+    @Query("SELECT pgp FROM PlayerGamePitching pgp " +
+           "JOIN FETCH pgp.game g JOIN FETCH g.homeTeam JOIN FETCH g.awayTeam " +
+           "JOIN FETCH pgp.team " +
+           "WHERE pgp.player.id IN :playerIds " +
+           "AND g.gameDate = (" +
+           "    SELECT MAX(g2.gameDate) FROM PlayerGamePitching pgp2 " +
+           "    JOIN pgp2.game g2 " +
+           "    WHERE pgp2.player.id = pgp.player.id" +
+           ")")
+    List<PlayerGamePitching> findLatestByPlayerIds(@Param("playerIds") List<Long> playerIds);
 }

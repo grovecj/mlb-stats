@@ -53,4 +53,7 @@ public interface PlayerBattingStatsRepository extends JpaRepository<PlayerBattin
 
     @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player WHERE pbs.player.id = :playerId AND pbs.season = :season AND pbs.gameType = 'R'")
     Optional<PlayerBattingStats> findByPlayerIdAndSeasonSingle(@Param("playerId") Long playerId, @Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.player.id IN :playerIds AND pbs.season = :season AND pbs.gameType = 'R'")
+    List<PlayerBattingStats> findByPlayerIdsAndSeason(@Param("playerIds") List<Long> playerIds, @Param("season") Integer season);
 }

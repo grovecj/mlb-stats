@@ -739,3 +739,463 @@ a:hover {
     font-size: 10px;
   }
 }
+
+/* ===========================================
+   FAVORITES DASHBOARD
+   =========================================== */
+
+.favorites-dashboard {
+  margin-bottom: 32px;
+}
+
+.favorites-dashboard.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.favorites-dashboard .loading-spinner {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.dashboard-section {
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.view-all-link {
+  font-size: 14px;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+/* Favorite Teams Grid */
+.favorite-teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Favorite Team Card */
+.favorite-team-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.favorite-team-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.favorite-team-header:hover {
+  text-decoration: none;
+  background-color: var(--border-color);
+}
+
+.favorite-team-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.favorite-team-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.favorite-team-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favorite-team-record {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.favorite-team-record .record {
+  font-weight: 600;
+}
+
+.favorite-team-record .rank {
+  color: var(--text-light);
+}
+
+.favorite-team-record .streak {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.favorite-team-record .streak.winning {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.favorite-team-record .streak.losing {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.favorite-team-games {
+  border-top: 1px solid var(--border-color);
+  padding: 12px 16px;
+}
+
+.favorite-team-games .no-game {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* Game Mini Card */
+.game-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  padding: 4px 0;
+}
+
+.game-mini-card:hover {
+  text-decoration: none;
+}
+
+.game-mini-label {
+  font-size: 11px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  min-width: 40px;
+}
+
+.game-mini-matchup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.game-mini-vs {
+  color: var(--text-light);
+}
+
+.game-mini-opponent {
+  font-weight: 600;
+}
+
+.game-mini-score {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.game-mini-time {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.game-mini-live {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Favorite Players Grid */
+.favorite-players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* Favorite Player Card */
+.favorite-player-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.favorite-player-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.favorite-player-header:hover {
+  text-decoration: none;
+  background-color: var(--border-color);
+}
+
+.favorite-player-headshot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--border-color);
+}
+
+.favorite-player-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.favorite-player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.favorite-player-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favorite-player-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.favorite-player-details .position {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.favorite-player-details .team {
+  color: var(--text-light);
+}
+
+.favorite-player-stats {
+  border-top: 1px solid var(--border-color);
+  padding: 12px 16px;
+}
+
+.last-game-stats {
+  margin-bottom: 12px;
+}
+
+.stats-label {
+  font-size: 11px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.stats-row .highlight {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.season-stats .stats-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-item .stat-value {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.stat-item .stat-label {
+  font-size: 10px;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.no-stats {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* Empty Favorites State */
+.empty-favorites {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.empty-favorites-icon {
+  color: var(--border-color);
+  margin-bottom: 16px;
+}
+
+.empty-favorites-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-color);
+}
+
+.empty-favorites-text {
+  font-size: 14px;
+  color: var(--text-light);
+  margin: 0 0 24px 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-favorites-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #001d52;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background-color: var(--card-background);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+}
+
+/* Dashboard Responsive */
+@media (max-width: 768px) {
+  .favorite-teams-grid,
+  .favorite-players-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .empty-favorites {
+    padding: 32px 16px;
+  }
+
+  .empty-favorites-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorite-team-header,
+  .favorite-player-header {
+    padding: 12px;
+  }
+
+  .favorite-team-logo,
+  .favorite-player-headshot,
+  .favorite-player-placeholder {
+    width: 40px;
+    height: 40px;
+  }
+
+  .favorite-team-name,
+  .favorite-player-name {
+    font-size: 14px;
+  }
+
+  .season-stats .stats-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stat-item {
+    min-width: 60px;
+  }
+}

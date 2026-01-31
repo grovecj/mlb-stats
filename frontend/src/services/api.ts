@@ -3,6 +3,7 @@ import { Player } from '../types/player';
 import { Game, BoxScore, Linescore, CalendarGame, GameCount } from '../types/game';
 import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
 import { PlayerComparisonResponse, PlayerSelection } from '../types/comparison';
+import { FavoritesDashboard } from '../types/dashboard';
 
 const API_BASE = '/api';
 
@@ -511,6 +512,10 @@ export async function updateUserRole(userId: number, role: 'USER' | 'ADMIN'): Pr
 }
 
 // Favorites
+export async function getFavoritesDashboard(): Promise<FavoritesDashboard> {
+  return fetchJson<FavoritesDashboard>(`${API_BASE}/favorites/dashboard`);
+}
+
 export async function getFavoriteTeams(): Promise<Team[]> {
   return fetchJson<Team[]>(`${API_BASE}/favorites/teams`);
 }

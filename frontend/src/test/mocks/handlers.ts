@@ -3,6 +3,7 @@ import { mockTeams, mockStandings } from './data/teams'
 import { mockPlayers, mockPlayersPage } from './data/players'
 import { mockGames, mockGamesPage } from './data/games'
 import type { PlayerComparisonResponse } from '../../types/comparison'
+import type { FavoritesDashboard } from '../../types/dashboard'
 
 export const handlers = [
   // Auth endpoints
@@ -151,6 +152,97 @@ export const handlers = [
     return HttpResponse.json([
       { playerId: 2, playerName: 'Gerrit Cole', era: 2.75 },
     ])
+  }),
+
+  // Favorites dashboard endpoint
+  http.get('/api/favorites/dashboard', () => {
+    const mockDashboard: FavoritesDashboard = {
+      teams: mockTeams.slice(0, 2).map(team => ({
+        team,
+        todaysGame: {
+          id: 1,
+          gameDate: '2024-08-15',
+          scheduledTime: '19:05:00',
+          status: 'Scheduled',
+          opponent: mockTeams[2],
+          isHome: true,
+          teamScore: null,
+          opponentScore: null,
+          venueName: 'Yankee Stadium',
+        },
+        nextGame: null,
+        standing: {
+          wins: 85,
+          losses: 60,
+          divisionRank: 2,
+          gamesBack: '3.0',
+          streakCode: 'W3',
+          winningPercentage: 0.586,
+        },
+      })),
+      players: mockPlayers.slice(0, 2).map(player => ({
+        player,
+        currentTeam: mockTeams[0],
+        playerType: player.positionType === 'Pitcher' ? 'PITCHER' as const : 'BATTER' as const,
+        lastBattingGame: player.positionType !== 'Pitcher' ? {
+          gameId: 1,
+          gameDate: '2024-08-15',
+          opponent: 'BOS',
+          atBats: 4,
+          hits: 2,
+          runs: 1,
+          rbi: 2,
+          homeRuns: 1,
+          walks: 1,
+          strikeouts: 1,
+        } : null,
+        lastPitchingGame: player.positionType === 'Pitcher' ? {
+          gameId: 1,
+          gameDate: '2024-08-15',
+          opponent: 'BOS',
+          inningsPitched: 7.0,
+          hitsAllowed: 4,
+          earnedRuns: 2,
+          strikeouts: 10,
+          walks: 2,
+          isWinner: true,
+          isLoser: false,
+          isSave: false,
+        } : null,
+        seasonBatting: player.positionType !== 'Pitcher' ? {
+          season: 2024,
+          gamesPlayed: 140,
+          atBats: 500,
+          hits: 155,
+          homeRuns: 45,
+          rbi: 110,
+          runs: 95,
+          stolenBases: 5,
+          battingAvg: 0.310,
+          obp: 0.410,
+          slg: 0.650,
+          ops: 1.060,
+        } : null,
+        seasonPitching: player.positionType === 'Pitcher' ? {
+          season: 2024,
+          gamesPlayed: 28,
+          gamesStarted: 28,
+          wins: 14,
+          losses: 7,
+          saves: 0,
+          inningsPitched: 175.0,
+          strikeouts: 200,
+          era: 3.15,
+          whip: 1.05,
+          kPer9: 10.3,
+        } : null,
+      })),
+      hasMoreTeams: false,
+      hasMorePlayers: true,
+      totalTeamCount: 2,
+      totalPlayerCount: 8,
+    }
+    return HttpResponse.json(mockDashboard)
   }),
 
   // Player comparison endpoint
