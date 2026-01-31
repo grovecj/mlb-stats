@@ -151,4 +151,23 @@ public class MlbApiClient {
             return null;
         }
     }
+
+    public LinescoreResponse getLinescore(Integer gamePk) {
+        log.debug("Fetching linescore for game {}", gamePk);
+        try {
+            LinescoreResponse response = restClient.get()
+                    .uri("/game/{gamePk}/linescore", gamePk)
+                    .retrieve()
+                    .body(LinescoreResponse.class);
+
+            if (response != null && response.getInnings() != null) {
+                log.debug("Linescore for game {}: {} innings", gamePk, response.getInnings().size());
+            }
+
+            return response;
+        } catch (RestClientException e) {
+            log.warn("Failed to fetch linescore for game {}: {}", gamePk, e.getMessage());
+            return null;
+        }
+    }
 }

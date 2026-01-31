@@ -177,6 +177,20 @@ public class IngestionController {
         return ResponseEntity.ok(SyncJobDto.fromEntity(job));
     }
 
+    @PostMapping("/linescores")
+    @Operation(summary = "Sync linescores", description = "Synchronizes inning-by-inning linescore data for completed games")
+    public ResponseEntity<SyncJobDto> syncLinescores(
+            @RequestParam(required = false) Integer season,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        AppUser user = getUserFromPrincipal(principal);
+        SyncJob job = orchestrator.createAndRunTrackedLinescoresSync(season, TriggerType.MANUAL, user);
+        return ResponseEntity.ok(SyncJobDto.fromEntity(job));
+    }
+
     // ===== Legacy Untracked Endpoints =====
 
     @PostMapping("/players/incomplete")

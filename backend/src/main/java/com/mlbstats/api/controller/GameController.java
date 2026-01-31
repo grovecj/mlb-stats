@@ -71,6 +71,12 @@ public class GameController {
         return ResponseEntity.ok(gameApiService.getBoxScore(id));
     }
 
+    @GetMapping("/{id}/linescore")
+    @Operation(summary = "Get game linescore", description = "Returns inning-by-inning scoring for a game")
+    public ResponseEntity<LinescoreDto> getLinescore(@PathVariable Long id) {
+        return ResponseEntity.ok(gameApiService.getLinescore(id));
+    }
+
     // ==================== Calendar APIs ====================
 
     @GetMapping("/calendar")
