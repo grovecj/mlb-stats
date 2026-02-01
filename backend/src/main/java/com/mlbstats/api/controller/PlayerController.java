@@ -170,6 +170,96 @@ public class PlayerController {
         return ResponseEntity.ok(playerApiService.getTopWhip(season, minInnings, limit));
     }
 
+    // Advanced Sabermetric Leaderboards
+
+    @GetMapping("/leaders/war/batting")
+    @Operation(summary = "Get batting WAR leaders", description = "Returns top position players by WAR for a season")
+    public ResponseEntity<List<BattingStatsDto>> getBattingWarLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopBattingWar(season, limit));
+    }
+
+    @GetMapping("/leaders/woba")
+    @Operation(summary = "Get wOBA leaders", description = "Returns top players by weighted on-base average for a season")
+    public ResponseEntity<List<BattingStatsDto>> getWobaLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "200") int minPa,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopWoba(season, minPa, limit));
+    }
+
+    @GetMapping("/leaders/wrc-plus")
+    @Operation(summary = "Get wRC+ leaders", description = "Returns top players by weighted runs created plus for a season")
+    public ResponseEntity<List<BattingStatsDto>> getWrcPlusLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "200") int minPa,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopWrcPlus(season, minPa, limit));
+    }
+
+    @GetMapping("/leaders/exit-velocity")
+    @Operation(summary = "Get exit velocity leaders", description = "Returns top players by average exit velocity for a season")
+    public ResponseEntity<List<BattingStatsDto>> getExitVelocityLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "100") int minPa,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopExitVelocity(season, minPa, limit));
+    }
+
+    @GetMapping("/leaders/barrel-pct")
+    @Operation(summary = "Get barrel percentage leaders", description = "Returns top players by barrel percentage for a season")
+    public ResponseEntity<List<BattingStatsDto>> getBarrelPctLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "100") int minPa,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopBarrelPct(season, minPa, limit));
+    }
+
+    @GetMapping("/leaders/war/pitching")
+    @Operation(summary = "Get pitching WAR leaders", description = "Returns top pitchers by WAR for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getPitchingWarLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopPitchingWar(season, limit));
+    }
+
+    @GetMapping("/leaders/fip")
+    @Operation(summary = "Get FIP leaders", description = "Returns top pitchers by fielding independent pitching for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getFipLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "50") java.math.BigDecimal minInnings,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopFip(season, minInnings, limit));
+    }
+
+    @GetMapping("/leaders/xfip")
+    @Operation(summary = "Get xFIP leaders", description = "Returns top pitchers by expected fielding independent pitching for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getXfipLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "50") java.math.BigDecimal minInnings,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopXfip(season, minInnings, limit));
+    }
+
+    @GetMapping("/leaders/xera")
+    @Operation(summary = "Get xERA leaders", description = "Returns top pitchers by expected ERA for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getXeraLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "50") java.math.BigDecimal minInnings,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopXera(season, minInnings, limit));
+    }
+
+    @GetMapping("/leaders/whiff-pct")
+    @Operation(summary = "Get whiff percentage leaders", description = "Returns top pitchers by whiff percentage for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getWhiffPctLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "50") java.math.BigDecimal minInnings,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopWhiffPct(season, minInnings, limit));
+    }
+
     @GetMapping("/{id}/batting-game-log")
     @Operation(summary = "Get player batting game log", description = "Returns game-by-game batting stats for a player")
     public ResponseEntity<List<BattingGameLogDto>> getPlayerBattingGameLog(
