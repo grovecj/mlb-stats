@@ -1,7 +1,7 @@
 import { Team, RosterEntry, TeamStanding, TeamAggregateStats } from '../types/team';
 import { Player } from '../types/player';
 import { Game, BoxScore, Linescore, CalendarGame, GameCount } from '../types/game';
-import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse } from '../types/stats';
+import { BattingStats, PitchingStats, BattingGameLog, PitchingGameLog, PageResponse, BattingSplit, PitchingSplit } from '../types/stats';
 import { PlayerComparisonResponse, PlayerSelection } from '../types/comparison';
 import { FavoritesDashboard } from '../types/dashboard';
 
@@ -141,6 +141,16 @@ export async function getPlayerBattingStats(id: number, season?: number): Promis
 export async function getPlayerPitchingStats(id: number, season?: number): Promise<PitchingStats[]> {
   const params = season ? `?season=${season}` : '';
   return fetchJson<PitchingStats[]>(`${API_BASE}/players/${id}/pitching-stats${params}`);
+}
+
+export async function getPlayerBattingSplits(id: number, season?: number): Promise<BattingSplit[]> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<BattingSplit[]>(`${API_BASE}/players/${id}/batting-splits${params}`);
+}
+
+export async function getPlayerPitchingSplits(id: number, season?: number): Promise<PitchingSplit[]> {
+  const params = season ? `?season=${season}` : '';
+  return fetchJson<PitchingSplit[]>(`${API_BASE}/players/${id}/pitching-splits${params}`);
 }
 
 export async function getPlayerBattingGameLog(id: number, season?: number): Promise<BattingGameLog[]> {
