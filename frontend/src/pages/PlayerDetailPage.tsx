@@ -5,6 +5,7 @@ import { BattingStats, PitchingStats } from '../types/stats';
 import { getPlayer, getPlayerBattingStats, getPlayerPitchingStats } from '../services/api';
 import { usePlayerFavorite } from '../hooks/useFavorite';
 import PlayerStats from '../components/player/PlayerStats';
+import PlayerSplits from '../components/player/PlayerSplits';
 import PlayerGameLog from '../components/player/PlayerGameLog';
 import CareerStats from '../components/player/CareerStats';
 import FavoriteButton from '../components/common/FavoriteButton';
@@ -131,6 +132,10 @@ function PlayerDetailPage() {
       </div>
 
       <PlayerStats battingStats={battingStats} pitchingStats={pitchingStats} />
+
+      {playerId && (
+        <PlayerSplits playerId={playerId} positionType={player.positionType} />
+      )}
 
       {playerId && (
         <PlayerGameLog playerId={playerId} positionType={player.positionType} />

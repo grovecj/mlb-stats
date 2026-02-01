@@ -114,3 +114,62 @@ export interface PitchingGameLog {
   strikes: number | null;
   isStarter: boolean;
 }
+
+export type SplitType =
+  | 'HOME' | 'AWAY'
+  | 'VS_LHP' | 'VS_RHP'
+  | 'VS_LHB' | 'VS_RHB'
+  | 'FIRST_HALF' | 'SECOND_HALF'
+  | 'MONTH_MAR' | 'MONTH_APR' | 'MONTH_MAY' | 'MONTH_JUN'
+  | 'MONTH_JUL' | 'MONTH_AUG' | 'MONTH_SEP' | 'MONTH_OCT'
+  | 'DAY' | 'NIGHT'
+  | 'RUNNERS_ON' | 'RISP' | 'BASES_EMPTY';
+
+export interface BattingSplit {
+  id: number;
+  playerId: number;
+  teamId: number | null;
+  season: number;
+  splitType: SplitType;
+  splitTypeDisplay: string;
+  gamesPlayed: number;
+  plateAppearances: number;
+  atBats: number;
+  runs: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  rbi: number;
+  walks: number;
+  strikeouts: number;
+  stolenBases: number;
+  battingAvg: number | null;
+  obp: number | null;
+  slg: number | null;
+  ops: number | null;
+}
+
+export interface PitchingSplit {
+  id: number;
+  playerId: number;
+  teamId: number | null;
+  season: number;
+  splitType: SplitType;
+  splitTypeDisplay: string;
+  gamesPlayed: number;
+  gamesStarted: number;
+  inningsPitched: number | null;
+  wins: number;
+  losses: number;
+  saves: number;
+  holds: number;
+  hitsAllowed: number;
+  earnedRuns: number;
+  walks: number;
+  strikeouts: number;
+  era: number | null;
+  whip: number | null;
+  kPer9: number | null;
+  bbPer9: number | null;
+}

@@ -229,4 +229,20 @@ public class PlayerController {
 
         return ResponseEntity.ok(playerApiService.comparePlayerStats(playerIds, seasonList, careerMode));
     }
+
+    @GetMapping("/{id}/batting-splits")
+    @Operation(summary = "Get player batting splits", description = "Returns batting splits for a player (home/away, vs LHP/RHP, etc.)")
+    public ResponseEntity<List<BattingSplitDto>> getPlayerBattingSplits(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(playerApiService.getPlayerBattingSplits(id, season));
+    }
+
+    @GetMapping("/{id}/pitching-splits")
+    @Operation(summary = "Get player pitching splits", description = "Returns pitching splits for a player (home/away, vs LHB/RHB, etc.)")
+    public ResponseEntity<List<PitchingSplitDto>> getPlayerPitchingSplits(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(playerApiService.getPlayerPitchingSplits(id, season));
+    }
 }

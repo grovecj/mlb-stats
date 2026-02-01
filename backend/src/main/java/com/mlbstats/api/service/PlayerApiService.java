@@ -8,10 +8,14 @@ import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.player.PlayerRepository;
 import com.mlbstats.domain.player.PlayerSearchCriteria;
 import com.mlbstats.domain.player.PlayerSpecification;
+import com.mlbstats.domain.stats.PlayerBattingSplit;
+import com.mlbstats.domain.stats.PlayerBattingSplitRepository;
 import com.mlbstats.domain.stats.PlayerBattingStats;
 import com.mlbstats.domain.stats.PlayerBattingStatsRepository;
 import com.mlbstats.domain.stats.PlayerGameBattingRepository;
 import com.mlbstats.domain.stats.PlayerGamePitchingRepository;
+import com.mlbstats.domain.stats.PlayerPitchingSplit;
+import com.mlbstats.domain.stats.PlayerPitchingSplitRepository;
 import com.mlbstats.domain.stats.PlayerPitchingStats;
 import com.mlbstats.domain.stats.PlayerPitchingStatsRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,8 @@ public class PlayerApiService {
     private final PlayerPitchingStatsRepository pitchingStatsRepository;
     private final PlayerGameBattingRepository gameBattingRepository;
     private final PlayerGamePitchingRepository gamePitchingRepository;
+    private final PlayerBattingSplitRepository battingSplitRepository;
+    private final PlayerPitchingSplitRepository pitchingSplitRepository;
 
     public PageDto<PlayerDto> getAllPlayers(Pageable pageable) {
         Page<Player> page = playerRepository.findByActiveTrue(pageable);
@@ -478,5 +484,25 @@ public class PlayerApiService {
             case "shutouts" -> stats.shutouts() != null ? java.math.BigDecimal.valueOf(stats.shutouts()) : null;
             default -> null;
         };
+    }
+
+    // Player Splits
+
+    public List<BattingSplitDto> getPlayerBattingSplits(Long playerId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingSplitRepository.findByPlayerIdAndSeason(playerId, season).stream()
+                .map(BattingSplitDto::fromEntity)
+                .toList();
+    }
+
+    public List<PitchingSplitDto> getPlayerPitchingSplits(Long playerId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingSplitRepository.findByPlayerIdAndSeason(playerId, season).stream()
+                .map(PitchingSplitDto::fromEntity)
+                .toList();
     }
 }
