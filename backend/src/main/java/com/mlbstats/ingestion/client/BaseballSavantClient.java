@@ -253,8 +253,13 @@ public class BaseballSavantClient {
     // UTILITY METHODS
     // ================================================================================
 
+    /**
+     * Parses a CSV line using a regex pattern.
+     * Handles standard quoted fields but may not handle all edge cases
+     * (e.g., escaped quotes within fields like "Player ""Nickname"" Name").
+     * Baseball Savant's CSV output uses standard formatting, so this is sufficient.
+     */
     private String[] parseCsvLine(String line) {
-        // Simple CSV parsing - handles quoted fields
         return line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
     }
 
@@ -284,6 +289,22 @@ public class BaseballSavantClient {
         }
     }
 
+    /**
+     * Parses a numeric value from Baseball Savant CSV.
+     * <p>
+     * This method:
+     * <ul>
+     *     <li>Trims whitespace and removes surrounding quotes</li>
+     *     <li>Strips any '%' characters from the value</li>
+     *     <li>Parses the remaining text as a BigDecimal without scaling</li>
+     * </ul>
+     * <p>
+     * Baseball Savant returns percentages already in 0-100 form (e.g., "15.3" or "15.3%"
+     * both represent 15.3%). Values are parsed as-is without conversion.
+     *
+     * @param value The string value from the CSV
+     * @return The parsed BigDecimal, or null if parsing fails
+     */
     private BigDecimal parseDecimal(String value) {
         if (value == null || value.isBlank()) return null;
         try {

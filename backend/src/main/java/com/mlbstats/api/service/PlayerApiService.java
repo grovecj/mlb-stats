@@ -629,6 +629,13 @@ public class PlayerApiService {
                 .toList();
     }
 
+    /**
+     * Gets the gWAR breakdown for a player in a given season.
+     * <p>
+     * Note: For two-way players (e.g., Shohei Ohtani) who have both batting and pitching
+     * stats, this method returns the batting breakdown. A future enhancement could return
+     * both or use the player's primary position to determine which to prioritize.
+     */
     public GwarBreakdownDto getGwarBreakdown(Long playerId, Integer season) {
         if (season == null) {
             season = DateUtils.getCurrentSeason();
@@ -637,7 +644,7 @@ public class PlayerApiService {
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Player", playerId));
 
-        // Check batting stats first
+        // Check batting stats first (for two-way players, batting is returned)
         List<PlayerBattingStats> battingStats = battingStatsRepository.findByPlayerIdAndSeason(playerId, season);
         if (!battingStats.isEmpty() && battingStats.get(0).getGwar() != null) {
             PlayerBattingStats stats = battingStats.get(0);

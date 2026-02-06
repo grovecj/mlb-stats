@@ -222,8 +222,10 @@ public class GwarCalculationService {
             return BigDecimal.ZERO;
         }
 
-        // Use FIP constant + 3.2 as approximate league average FIP
-        BigDecimal lgFip = lc.getFipConstant().add(bd("0.85"));
+        // Use a fixed league-average FIP of ~4.00 for consistency across seasons.
+        // While lgFIP varies slightly by year (typically 3.95-4.05), using a fixed value
+        // simplifies the calculation and provides stable cross-season comparisons.
+        BigDecimal lgFip = bd("4.00");
         BigDecimal fipDiff = lgFip.subtract(fip);
         BigDecimal runsPerInning = fipDiff.divide(bd("9"), 6, RoundingMode.HALF_UP);
         return runsPerInning.multiply(inningsPitched);

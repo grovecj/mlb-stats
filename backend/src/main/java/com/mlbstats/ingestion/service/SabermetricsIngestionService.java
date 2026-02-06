@@ -38,14 +38,16 @@ public class SabermetricsIngestionService {
 
     /**
      * Syncs sabermetrics for all players with stats in a given season.
+     * All operations run in a single transaction. If any player sync fails,
+     * it is logged and skipped, but does not roll back the entire batch.
      */
     @Transactional
     public int syncAllPlayerSabermetrics(Integer season) {
         log.info("Starting sabermetrics sync for season {}", season);
 
-        // Get all players with batting or pitching stats for this season
-        List<PlayerBattingStats> battingStats = battingRepo.findTopWar(season);
-        List<PlayerPitchingStats> pitchingStats = pitchingRepo.findTopWar(season);
+        // Get all players with batting or pitching stats for this season (regular season only)
+        List<PlayerBattingStats> battingStats = battingRepo.findBySeasonRegularSeason(season);
+        List<PlayerPitchingStats> pitchingStats = pitchingRepo.findBySeasonRegularSeason(season);
 
         AtomicInteger count = new AtomicInteger(0);
 
@@ -75,8 +77,8 @@ public class SabermetricsIngestionService {
 
     /**
      * Syncs batting sabermetrics for a single player.
+     * Note: When called from syncAllPlayerSabermetrics, runs within the parent transaction.
      */
-    @Transactional
     public boolean syncPlayerBattingSabermetrics(Player player, Integer season) {
         try {
             // Fetch sabermetrics from MLB API
@@ -115,8 +117,8 @@ public class SabermetricsIngestionService {
 
     /**
      * Syncs pitching sabermetrics for a single player.
+     * Note: When called from syncAllPlayerSabermetrics, runs within the parent transaction.
      */
-    @Transactional
     public boolean syncPlayerPitchingSabermetrics(Player player, Integer season) {
         try {
             // Fetch sabermetrics from MLB API
