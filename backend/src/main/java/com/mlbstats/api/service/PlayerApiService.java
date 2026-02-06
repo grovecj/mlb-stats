@@ -479,4 +479,116 @@ public class PlayerApiService {
             default -> null;
         };
     }
+
+    // Advanced Stats Leaderboards
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'batting_war_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopBattingWar(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopWar(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'woba_' + #season + '_' + #minPa + '_' + #limit")
+    public List<BattingStatsDto> getTopWoba(Integer season, int minPa, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopWoba(season, minPa).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'wrcplus_' + #season + '_' + #minPa + '_' + #limit")
+    public List<BattingStatsDto> getTopWrcPlus(Integer season, int minPa, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopWrcPlus(season, minPa).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'exitvelo_' + #season + '_' + #minPa + '_' + #limit")
+    public List<BattingStatsDto> getTopExitVelocity(Integer season, int minPa, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopExitVelocity(season, minPa).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'barrel_' + #season + '_' + #minPa + '_' + #limit")
+    public List<BattingStatsDto> getTopBarrelPct(Integer season, int minPa, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopBarrelPct(season, minPa).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'pitching_war_' + #season + '_' + #limit")
+    public List<PitchingStatsDto> getTopPitchingWar(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopWar(season).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'fip_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopFip(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopFip(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'xfip_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopXfip(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopXfip(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'xera_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopXera(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopXera(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'whiff_' + #season + '_' + #minInnings + '_' + #limit")
+    public List<PitchingStatsDto> getTopWhiffPct(Integer season, java.math.BigDecimal minInnings, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopWhiffPct(season, minInnings).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
 }

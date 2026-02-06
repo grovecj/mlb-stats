@@ -28,6 +28,20 @@ export interface BattingStats {
   plateAppearances: number;
   totalBases: number;
   extraBaseHits: number;
+  // Advanced Sabermetric Stats
+  war: number | null;
+  woba: number | null;
+  wrcPlus: number | null;
+  hardHitPct: number | null;
+  barrelPct: number | null;
+  avgExitVelocity: number | null;
+  avgLaunchAngle: number | null;
+  sprintSpeed: number | null;
+  xba: number | null;
+  xslg: number | null;
+  xwoba: number | null;
+  kPct: number | null;
+  bbPct: number | null;
 }
 
 export interface PitchingStats {
@@ -56,6 +70,21 @@ export interface PitchingStats {
   hPer9: number;
   completeGames: number;
   shutouts: number;
+  // Advanced Sabermetric Stats
+  war: number | null;
+  fip: number | null;
+  xfip: number | null;
+  siera: number | null;
+  kPct: number | null;
+  bbPct: number | null;
+  gbPct: number | null;
+  fbPct: number | null;
+  hardHitPctAgainst: number | null;
+  avgExitVelocityAgainst: number | null;
+  xera: number | null;
+  avgSpinRate: number | null;
+  whiffPct: number | null;
+  chasePct: number | null;
 }
 
 export interface PageResponse<T> {
