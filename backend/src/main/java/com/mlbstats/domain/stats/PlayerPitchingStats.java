@@ -142,6 +142,16 @@ public class PlayerPitchingStats {
     @Column(name = "chase_pct", precision = 4, scale = 1)
     private BigDecimal chasePct;
 
+    // gWAR (Grove WAR) components
+    @Column(precision = 4, scale = 1)
+    private BigDecimal gwar;
+
+    @Column(name = "gwar_pitching", precision = 5, scale = 1)
+    private BigDecimal gwarPitching;
+
+    @Column(name = "gwar_replacement", precision = 5, scale = 1)
+    private BigDecimal gwarReplacement;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

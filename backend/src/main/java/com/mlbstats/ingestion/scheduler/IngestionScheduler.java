@@ -3,7 +3,10 @@ package com.mlbstats.ingestion.scheduler;
 import com.mlbstats.common.util.DateUtils;
 import com.mlbstats.ingestion.service.GameIngestionService;
 import com.mlbstats.ingestion.service.IngestionOrchestrator;
+import com.mlbstats.ingestion.service.OaaIngestionService;
 import com.mlbstats.ingestion.service.RosterIngestionService;
+import com.mlbstats.ingestion.service.SabermetricsIngestionService;
+import com.mlbstats.ingestion.service.StatcastIngestionService;
 import com.mlbstats.ingestion.service.StatsIngestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ public class IngestionScheduler {
     private final GameIngestionService gameIngestionService;
     private final RosterIngestionService rosterIngestionService;
     private final StatsIngestionService statsIngestionService;
+    private final SabermetricsIngestionService sabermetricsIngestionService;
+    private final OaaIngestionService oaaIngestionService;
+    private final StatcastIngestionService statcastIngestionService;
 
     @Value("${mlb.ingestion.enabled:false}")
     private boolean ingestionEnabled;
@@ -84,6 +90,69 @@ public class IngestionScheduler {
             log.info("Weekly roster sync completed");
         } catch (Exception e) {
             log.error("Weekly roster sync failed", e);
+        }
+    }
+
+    /**
+     * Daily: Sabermetrics sync at 6:30 AM (after stats sync)
+     * Fetches WAR, wOBA, FIP from MLB API and calculates gWAR
+     */
+    @Scheduled(cron = "0 30 6 * * *")
+    public void dailySabermetricsSync() {
+        if (!ingestionEnabled) {
+            log.debug("Scheduled ingestion is disabled");
+            return;
+        }
+
+        log.info("Starting daily sabermetrics sync");
+        try {
+            int season = DateUtils.getCurrentSeason();
+            sabermetricsIngestionService.syncAllPlayerSabermetrics(season);
+            log.info("Daily sabermetrics sync completed");
+        } catch (Exception e) {
+            log.error("Daily sabermetrics sync failed", e);
+        }
+    }
+
+    /**
+     * Weekly: OAA (Outs Above Average) sync on Sunday at 7 AM
+     * Fetches OAA from Baseball Savant and recalculates gWAR
+     */
+    @Scheduled(cron = "0 0 7 * * SUN")
+    public void weeklyOaaSync() {
+        if (!ingestionEnabled) {
+            log.debug("Scheduled ingestion is disabled");
+            return;
+        }
+
+        log.info("Starting weekly OAA sync");
+        try {
+            int season = DateUtils.getCurrentSeason();
+            oaaIngestionService.syncOaaForSeason(season);
+            log.info("Weekly OAA sync completed");
+        } catch (Exception e) {
+            log.error("Weekly OAA sync failed", e);
+        }
+    }
+
+    /**
+     * Weekly: Statcast expected stats sync on Sunday at 7:30 AM
+     * Fetches xBA, xSLG, xwOBA, exit velocity, barrel% from Baseball Savant
+     */
+    @Scheduled(cron = "0 30 7 * * SUN")
+    public void weeklyStatcastSync() {
+        if (!ingestionEnabled) {
+            log.debug("Scheduled ingestion is disabled");
+            return;
+        }
+
+        log.info("Starting weekly Statcast sync");
+        try {
+            int season = DateUtils.getCurrentSeason();
+            statcastIngestionService.syncAllStatcastData(season);
+            log.info("Weekly Statcast sync completed");
+        } catch (Exception e) {
+            log.error("Weekly Statcast sync failed", e);
         }
     }
 }
