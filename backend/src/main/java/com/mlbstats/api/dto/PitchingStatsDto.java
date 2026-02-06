@@ -29,7 +29,22 @@ public record PitchingStatsDto(
         BigDecimal bbPer9,
         BigDecimal hPer9,
         Integer completeGames,
-        Integer shutouts
+        Integer shutouts,
+        // Advanced Sabermetric Stats
+        BigDecimal war,
+        BigDecimal fip,
+        BigDecimal xfip,
+        BigDecimal siera,
+        BigDecimal kPct,
+        BigDecimal bbPct,
+        BigDecimal gbPct,
+        BigDecimal fbPct,
+        BigDecimal hardHitPctAgainst,
+        BigDecimal avgExitVelocityAgainst,
+        BigDecimal xera,
+        Integer avgSpinRate,
+        BigDecimal whiffPct,
+        BigDecimal chasePct
 ) {
     public static PitchingStatsDto fromEntity(PlayerPitchingStats stats) {
         return new PitchingStatsDto(
@@ -57,7 +72,21 @@ public record PitchingStatsDto(
                 stats.getBbPer9(),
                 stats.getHPer9(),
                 stats.getCompleteGames(),
-                stats.getShutouts()
+                stats.getShutouts(),
+                stats.getWar(),
+                stats.getFip(),
+                stats.getXfip(),
+                stats.getSiera(),
+                stats.getKPct(),
+                stats.getBbPct(),
+                stats.getGbPct(),
+                stats.getFbPct(),
+                stats.getHardHitPctAgainst(),
+                stats.getAvgExitVelocityAgainst(),
+                stats.getXera(),
+                stats.getAvgSpinRate(),
+                stats.getWhiffPct(),
+                stats.getChasePct()
         );
     }
 }

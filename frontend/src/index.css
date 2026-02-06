@@ -157,6 +157,24 @@ body {
   letter-spacing: 0.5px;
 }
 
+.stat-card .stat-info-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  font-size: 10px;
+  background-color: var(--text-light);
+  color: var(--card-background);
+  border-radius: 50%;
+  margin-left: 4px;
+  cursor: help;
+  vertical-align: middle;
+}
+
+.stat-card[title]:hover {
+  cursor: help;
+}
+
 /* Grids */
 .grid {
   display: grid;

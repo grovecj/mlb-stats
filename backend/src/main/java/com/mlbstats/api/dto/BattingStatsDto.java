@@ -30,7 +30,21 @@ public record BattingStatsDto(
         BigDecimal iso,
         Integer plateAppearances,
         Integer totalBases,
-        Integer extraBaseHits
+        Integer extraBaseHits,
+        // Advanced Sabermetric Stats
+        BigDecimal war,
+        BigDecimal woba,
+        Integer wrcPlus,
+        BigDecimal hardHitPct,
+        BigDecimal barrelPct,
+        BigDecimal avgExitVelocity,
+        BigDecimal avgLaunchAngle,
+        BigDecimal sprintSpeed,
+        BigDecimal xba,
+        BigDecimal xslg,
+        BigDecimal xwoba,
+        BigDecimal kPct,
+        BigDecimal bbPct
 ) {
     public static BattingStatsDto fromEntity(PlayerBattingStats stats) {
         return new BattingStatsDto(
@@ -59,7 +73,20 @@ public record BattingStatsDto(
                 stats.getIso(),
                 stats.getPlateAppearances(),
                 stats.getTotalBases(),
-                stats.getExtraBaseHits()
+                stats.getExtraBaseHits(),
+                stats.getWar(),
+                stats.getWoba(),
+                stats.getWrcPlus(),
+                stats.getHardHitPct(),
+                stats.getBarrelPct(),
+                stats.getAvgExitVelocity(),
+                stats.getAvgLaunchAngle(),
+                stats.getSprintSpeed(),
+                stats.getXba(),
+                stats.getXslg(),
+                stats.getXwoba(),
+                stats.getKPct(),
+                stats.getBbPct()
         );
     }
 }
