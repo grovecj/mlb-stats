@@ -67,9 +67,6 @@ public class GwarCalculationService {
     private static final BigDecimal BATTER_REPLACEMENT_RUNS_PER_PA = bd("20.5").divide(bd("600"), 6, RoundingMode.HALF_UP);
     private static final BigDecimal PITCHER_REPLACEMENT_RUNS_PER_IP = bd("5.5").divide(bd("200"), 6, RoundingMode.HALF_UP);
 
-    // League average FIP (approximate, used when calculating pitcher runs)
-    private static final BigDecimal LEAGUE_AVG_FIP = bd("4.00");
-
     /**
      * Calculates and applies gWAR to a batter's stats.
      *

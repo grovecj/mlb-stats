@@ -20,7 +20,10 @@ CREATE TABLE league_constants (
 
 -- Seed recent years with league constants
 -- Source: FanGraphs guts! constants
+-- Note: 2025/2026 values are estimates based on recent trends; update when official data available
 INSERT INTO league_constants (season, lg_woba, woba_scale, lg_r_per_pa, fip_constant) VALUES
+(2026, 0.3120, 1.180, 0.1130, 3.14),
+(2025, 0.3110, 1.178, 0.1125, 3.14),
 (2024, 0.3100, 1.177, 0.1120, 3.15),
 (2023, 0.3180, 1.169, 0.1100, 3.10),
 (2022, 0.3100, 1.157, 0.1060, 3.15),
