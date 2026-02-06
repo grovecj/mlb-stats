@@ -225,6 +225,37 @@ export async function getWhipLeaders(season?: number, limit = 10): Promise<Pitch
   return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/whip?${params}`);
 }
 
+// gWAR (Grove WAR) Leaders
+export async function getBattingGwarLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/gwar/batting?${params}`);
+}
+
+export async function getPitchingGwarLeaders(season?: number, limit = 10): Promise<PitchingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/gwar/pitching?${params}`);
+}
+
+export async function getOaaLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/oaa?${params}`);
+}
+
+export async function getWarLeaders(season?: number, limit = 10): Promise<BattingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<BattingStats[]>(`${API_BASE}/players/leaders/war/batting?${params}`);
+}
+
+export async function getPitchingWarLeaders(season?: number, limit = 10): Promise<PitchingStats[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (season) params.set('season', String(season));
+  return fetchJson<PitchingStats[]>(`${API_BASE}/players/leaders/war/pitching?${params}`);
+}
+
 export async function comparePlayerStats(
   players: PlayerSelection[],
   mode: 'season' | 'career'
@@ -301,7 +332,7 @@ export async function getGameCounts(options: {
 }
 
 // Sync Job Types
-export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES' | 'LINESCORES';
+export type SyncJobType = 'FULL_SYNC' | 'TEAMS' | 'ROSTERS' | 'GAMES' | 'STATS' | 'STANDINGS' | 'BOX_SCORES' | 'LINESCORES' | 'SABERMETRICS';
 export type SyncJobStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 export type TriggerType = 'MANUAL' | 'SCHEDULED';
 export type FreshnessLevel = 'FRESH' | 'STALE' | 'CRITICAL';
@@ -432,6 +463,11 @@ export async function triggerBoxScoresSync(season?: number): Promise<SyncJob> {
 export async function triggerLinescoresSync(season?: number): Promise<SyncJob> {
   const params = season ? `?season=${season}` : '';
   return postJson<SyncJob>(`${API_BASE}/ingestion/linescores${params}`);
+}
+
+export async function triggerSabermetricsSync(season?: number): Promise<SyncJob> {
+  const params = season ? `?season=${season}` : '';
+  return postJson<SyncJob>(`${API_BASE}/ingestion/sabermetrics${params}`);
 }
 
 // Data Manager

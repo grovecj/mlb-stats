@@ -591,4 +591,99 @@ public class PlayerApiService {
                 .map(PitchingStatsDto::fromEntity)
                 .toList();
     }
+
+    // ================================================================================
+    // gWAR (Grove WAR) Leaderboards
+    // ================================================================================
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'batting_gwar_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopBattingGwar(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopGwar(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'pitching_gwar_' + #season + '_' + #limit")
+    public List<PitchingStatsDto> getTopPitchingGwar(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return pitchingStatsRepository.findTopGwar(season).stream()
+                .limit(limit)
+                .map(PitchingStatsDto::fromEntity)
+                .toList();
+    }
+
+    @Cacheable(value = CacheConfig.LEADERBOARDS, key = "'oaa_' + #season + '_' + #limit")
+    public List<BattingStatsDto> getTopOaa(Integer season, int limit) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        return battingStatsRepository.findTopOaa(season).stream()
+                .limit(limit)
+                .map(BattingStatsDto::fromEntity)
+                .toList();
+    }
+
+    /**
+     * Gets the gWAR breakdown for a player in a given season.
+     * <p>
+     * Note: For two-way players (e.g., Shohei Ohtani) who have both batting and pitching
+     * stats, this method returns the batting breakdown. A future enhancement could return
+     * both or use the player's primary position to determine which to prioritize.
+     */
+    public GwarBreakdownDto getGwarBreakdown(Long playerId, Integer season) {
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Player", playerId));
+
+        // Check batting stats first (for two-way players, batting is returned)
+        List<PlayerBattingStats> battingStats = battingStatsRepository.findByPlayerIdAndSeason(playerId, season);
+        if (!battingStats.isEmpty() && battingStats.get(0).getGwar() != null) {
+            PlayerBattingStats stats = battingStats.get(0);
+            return GwarBreakdownDto.forBatter(
+                    PlayerDto.fromEntity(player),
+                    season,
+                    stats.getGwar(),
+                    stats.getWar(),
+                    stats.getGwarBatting(),
+                    stats.getGwarBaserunning(),
+                    stats.getGwarFielding(),
+                    stats.getGwarPositional(),
+                    stats.getGwarReplacement(),
+                    player.getPosition(),
+                    stats.getOaa()
+            );
+        }
+
+        // Check pitching stats
+        List<PlayerPitchingStats> pitchingStats = pitchingStatsRepository.findByPlayerIdAndSeason(playerId, season);
+        if (!pitchingStats.isEmpty() && pitchingStats.get(0).getGwar() != null) {
+            PlayerPitchingStats stats = pitchingStats.get(0);
+            return GwarBreakdownDto.forPitcher(
+                    PlayerDto.fromEntity(player),
+                    season,
+                    stats.getGwar(),
+                    stats.getWar(),
+                    stats.getGwarPitching(),
+                    stats.getGwarReplacement()
+            );
+        }
+
+        // No gWAR data available
+        return GwarBreakdownDto.forBatter(
+                PlayerDto.fromEntity(player),
+                season,
+                null, null, null, null, null, null, null,
+                player.getPosition(),
+                null
+        );
+    }
 }

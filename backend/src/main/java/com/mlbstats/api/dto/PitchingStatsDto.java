@@ -44,7 +44,11 @@ public record PitchingStatsDto(
         BigDecimal xera,
         Integer avgSpinRate,
         BigDecimal whiffPct,
-        BigDecimal chasePct
+        BigDecimal chasePct,
+        // gWAR (Grove WAR) fields
+        BigDecimal gwar,
+        BigDecimal gwarPitching,
+        BigDecimal gwarReplacement
 ) {
     public static PitchingStatsDto fromEntity(PlayerPitchingStats stats) {
         return new PitchingStatsDto(
@@ -86,7 +90,10 @@ public record PitchingStatsDto(
                 stats.getXera(),
                 stats.getAvgSpinRate(),
                 stats.getWhiffPct(),
-                stats.getChasePct()
+                stats.getChasePct(),
+                stats.getGwar(),
+                stats.getGwarPitching(),
+                stats.getGwarReplacement()
         );
     }
 }

@@ -67,4 +67,11 @@ public interface PlayerPitchingStatsRepository extends JpaRepository<PlayerPitch
 
     @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season AND pps.inningsPitched >= :minInnings AND pps.whiffPct IS NOT NULL ORDER BY pps.whiffPct DESC")
     List<PlayerPitchingStats> findTopWhiffPct(@Param("season") Integer season, @Param("minInnings") BigDecimal minInnings);
+
+    // gWAR Leaderboards
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season AND pps.gameType = 'R' AND pps.gwar IS NOT NULL ORDER BY pps.gwar DESC")
+    List<PlayerPitchingStats> findTopGwar(@Param("season") Integer season);
+
+    @Query("SELECT pps FROM PlayerPitchingStats pps JOIN FETCH pps.player JOIN FETCH pps.team WHERE pps.season = :season AND pps.gameType = 'R'")
+    List<PlayerPitchingStats> findBySeasonRegularSeason(@Param("season") Integer season);
 }
