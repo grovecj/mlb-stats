@@ -125,3 +125,10 @@ variable "new_relic_account_id" {
   type        = string
   default     = ""
 }
+
+# Shared database access
+variable "gif_clipper_app_id" {
+  description = "DigitalOcean App ID for gif-clipper (grants database access)"
+  type        = string
+  default     = ""
+}

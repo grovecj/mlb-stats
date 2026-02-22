@@ -40,13 +40,21 @@ resource "digitalocean_database_cluster" "postgres" {
   tags = var.tags
 }
 
-# Database firewall - only allow App Platform
+# Database firewall - centralized here since mlb-stats owns the cluster
 resource "digitalocean_database_firewall" "postgres_fw" {
   cluster_id = digitalocean_database_cluster.postgres.id
 
   rule {
     type  = "app"
     value = digitalocean_app.mlb_stats.id
+  }
+
+  dynamic "rule" {
+    for_each = var.gif_clipper_app_id != "" ? [var.gif_clipper_app_id] : []
+    content {
+      type  = "app"
+      value = rule.value
+    }
   }
 }
 
