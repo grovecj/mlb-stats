@@ -40,13 +40,21 @@ resource "digitalocean_database_cluster" "postgres" {
   tags = var.tags
 }
 
-# Database firewall - only allow App Platform
+# Database firewall - allow App Platform apps
 resource "digitalocean_database_firewall" "postgres_fw" {
   cluster_id = digitalocean_database_cluster.postgres.id
 
   rule {
     type  = "app"
     value = digitalocean_app.mlb_stats.id
+  }
+
+  dynamic "rule" {
+    for_each = var.additional_trusted_sources
+    content {
+      type  = rule.value.type
+      value = rule.value.value
+    }
   }
 }
 
