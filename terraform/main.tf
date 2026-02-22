@@ -40,7 +40,8 @@ resource "digitalocean_database_cluster" "postgres" {
   tags = var.tags
 }
 
-# Database firewall - centralized here since mlb-stats owns the cluster
+# Database firewall - centralized here since mlb-stats owns the cluster.
+# Add other apps (e.g. gif-clipper) via additional_trusted_sources.
 resource "digitalocean_database_firewall" "postgres_fw" {
   cluster_id = digitalocean_database_cluster.postgres.id
 
@@ -50,10 +51,10 @@ resource "digitalocean_database_firewall" "postgres_fw" {
   }
 
   dynamic "rule" {
-    for_each = var.gif_clipper_app_id != "" ? [var.gif_clipper_app_id] : []
+    for_each = var.additional_trusted_sources
     content {
-      type  = "app"
-      value = rule.value
+      type  = rule.value.type
+      value = rule.value.value
     }
   }
 }

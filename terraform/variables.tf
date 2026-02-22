@@ -99,6 +99,16 @@ variable "ga_measurement_id" {
   description = "Google Analytics 4 Measurement ID"
 }
   
+# Additional Trusted Sources (for shared database access)
+variable "additional_trusted_sources" {
+  description = "Additional sources that need access to the database. Each entry needs a type (app, droplet, k8s, ip_addr, tag) and value."
+  type = list(object({
+    type  = string
+    value = string
+  }))
+  default = []
+}
+
 # Custom Domain
 variable "custom_domain" {
   description = "Custom domain for the application (e.g., stats.cartergrove.me)"
@@ -126,9 +136,3 @@ variable "new_relic_account_id" {
   default     = ""
 }
 
-# Shared database access
-variable "gif_clipper_app_id" {
-  description = "DigitalOcean App ID for gif-clipper (grants database access)"
-  type        = string
-  default     = ""
-}
