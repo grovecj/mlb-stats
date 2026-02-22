@@ -40,7 +40,8 @@ resource "digitalocean_database_cluster" "postgres" {
   tags = var.tags
 }
 
-# Database firewall - allow App Platform apps
+# Database firewall - centralized here since mlb-stats owns the cluster.
+# Add other apps (e.g. gif-clipper) via additional_trusted_sources.
 resource "digitalocean_database_firewall" "postgres_fw" {
   cluster_id = digitalocean_database_cluster.postgres.id
 

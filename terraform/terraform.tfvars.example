@@ -42,6 +42,13 @@ ga_measurement_id = "G-XXXXXXXXXX"
 # new_relic_api_key    = "your-new-relic-license-key"
 # new_relic_account_id = "your-account-id"
 
+# Shared Database Access (optional)
+# Grant other apps access to the managed database cluster.
+# Get app IDs with: doctl apps list
+# additional_trusted_sources = [
+#   { type = "app", value = "your-gif-clipper-app-id" },
+# ]
+
 # Optional: Override defaults
 # app_name       = "mlb-stats"
 # region         = "nyc"
