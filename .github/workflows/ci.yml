@@ -26,7 +26,7 @@ jobs:
         run: ./mvnw verify spotbugs:check pmd:pmd -B
 
       - name: Upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: backend-test-results
@@ -34,7 +34,7 @@ jobs:
           retention-days: 7
 
       - name: Upload PMD report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: pmd-report
@@ -68,7 +68,7 @@ jobs:
         run: npm test -- --run --coverage
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: frontend-coverage
