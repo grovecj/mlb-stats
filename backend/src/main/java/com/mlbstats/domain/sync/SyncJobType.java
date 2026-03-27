@@ -8,7 +8,8 @@ public enum SyncJobType {
     STATS("Stats"),
     STANDINGS("Standings"),
     BOX_SCORES("Box Scores"),
-    LINESCORES("Linescores");
+    LINESCORES("Linescores"),
+    SABERMETRICS("Sabermetrics");
 
     private final String displayName;
 

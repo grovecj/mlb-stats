@@ -27,4 +27,17 @@ public class RestClientConfig {
                 .defaultHeader("Accept", "application/json")
                 .build();
     }
+
+    @Bean
+    public RestClient baseballSavantRestClient() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(timeout);
+        factory.setReadTimeout(60000); // Longer timeout for CSV downloads
+
+        return RestClient.builder()
+                .requestFactory(factory)
+                .defaultHeader("Accept", "text/csv")
+                .defaultHeader("User-Agent", "MLB-Stats-App/1.0")
+                .build();
+    }
 }

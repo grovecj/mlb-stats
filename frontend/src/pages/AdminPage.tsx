@@ -10,6 +10,7 @@ import {
   triggerStandingsSync,
   triggerBoxScoresSync,
   triggerLinescoresSync,
+  triggerSabermetricsSync,
   getUsers,
   updateUserRole,
   AdminUser,
@@ -133,6 +134,9 @@ function AdminPage() {
           break;
         case 'LINESCORES':
           job = await triggerLinescoresSync();
+          break;
+        case 'SABERMETRICS':
+          job = await triggerSabermetricsSync();
           break;
         default:
           return;

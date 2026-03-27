@@ -44,7 +44,15 @@ public record BattingStatsDto(
         BigDecimal xslg,
         BigDecimal xwoba,
         BigDecimal kPct,
-        BigDecimal bbPct
+        BigDecimal bbPct,
+        // gWAR (Grove WAR) fields
+        BigDecimal gwar,
+        BigDecimal gwarBatting,
+        BigDecimal gwarBaserunning,
+        BigDecimal gwarFielding,
+        BigDecimal gwarPositional,
+        BigDecimal gwarReplacement,
+        Integer oaa
 ) {
     public static BattingStatsDto fromEntity(PlayerBattingStats stats) {
         return new BattingStatsDto(
@@ -86,7 +94,14 @@ public record BattingStatsDto(
                 stats.getXslg(),
                 stats.getXwoba(),
                 stats.getKPct(),
-                stats.getBbPct()
+                stats.getBbPct(),
+                stats.getGwar(),
+                stats.getGwarBatting(),
+                stats.getGwarBaserunning(),
+                stats.getGwarFielding(),
+                stats.getGwarPositional(),
+                stats.getGwarReplacement(),
+                stats.getOaa()
         );
     }
 }

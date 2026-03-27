@@ -10,6 +10,11 @@ function formatAvg(value: number | null): string {
   return value.toFixed(3).replace(/^0/, '');
 }
 
+function formatWar(value: number | null): string {
+  if (value === null || value === undefined) return '--';
+  return value.toFixed(1);
+}
+
 function CareerStats({ stats }: CareerStatsProps) {
   if (stats.length <= 1) return null;
 
@@ -48,6 +53,18 @@ function CareerStats({ stats }: CareerStatsProps) {
       header: 'SLG',
       className: 'number',
       render: (s: BattingStats) => formatAvg(s.slg),
+    },
+    {
+      key: 'war',
+      header: 'WAR',
+      className: 'number',
+      render: (s: BattingStats) => formatWar(s.war),
+    },
+    {
+      key: 'gwar',
+      header: 'gWAR',
+      className: 'number',
+      render: (s: BattingStats) => formatWar(s.gwar),
     },
   ];
 

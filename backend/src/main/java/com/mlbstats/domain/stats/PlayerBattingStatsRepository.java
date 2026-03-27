@@ -72,4 +72,14 @@ public interface PlayerBattingStatsRepository extends JpaRepository<PlayerBattin
 
     @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.plateAppearances >= :minPa AND pbs.barrelPct IS NOT NULL ORDER BY pbs.barrelPct DESC")
     List<PlayerBattingStats> findTopBarrelPct(@Param("season") Integer season, @Param("minPa") Integer minPa);
+
+    // gWAR Leaderboards
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.gameType = 'R' AND pbs.gwar IS NOT NULL ORDER BY pbs.gwar DESC")
+    List<PlayerBattingStats> findTopGwar(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.gameType = 'R' AND pbs.oaa IS NOT NULL ORDER BY pbs.oaa DESC")
+    List<PlayerBattingStats> findTopOaa(@Param("season") Integer season);
+
+    @Query("SELECT pbs FROM PlayerBattingStats pbs JOIN FETCH pbs.player JOIN FETCH pbs.team WHERE pbs.season = :season AND pbs.gameType = 'R'")
+    List<PlayerBattingStats> findBySeasonRegularSeason(@Param("season") Integer season);
 }

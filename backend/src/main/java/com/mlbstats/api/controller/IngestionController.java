@@ -191,6 +191,20 @@ public class IngestionController {
         return ResponseEntity.ok(SyncJobDto.fromEntity(job));
     }
 
+    @PostMapping("/sabermetrics")
+    @Operation(summary = "Sync sabermetrics", description = "Synchronizes WAR, wOBA, FIP, expected stats, and calculates gWAR")
+    public ResponseEntity<SyncJobDto> syncSabermetrics(
+            @RequestParam(required = false) Integer season,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        if (season == null) {
+            season = DateUtils.getCurrentSeason();
+        }
+        AppUser user = getUserFromPrincipal(principal);
+        SyncJob job = orchestrator.createAndRunTrackedSabermetricsSync(season, TriggerType.MANUAL, user);
+        return ResponseEntity.ok(SyncJobDto.fromEntity(job));
+    }
+
     // ===== Legacy Untracked Endpoints =====
 
     @PostMapping("/players/incomplete")

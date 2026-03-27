@@ -42,6 +42,14 @@ export interface BattingStats {
   xwoba: number | null;
   kPct: number | null;
   bbPct: number | null;
+  // gWAR (Grove WAR) fields
+  gwar: number | null;
+  gwarBatting: number | null;
+  gwarBaserunning: number | null;
+  gwarFielding: number | null;
+  gwarPositional: number | null;
+  gwarReplacement: number | null;
+  oaa: number | null;
 }
 
 export interface PitchingStats {
@@ -85,6 +93,10 @@ export interface PitchingStats {
   avgSpinRate: number | null;
   whiffPct: number | null;
   chasePct: number | null;
+  // gWAR (Grove WAR) fields
+  gwar: number | null;
+  gwarPitching: number | null;
+  gwarReplacement: number | null;
 }
 
 export interface PageResponse<T> {

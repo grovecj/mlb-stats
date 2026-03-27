@@ -144,6 +144,31 @@ public class PlayerBattingStats {
     @Column(name = "bb_pct", precision = 4, scale = 1)
     private BigDecimal bbPct;
 
+    // gWAR (Grove WAR) components
+    @Column(precision = 4, scale = 1)
+    private BigDecimal gwar;
+
+    @Column(name = "gwar_batting", precision = 5, scale = 1)
+    private BigDecimal gwarBatting;
+
+    @Column(name = "gwar_baserunning", precision = 5, scale = 1)
+    private BigDecimal gwarBaserunning;
+
+    @Column(name = "gwar_fielding", precision = 5, scale = 1)
+    private BigDecimal gwarFielding;
+
+    @Column(name = "gwar_positional", precision = 5, scale = 1)
+    private BigDecimal gwarPositional;
+
+    @Column(name = "gwar_replacement", precision = 5, scale = 1)
+    private BigDecimal gwarReplacement;
+
+    /**
+     * Outs Above Average from Baseball Savant - used for fielding component of gWAR
+     */
+    @Column
+    private Integer oaa;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

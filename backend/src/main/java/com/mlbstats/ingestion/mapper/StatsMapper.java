@@ -4,10 +4,14 @@ import com.mlbstats.domain.player.Player;
 import com.mlbstats.domain.stats.PlayerBattingStats;
 import com.mlbstats.domain.stats.PlayerPitchingStats;
 import com.mlbstats.domain.team.Team;
+import com.mlbstats.ingestion.client.dto.ExpectedStatsResponse;
+import com.mlbstats.ingestion.client.dto.SabermetricsResponse;
+import com.mlbstats.ingestion.client.dto.SeasonAdvancedResponse;
 import com.mlbstats.ingestion.client.dto.StatsResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Component
 public class StatsMapper {
@@ -187,5 +191,113 @@ public class StatsMapper {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    // ================================================================================
+    // SABERMETRICS MAPPING
+    // ================================================================================
+
+    /**
+     * Applies sabermetric stats (WAR, wOBA, wRC+) to batting stats.
+     */
+    public void applySabermetrics(PlayerBattingStats stats, SabermetricsResponse.SabermetricData saber) {
+        if (saber == null) return;
+
+        stats.setWar(saber.getWar());
+        stats.setWoba(saber.getWoba());
+        if (saber.getWRcPlus() != null) {
+            stats.setWrcPlus(saber.getWRcPlus().intValue());
+        }
+    }
+
+    /**
+     * Applies sabermetric stats (WAR, FIP, xFIP) to pitching stats.
+     */
+    public void applySabermetrics(PlayerPitchingStats stats, SabermetricsResponse.SabermetricData saber) {
+        if (saber == null) return;
+
+        stats.setWar(saber.getWar());
+        stats.setFip(saber.getFip());
+        stats.setXfip(saber.getXfip());
+    }
+
+    /**
+     * Applies expected stats (xBA, xSLG, xwOBA) to batting stats.
+     */
+    public void applyExpectedStats(PlayerBattingStats stats, ExpectedStatsResponse.ExpectedStatData expected) {
+        if (expected == null) return;
+
+        stats.setXba(parseDecimal(expected.getAvg()));
+        stats.setXslg(parseDecimal(expected.getSlg()));
+        stats.setXwoba(parseDecimal(expected.getWoba()));
+    }
+
+    /**
+     * Applies season advanced stats (BABIP, K%, BB%) to batting stats.
+     */
+    public void applySeasonAdvanced(PlayerBattingStats stats, SeasonAdvancedResponse.AdvancedStatData advanced) {
+        if (advanced == null) return;
+
+        stats.setBabip(parseDecimal(advanced.getBabip()));
+
+        // Convert decimal rates to percentages (e.g., 0.222 -> 22.2)
+        BigDecimal kPct = parseDecimalToPercent(advanced.getStrikeoutsPerPlateAppearance());
+        BigDecimal bbPct = parseDecimalToPercent(advanced.getWalksPerPlateAppearance());
+
+        if (kPct != null) stats.setKPct(kPct);
+        if (bbPct != null) stats.setBbPct(bbPct);
+    }
+
+    /**
+     * Applies season advanced stats (QS, whiff%, GB%, FB%) to pitching stats.
+     */
+    public void applySeasonAdvanced(PlayerPitchingStats stats, SeasonAdvancedResponse.AdvancedStatData advanced) {
+        if (advanced == null) return;
+
+        stats.setQualityStarts(advanced.getQualityStarts());
+
+        // Convert decimal rates to percentages
+        BigDecimal whiffPct = parseDecimalToPercent(advanced.getWhiffPercentage());
+        BigDecimal fbPct = parseDecimalToPercent(advanced.getFlyBallPercentage());
+
+        if (whiffPct != null) stats.setWhiffPct(whiffPct);
+        if (fbPct != null) stats.setFbPct(fbPct);
+
+        // Calculate GB% from batted ball data
+        BigDecimal gbPct = calculateGroundBallPct(advanced);
+        if (gbPct != null) stats.setGbPct(gbPct);
+    }
+
+    /**
+     * Parses a decimal string and converts to percentage.
+     * E.g., "0.222" -> 22.2
+     */
+    private BigDecimal parseDecimalToPercent(String value) {
+        BigDecimal decimal = parseDecimal(value);
+        if (decimal == null) return null;
+        return decimal.multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Calculates ground ball percentage from batted ball data.
+     * GB% = groundOuts / (groundOuts + flyOuts + lineOuts + popOuts) * 100
+     */
+    private BigDecimal calculateGroundBallPct(SeasonAdvancedResponse.AdvancedStatData advanced) {
+        Integer groundOuts = advanced.getGroundOuts();
+        Integer flyOuts = advanced.getFlyOuts();
+        Integer lineOuts = advanced.getLineOuts();
+        Integer popOuts = advanced.getPopOuts();
+
+        if (groundOuts == null || flyOuts == null || lineOuts == null || popOuts == null) {
+            return null;
+        }
+
+        int total = groundOuts + flyOuts + lineOuts + popOuts;
+        if (total == 0) return null;
+
+        return new BigDecimal(groundOuts)
+                .divide(new BigDecimal(total), 4, RoundingMode.HALF_UP)
+                .multiply(new BigDecimal("100"))
+                .setScale(1, RoundingMode.HALF_UP);
     }
 }

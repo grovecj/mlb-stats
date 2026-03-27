@@ -32,12 +32,12 @@ function formatWar(value: number | null): string {
 }
 
 function hasAdvancedBattingStats(stats: BattingStats): boolean {
-  return stats.war != null || stats.woba != null || stats.wrcPlus != null ||
-    stats.avgExitVelocity != null || stats.barrelPct != null;
+  return stats.war != null || stats.gwar != null || stats.woba != null || stats.wrcPlus != null ||
+    stats.avgExitVelocity != null || stats.barrelPct != null || stats.oaa != null;
 }
 
 function hasAdvancedPitchingStats(stats: PitchingStats): boolean {
-  return stats.war != null || stats.fip != null || stats.xfip != null ||
+  return stats.war != null || stats.gwar != null || stats.fip != null || stats.xfip != null ||
     stats.whiffPct != null || stats.xera != null;
 }
 
@@ -102,6 +102,22 @@ function PlayerStats({ battingStats, pitchingStats }: PlayerStatsProps) {
                 <StatCard value={formatPct(latestBatting.barrelPct)} label="Barrel%" tooltip="Percentage of batted balls with optimal exit velocity and launch angle" />
                 <StatCard value={formatRate(latestBatting.sprintSpeed)} label="Sprint Speed" tooltip="Average sprint speed in feet per second" />
               </div>
+
+              {/* gWAR Breakdown */}
+              {latestBatting.gwar != null && (
+                <>
+                  <h4 style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '12px' }}>gWAR Breakdown (Grove WAR)</h4>
+                  <div className="grid grid-4" style={{ marginBottom: '24px' }}>
+                    <StatCard value={formatWar(latestBatting.gwar)} label="gWAR" tooltip="Grove WAR - transparent, simplified WAR calculation" />
+                    <StatCard value={formatWar(latestBatting.gwarBatting)} label="Batting" tooltip="gWAR contribution from batting (wRAA)" />
+                    <StatCard value={formatWar(latestBatting.gwarBaserunning)} label="Baserunning" tooltip="gWAR contribution from baserunning (wSB)" />
+                    <StatCard value={formatWar(latestBatting.gwarFielding)} label="Fielding" tooltip="gWAR contribution from fielding (OAA-based)" />
+                    <StatCard value={formatWar(latestBatting.gwarPositional)} label="Positional" tooltip="gWAR positional adjustment" />
+                    <StatCard value={formatWar(latestBatting.gwarReplacement)} label="Replacement" tooltip="gWAR replacement level runs" />
+                    <StatCard value={latestBatting.oaa ?? '--'} label="OAA" tooltip="Outs Above Average - fielding metric from Statcast" />
+                  </div>
+                </>
+              )}
             </>
           )}
         </>
@@ -146,7 +162,7 @@ function PlayerStats({ battingStats, pitchingStats }: PlayerStatsProps) {
           {hasAdvancedPitchingStats(latestPitching) && (
             <>
               <h4 style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '12px' }}>Advanced Analytics</h4>
-              <div className="grid grid-4">
+              <div className="grid grid-4" style={{ marginBottom: '24px' }}>
                 <StatCard value={formatWar(latestPitching.war)} label="WAR" tooltip="Wins Above Replacement - measures total value compared to a replacement-level player" />
                 <StatCard value={formatEra(latestPitching.fip)} label="FIP" tooltip="Fielding Independent Pitching - ERA based only on events pitcher controls (K, BB, HR)" />
                 <StatCard value={formatEra(latestPitching.xfip)} label="xFIP" tooltip="Expected FIP - FIP with normalized home run rate" />
@@ -162,6 +178,18 @@ function PlayerStats({ battingStats, pitchingStats }: PlayerStatsProps) {
                 <StatCard value={formatPct(latestPitching.hardHitPctAgainst)} label="Hard Hit% Against" tooltip="Percentage of hard-hit balls allowed" />
                 <StatCard value={latestPitching.avgSpinRate ?? '--'} label="Avg Spin" tooltip="Average spin rate across all pitches" />
               </div>
+
+              {/* gWAR Breakdown for Pitchers */}
+              {latestPitching.gwar != null && (
+                <>
+                  <h4 style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '12px' }}>gWAR Breakdown (Grove WAR)</h4>
+                  <div className="grid grid-4">
+                    <StatCard value={formatWar(latestPitching.gwar)} label="gWAR" tooltip="Grove WAR - transparent, simplified WAR calculation for pitchers" />
+                    <StatCard value={formatWar(latestPitching.gwarPitching)} label="Pitching" tooltip="gWAR contribution from pitching (FIP-based)" />
+                    <StatCard value={formatWar(latestPitching.gwarReplacement)} label="Replacement" tooltip="gWAR replacement level runs" />
+                  </div>
+                </>
+              )}
             </>
           )}
         </>

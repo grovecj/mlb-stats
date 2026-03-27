@@ -247,6 +247,11 @@ public class SyncJobService {
                 if (hours < 24) yield FreshnessLevel.STALE;
                 yield FreshnessLevel.CRITICAL;
             }
+            case SABERMETRICS -> {
+                if (hours < 24) yield FreshnessLevel.FRESH;
+                if (days < 3) yield FreshnessLevel.STALE;
+                yield FreshnessLevel.CRITICAL;
+            }
             case FULL_SYNC -> {
                 if (hours < 24) yield FreshnessLevel.FRESH;
                 if (days < 7) yield FreshnessLevel.STALE;

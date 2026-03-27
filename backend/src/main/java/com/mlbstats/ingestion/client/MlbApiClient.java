@@ -170,4 +170,68 @@ public class MlbApiClient {
             return null;
         }
     }
+
+    /**
+     * Fetches sabermetric stats for a player.
+     *
+     * @param playerId MLB player ID
+     * @param season Season year
+     * @param group Stats group: "hitting" or "pitching"
+     * @return Sabermetrics response containing WAR, wOBA, FIP, etc.
+     */
+    public SabermetricsResponse getPlayerSabermetrics(Integer playerId, Integer season, String group) {
+        log.debug("Fetching sabermetrics for player {} season {} group {}", playerId, season, group);
+        try {
+            return restClient.get()
+                    .uri("/people/{id}/stats?stats=sabermetrics&season={season}&group={group}",
+                            playerId, season, group)
+                    .retrieve()
+                    .body(SabermetricsResponse.class);
+        } catch (RestClientException e) {
+            log.warn("Failed to fetch sabermetrics for player {}: {}", playerId, e.getMessage());
+            return null;
+        }
+    }
+
+    public SabermetricsResponse getBattingSabermetrics(Integer playerId, Integer season) {
+        return getPlayerSabermetrics(playerId, season, "hitting");
+    }
+
+    public SabermetricsResponse getPitchingSabermetrics(Integer playerId, Integer season) {
+        return getPlayerSabermetrics(playerId, season, "pitching");
+    }
+
+    /**
+     * Fetches expected stats for a player (xBA, xSLG, xwOBA).
+     */
+    public ExpectedStatsResponse getPlayerExpectedStats(Integer playerId, Integer season, String group) {
+        log.debug("Fetching expected stats for player {} season {} group {}", playerId, season, group);
+        try {
+            return restClient.get()
+                    .uri("/people/{id}/stats?stats=expectedStatistics&season={season}&group={group}",
+                            playerId, season, group)
+                    .retrieve()
+                    .body(ExpectedStatsResponse.class);
+        } catch (RestClientException e) {
+            log.warn("Failed to fetch expected stats for player {}: {}", playerId, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Fetches season advanced stats for a player (BABIP, K%, BB%, etc.).
+     */
+    public SeasonAdvancedResponse getPlayerSeasonAdvanced(Integer playerId, Integer season, String group) {
+        log.debug("Fetching season advanced stats for player {} season {} group {}", playerId, season, group);
+        try {
+            return restClient.get()
+                    .uri("/people/{id}/stats?stats=seasonAdvanced&season={season}&group={group}",
+                            playerId, season, group)
+                    .retrieve()
+                    .body(SeasonAdvancedResponse.class);
+        } catch (RestClientException e) {
+            log.warn("Failed to fetch season advanced stats for player {}: {}", playerId, e.getMessage());
+            return null;
+        }
+    }
 }

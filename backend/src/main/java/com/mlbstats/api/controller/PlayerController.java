@@ -319,4 +319,40 @@ public class PlayerController {
 
         return ResponseEntity.ok(playerApiService.comparePlayerStats(playerIds, seasonList, careerMode));
     }
+
+    // ================================================================================
+    // gWAR (Grove WAR) Endpoints
+    // ================================================================================
+
+    @GetMapping("/leaders/gwar/batting")
+    @Operation(summary = "Get batting gWAR leaders", description = "Returns top position players by gWAR (Grove WAR) for a season")
+    public ResponseEntity<List<BattingStatsDto>> getBattingGwarLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopBattingGwar(season, limit));
+    }
+
+    @GetMapping("/leaders/gwar/pitching")
+    @Operation(summary = "Get pitching gWAR leaders", description = "Returns top pitchers by gWAR (Grove WAR) for a season")
+    public ResponseEntity<List<PitchingStatsDto>> getPitchingGwarLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopPitchingGwar(season, limit));
+    }
+
+    @GetMapping("/leaders/oaa")
+    @Operation(summary = "Get OAA leaders", description = "Returns top fielders by Outs Above Average for a season")
+    public ResponseEntity<List<BattingStatsDto>> getOaaLeaders(
+            @RequestParam(required = false) Integer season,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(playerApiService.getTopOaa(season, limit));
+    }
+
+    @GetMapping("/{id}/gwar-breakdown")
+    @Operation(summary = "Get gWAR breakdown", description = "Returns detailed breakdown of gWAR components for a player")
+    public ResponseEntity<GwarBreakdownDto> getGwarBreakdown(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer season) {
+        return ResponseEntity.ok(playerApiService.getGwarBreakdown(id, season));
+    }
 }

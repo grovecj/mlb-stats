@@ -14,11 +14,17 @@ import {
   getEraLeaders,
   getSavesLeaders,
   getWhipLeaders,
+  getBattingGwarLeaders,
+  getPitchingGwarLeaders,
+  getOaaLeaders,
+  getWarLeaders,
+  getPitchingWarLeaders,
 } from '../services/api';
 
 type LeaderboardCategory =
   | 'home-runs' | 'batting-average' | 'rbi' | 'runs' | 'hits' | 'stolen-bases' | 'ops'
-  | 'wins' | 'strikeouts' | 'era' | 'saves' | 'whip';
+  | 'war' | 'gwar' | 'oaa'
+  | 'wins' | 'strikeouts' | 'era' | 'saves' | 'whip' | 'pitching-war' | 'pitching-gwar';
 
 interface CategoryConfig {
   label: string;
@@ -113,10 +119,45 @@ const categories: Record<LeaderboardCategory, CategoryConfig> = {
     statKey: 'whip',
     format: (v) => v.toFixed(2),
   },
+  'war': {
+    label: 'WAR',
+    type: 'batting',
+    fetch: getWarLeaders,
+    statKey: 'war',
+    format: (v) => v?.toFixed(1) ?? '--',
+  },
+  'gwar': {
+    label: 'gWAR',
+    type: 'batting',
+    fetch: getBattingGwarLeaders,
+    statKey: 'gwar',
+    format: (v) => v?.toFixed(1) ?? '--',
+  },
+  'oaa': {
+    label: 'OAA',
+    type: 'batting',
+    fetch: getOaaLeaders,
+    statKey: 'oaa',
+    format: (v) => String(v ?? '--'),
+  },
+  'pitching-war': {
+    label: 'WAR',
+    type: 'pitching',
+    fetch: getPitchingWarLeaders,
+    statKey: 'war',
+    format: (v) => v?.toFixed(1) ?? '--',
+  },
+  'pitching-gwar': {
+    label: 'gWAR',
+    type: 'pitching',
+    fetch: getPitchingGwarLeaders,
+    statKey: 'gwar',
+    format: (v) => v?.toFixed(1) ?? '--',
+  },
 };
 
-const battingCategories: LeaderboardCategory[] = ['home-runs', 'batting-average', 'rbi', 'runs', 'hits', 'stolen-bases', 'ops'];
-const pitchingCategories: LeaderboardCategory[] = ['wins', 'strikeouts', 'era', 'saves', 'whip'];
+const battingCategories: LeaderboardCategory[] = ['home-runs', 'batting-average', 'rbi', 'runs', 'hits', 'stolen-bases', 'ops', 'war', 'gwar', 'oaa'];
+const pitchingCategories: LeaderboardCategory[] = ['wins', 'strikeouts', 'era', 'saves', 'whip', 'pitching-war', 'pitching-gwar'];
 
 function getDefaultSeason(): number {
   const now = new Date();

@@ -26,6 +26,7 @@ public class IngestionOrchestrator {
     private final StandingsIngestionService standingsIngestionService;
     private final BoxScoreIngestionService boxScoreIngestionService;
     private final LinescoreIngestionService linescoreIngestionService;
+    private final SabermetricsIngestionService sabermetricsIngestionService;
     private final SyncJobService syncJobService;
 
     @Caching(evict = {
@@ -371,6 +372,33 @@ public class IngestionOrchestrator {
     public SyncJob createAndRunTrackedLinescoresSync(int season, TriggerType trigger, AppUser user) {
         SyncJob job = syncJobService.createJob(SyncJobType.LINESCORES, season, trigger, user);
         runTrackedLinescoresSync(job.getId(), season);
+        return job;
+    }
+
+    @Async
+    @Caching(evict = {
+            @CacheEvict(value = CacheConfig.LEADERBOARDS, allEntries = true),
+            @CacheEvict(value = CacheConfig.PLAYERS, allEntries = true)
+    })
+    public void runTrackedSabermetricsSync(Long jobId, int season) {
+        log.info("Starting tracked sabermetrics sync for season {} (job {})", season, jobId);
+        try {
+            syncJobService.startJob(jobId);
+            syncJobService.updateProgress(jobId, 0, 1, "Syncing sabermetrics and calculating gWAR...");
+
+            int count = sabermetricsIngestionService.syncAllPlayerSabermetrics(season);
+
+            syncJobService.completeJob(jobId, count, 0, 0);
+            log.info("Tracked sabermetrics sync completed (job {})", jobId);
+        } catch (Exception e) {
+            log.error("Tracked sabermetrics sync failed (job {})", jobId, e);
+            syncJobService.failJob(jobId, e.getMessage());
+        }
+    }
+
+    public SyncJob createAndRunTrackedSabermetricsSync(int season, TriggerType trigger, AppUser user) {
+        SyncJob job = syncJobService.createJob(SyncJobType.SABERMETRICS, season, trigger, user);
+        runTrackedSabermetricsSync(job.getId(), season);
         return job;
     }
 
